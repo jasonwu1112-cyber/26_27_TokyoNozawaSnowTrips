@@ -1,340 +1,678 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>2026-2027 東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅 v1.0</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {darkMode:'class', theme:{extend:{colors:{brand:{50:'#f0f9ff',100:'#e0f2fe',500:'#0284c7',600:'#0369a1',900:'#0c4a6e'}, snow:'#e0f2fe', accent:'#f59e0b'}}}}
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        .glass-card { background: rgba(30,41,59,.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.1); }
-        .spot-chip.active { background: linear-gradient(135deg,#0ea5e9,#0284c7); color: white; border-color: rgba(14,165,233,.8); box-shadow: 0 0 0 1px rgba(14,165,233,.25), 0 10px 25px rgba(2,132,199,.22); }
-        .map-link, .day-card { transition: all .18s ease; }
-        .map-link:hover, .day-card:hover { transform: translateY(-1px); }
-        .day-card.active-day { border-color: rgba(56,189,248,.9) !important; box-shadow: 0 0 0 1px rgba(56,189,248,.25), 0 18px 40px rgba(15,23,42,.28); }
-        .timeline-dot::before { content:''; position:absolute; left:11px; top:26px; bottom:-22px; width:1px; background: rgba(148,163,184,.25); }
-        .timeline-dot:last-child::before { display:none; }
-        .tab-btn.active { background: linear-gradient(135deg,#0ea5e9,#0284c7); color: white; border-color: rgba(14,165,233,.8); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<style>
+  :root{
+    --bg:#0b1220; --bg-card:rgba(30,41,59,.72); --bg-card-solid:#1a2436;
+    --text:#e6edf7; --text-dim:#93a1b8; --accent:#38bdf8; --accent2:#fbbf24;
+    --border:rgba(148,163,184,.18); --danger:#f87171; --ok:#34d399;
+    --animate-duration: .7s;
+  }
+</style>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#0b1220 0%,#0d1526 40%,#0b1220 100%);color:var(--text);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;padding-bottom:3rem;}
+  a{color:var(--accent);}
+  .wrap{max-width:480px;margin:0 auto;padding:0 1rem;}
+  header.hero{background:radial-gradient(circle at 20% -10%,rgba(56,189,248,.25),transparent 60%),#0f1a2e;
+    border-bottom:1px solid var(--border);padding:2rem 0 1.5rem;}
+  header.hero .tag{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent2);font-weight:700;font-size:.8rem;margin-bottom:.4rem;}
+  header.hero h1{font-size:1.5rem;margin:.2rem 0;font-weight:800;letter-spacing:.02em;}
+  header.hero .dates{color:var(--text-dim);font-size:.85rem;}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;backdrop-filter:blur(6px);}
+  .card h2{font-size:1.05rem;margin:0 0 .8rem;display:flex;align-items:center;gap:.4rem;color:#fff;}
+  .card h2 .n{color:var(--accent);}
+  .pill{display:inline-block;padding:.15rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700;background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3);}
+  .pill.gold{background:rgba(251,191,36,.15);color:var(--accent2);border-color:rgba(251,191,36,.3);}
+  .pill.pending{background:rgba(148,163,184,.15);color:var(--text-dim);border-color:var(--border);}
+  ul.pretrip-todo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;}
+  .todo-item{display:flex;gap:.5rem;align-items:flex-start;font-size:.85rem;background:rgba(148,163,184,.08);padding:.5rem .6rem;border-radius:10px;}
+  .todo-deadline{color:var(--accent2);font-weight:700;white-space:nowrap;}
+  .reminder-badge{display:inline-block;margin-left:.4rem;font-size:.7rem;background:rgba(248,113,113,.15);color:var(--danger);border:1px solid rgba(248,113,113,.35);padding:.1rem .5rem;border-radius:999px;}
+  .kv{font-size:.85rem;margin:.4rem 0;}
+  .kv b{color:#fff;}
+  .flight-row{border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem;margin-bottom:.6rem;font-size:.85rem;}
+  .flight-row.booked{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.06);}
+  .hotel-area{border-top:1px dashed var(--border);padding-top:.8rem;margin-top:.8rem;}
+  .hotel-area:first-child{border-top:none;padding-top:0;margin-top:0;}
+  .hotel-area .area-name{font-weight:800;color:#fff;font-size:.95rem;}
+  .hotel-area .reason{color:var(--text-dim);font-size:.78rem;margin-bottom:.5rem;}
+  .hotel-opt{display:flex;justify-content:space-between;gap:.6rem;font-size:.82rem;background:rgba(148,163,184,.07);padding:.5rem .6rem;border-radius:10px;margin-bottom:.4rem;}
+  .disclaimer-box{font-size:.78rem;color:var(--text-dim);background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:.8rem .9rem;}
+  #map{width:100%;height:280px;border-radius:14px;border:1px solid var(--border);}
+  .map-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;}
+  .map-state{font-size:.72rem;color:var(--text-dim);white-space:nowrap;}
+  .tabs{display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:.8rem;}
+  .tabs::-webkit-scrollbar{height:4px;}
+  .tab-btn{flex:none;padding:.4rem .8rem;border-radius:999px;border:1px solid var(--border);background:rgba(148,163,184,.08);color:var(--text-dim);font-size:.78rem;font-weight:700;cursor:pointer;}
+  .tab-btn.active{background:linear-gradient(135deg,var(--accent),#0284c7);color:#fff;border-color:transparent;}
+  .day-card{display:none;}
+  .day-card.show{display:block;}
+  .day-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem;margin-bottom:.3rem;}
+  .day-theme{font-size:1.05rem;font-weight:800;color:#fff;margin:.2rem 0 .6rem;}
+  .day-lodge{font-size:.75rem;color:var(--text-dim);}
+  .day-tips{font-size:.78rem;color:var(--accent2);background:rgba(251,191,36,.08);border-radius:10px;padding:.5rem .7rem;margin:.5rem 0;}
+  .alt-box{display:flex;flex-direction:column;gap:.5rem;margin:.6rem 0;}
+  .alt-item{border:1px dashed var(--border);border-radius:10px;padding:.5rem .6rem;font-size:.78rem;}
+  .alt-item b{color:#fff;}
+  .slot{border:1px solid var(--border);border-radius:14px;padding:.8rem;margin-bottom:.7rem;background:rgba(15,23,42,.4);}
+  .slot .period-tag{font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--accent);}
+  .slot .slot-name{font-size:.95rem;font-weight:800;color:#fff;margin:.15rem 0;}
+  .map-number{display:inline-block;margin-left:.4rem;padding:.08rem .42rem;border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);font-size:.67rem;font-weight:700;vertical-align:middle;}
+  .slot .slot-time{font-size:.75rem;color:var(--text-dim);}
+  .photo-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin:.5rem 0;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));}
+  .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#0b1220;font-weight:800;font-size:.85rem;text-align:center;padding:.5rem;}
+  .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  .slot .review{font-size:.82rem;margin:.4rem 0;}
+  .meta-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0;}
+  .meta-tags span{font-size:.68rem;background:rgba(148,163,184,.12);border:1px solid var(--border);border-radius:999px;padding:.15rem .5rem;color:var(--text-dim);}
+  .dining-item{border-left:3px solid var(--accent2);padding:.5rem .7rem;background:rgba(251,191,36,.05);border-radius:0 10px 10px 0;margin-bottom:.5rem;font-size:.82rem;}
+  .dishes{color:var(--text-dim);font-size:.75rem;margin-top:.2rem;}
+  ul.tips-list{margin:0;padding-left:1.1rem;font-size:.85rem;}
+  ul.tips-list li{margin-bottom:.4rem;}
+  footer{text-align:center;color:var(--text-dim);font-size:.72rem;margin-top:2rem;}
+  .budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.8rem;}
+  .budget-grid label{display:block;color:var(--text-dim);font-size:.72rem;margin-bottom:.2rem;}
+  .budget-grid input{width:100%;background:#0f1a2e;border:1px solid var(--border);border-radius:8px;padding:.4rem;color:#fff;}
+  .budget-total{display:flex;justify-content:space-between;margin-top:.8rem;font-weight:800;border-top:1px solid var(--border);padding-top:.7rem;}
+
+  html{scroll-behavior:smooth;}
+  section.card[id]{scroll-margin-top:4.2rem;}
+  .quicknav{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);padding:.5rem 1rem;margin:0 -1rem;}
+  .quicknav-row{display:flex;gap:.4rem;overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none;}
+  .quicknav-row::-webkit-scrollbar{display:none;}
+  .quicknav-row a, .quicknav-row button{flex:none;padding:.35rem .75rem;border-radius:999px;border:1px solid var(--border);
+    background:rgba(148,163,184,.08);color:var(--text-dim);font-size:.74rem;font-weight:700;text-decoration:none;cursor:pointer;}
+  .quicknav-row a:hover, .quicknav-row button:hover{color:#fff;border-color:var(--accent);}
+  .quicknav-days{margin-top:.4rem;}
+  .slot-maplinks{display:flex;gap:.5rem;margin-top:.3rem;}
+  .slot-maplinks a{font-size:.72rem;color:var(--accent);text-decoration:none;border:1px solid rgba(56,189,248,.3);
+    border-radius:999px;padding:.15rem .55rem;background:rgba(56,189,248,.08);}
+  .slot-maplinks a:hover{background:rgba(56,189,248,.2);}
+
+  @media (min-width: 768px){
+    .wrap{max-width:920px;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    #map{height:420px;}
+    .card{padding:1.5rem 1.7rem;}
+    header.hero h1{font-size:2.1rem;}
+    .day-cards-desktop{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  }
+</style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased pb-12">
-    <header class="relative bg-slate-800 border-b border-slate-700 py-8 px-4 sm:px-8 mb-8">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <div class="flex items-center gap-2 text-sky-400 font-semibold text-sm mb-1"><i class="fa-solid fa-snowflake"></i> 跨年滑雪與觀光全攻略</div>
-                <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">東京 ＆ 野澤溫泉 10 天 9 夜跨年之旅</h1>
-                <p class="text-slate-400 text-sm mt-1"><i class="fa-regular fa-calendar mr-1"></i> 2026/12/26 (六) － 2027/01/04 (一)</p>
-            </div>
-            <div class="glass-card p-4 rounded-xl flex items-center gap-4 border border-sky-500/30 max-w-xl">
-                <div class="text-sky-400 text-2xl"><i class="fa-solid fa-plane-departure"></i></div>
-                <div class="text-xs space-y-1.5 leading-5">
-                    <div class="font-bold text-slate-200">中華航空 (CI) 去回程</div>
-                    <div class="text-slate-400">去程：CI108 12/26 桃園 T2 14:25 ➔ 成田 T2 18:45</div>
-                    <div class="text-slate-400">回程：CI105 01/04 成田 T2 17:45 ➔ 桃園 T2 20:55</div>
-                </div>
-            </div>
-        </div>
-    </header>
+<body>
+<div class="wrap">
+  <header class="hero animate__animated animate__fadeInDown">
+    <div class="tag">❄️ 跨年滑雪與觀光全攻略</div>
+    <h1>東京＆野澤溫泉 10 天 9 夜跨年之旅</h1>
+    <div class="dates">2026/12/26（六）－ 2027/01/04（一）</div>
+  </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-8 space-y-8">
-        <!-- 行程亮點 -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500"><div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-horse text-amber-400 text-xl"></i><h3 class="font-bold text-slate-100">12/27 有馬紀念 (G1)</h3></div><p class="text-xs text-slate-300">第二天衝中山競馬場，備案 WINS 新宿或原宿散策。</p></div>
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-sky-500"><div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-person-skiing text-sky-400 text-xl"></i><h3 class="font-bold text-slate-100">野澤溫泉 5 日滑雪</h3></div><p class="text-xs text-slate-300">12/28~01/02 爽滑天然粉雪，攻頂毛無山看樹冰。</p></div>
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500"><div class="flex items-center gap-3 mb-2"><i class="fa-solid fa-bag-shopping text-emerald-400 text-xl"></i><h3 class="font-bold text-slate-100">東京後段改住西側更順</h3></div><p class="text-xs text-slate-300">最後兩晚改抓高田馬場，方便回新宿、澀谷、吉祥寺。</p></div>
-        </section>
+  <nav class="quicknav" id="quickNav" aria-label="快速導覽">
+    <div class="quicknav-row">
+      <a href="#pretrip-section">行前須知</a>
+      <a href="#flights-section">航班</a>
+      <a href="#hotels-section">住宿</a>
+      <a href="#map-section">地圖</a>
+      <a href="#itinerary-section">每日行程</a>
+      <a href="#tips-section">小提醒</a>
+      <a href="#budget-section">預算</a>
+    </div>
+    <div class="quicknav-row quicknav-days" id="quickNavDays"></div>
+  </nav>
 
-        <!-- 住宿資訊 -->
-        <section class="glass-card p-6 rounded-2xl border border-sky-500/30">
-            <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2 mb-4"><i class="fa-solid fa-hotel"></i> 住宿明細 (Accommodation)</h2>
-            <div class="space-y-4 text-sm text-slate-300">
-                <div class="rounded-xl bg-slate-900/60 border border-slate-700 p-4">
-                    <div class="font-bold text-white mb-1">前兩晚：YKB Ensign Building (ＹＫＢエンサインビル)</div>
-                    <p class="text-xs leading-6 text-slate-400">📍 <a href="https://www.google.com/maps/search/?api=1&query=〒160-0004+Tokyo,+Shinjuku+City,+Yotsuya,+4-chōme−28−6+ＹＫＢエンサインビル" target="_blank" class="text-sky-400 underline">〒160-0004 Tokyo, Shinjuku City, Yotsuya, 4-chōme−28−6</a></p>
-                    <p class="text-xs text-slate-400 mt-1">12/26 – 12/28 (共 2 晚)，位於四谷/新宿區域。</p>
-                </div>
-                <div class="rounded-xl bg-slate-900/60 border border-slate-700 p-4">
-                    <div class="font-bold text-white mb-1">中間五晚：SUKINOZAWA (スキーノザワ)</div>
-                    <p class="text-xs leading-6 text-slate-400">📍 <a href="https://www.google.com/maps/search/?api=1&query=SUKINOZAWA+Nozawaonsen" target="_blank" class="text-sky-400 underline">SUKINOZAWA Nozawaonsen</a></p>
-                    <p class="text-xs text-slate-400 mt-1">12/28 – 01/02 (共 5 晚)，三人房含每日早餐。總價 ¥190,000 JPY | Wise 訂金 ¥57,000 JPY | 現場尾款 ¥133,000 JPY (約 ¥44,333/人)。</p>
-                </div>
-                <div class="rounded-xl bg-slate-900/60 border border-slate-700 p-4">
-                    <div class="font-bold text-white mb-1">後兩晚：高田馬場 / 市區周邊飯店</div>
-                    <p class="text-xs leading-6 text-slate-400">📍 高田馬場站附近</p>
-                    <p class="text-xs text-slate-400 mt-1">01/02 – 01/04 (共 2 晚)，方便往新宿、澀谷、吉祥寺。</p>
-                </div>
-            </div>
-        </section>
+  <section class="card" id="checklist-section">
+    <h2><span class="n">📋</span> 出發前待辦清單</h2>
+    <div id="checklist"></div>
+  </section>
 
-        <!-- 交通配置 -->
-        <section class="glass-card p-6 rounded-2xl bg-slate-800/80 border border-amber-500/30">
-            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 mb-3"><i class="fa-solid fa-train"></i> 交通配置建議</h2>
-            <div class="text-sm text-slate-300 space-y-2">
-                <p>● <strong>JR Pass：</strong> 若只有東京 ⇄ 飯山往返，<strong>不建議購買</strong>，因為往返自由席約 16,500 日圓，低於北陸拱型 7 日票 35,000 日圓。</p>
-                <p>● <strong>建議：</strong> 東京市區用 Suica，東京→飯山往返直接買新幹線票即可。</p>
-            </div>
-        </section>
+  <section class="card" id="pretrip-section">
+    <h2><span class="n">🌦️</span> 行前須知</h2>
+    <div class="kv"><b>天氣：</b>東京 12 月底～1 月初均溫約 5–12°C，晴朗乾燥；野澤溫泉／長野山區均溫約 -6–2°C，山頂體感更低，山區降雪頻繁、部分路段易積雪濕滑。</div>
+    <div class="kv"><b>季節提醒：</b>12 月至隔年 1 月非颱風季，但野澤溫泉山區需留意強降雪與低溫特報，跨年夜（12/31）深夜戶外活動請加強保暖。</div>
+    <div class="kv"><b>穿搭：</b>羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫。</div>
+    <div class="kv"><b>支付：</b>推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金。</div>
+    <div class="kv"><b>必備 App：</b>Suica（交通 IC 卡）、Yahoo!天気（天氣預報）、野澤溫泉滑雪場官方 App（雪況／纜車營運）、JR東日本 App（新幹線時刻／誤點資訊）。</div>
+    <div class="kv"><b>購票時機：</b>有馬紀念(G1)、SHIBUYA SKY 建議提前上網預約時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存。</div>
+  </section>
 
-        <!-- 互動地圖 -->
-        <section class="glass-card p-6 rounded-2xl" id="mapSection">
-            <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-4"><i class="fa-solid fa-map-location-dot text-sky-400"></i> 行程互動地圖 (Google Maps)</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
-                <div class="w-full h-80 rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
-                    <iframe id="mapFrame" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?ll=35.681236,139.767125&z=13&t=&output=embed"></iframe>
-                </div>
-                <aside class="glass-card rounded-xl p-4 border border-slate-700/80">
-                    <div class="flex items-start justify-between gap-3 mb-3">
-                        <div>
-                            <p class="text-xs uppercase tracking-[0.18em] text-slate-500">Spot</p>
-                            <h3 id="spotTitle" class="text-lg font-bold text-white">東京車站</h3>
-                        </div>
-                        <span id="spotTag" class="text-[11px] px-2 py-1 rounded-full bg-sky-500/15 text-sky-300 border border-sky-400/20">東京</span>
-                    </div>
-                    <p id="spotDesc" class="text-sm text-slate-300 leading-6 mb-4">東京段轉乘核心，前兩晚住銀座或有樂町時特別好用。</p>
-                    <div class="space-y-2 text-xs text-slate-400 mb-4">
-                        <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-sky-400 w-4"></i><span id="spotCoord">35.681236, 139.767125</span></div>
-                        <div class="flex items-center gap-2"><i class="fa-solid fa-route text-sky-400 w-4"></i><span id="spotHint">可切到同區其他景點，不用重新搜尋。</span></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <a id="openPlaceLink" target="_blank" rel="noopener noreferrer" class="map-link inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold"><i class="fa-brands fa-google"></i> 開啟地圖</a>
-                        <a id="openDirLink" target="_blank" rel="noopener noreferrer" class="map-link inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100 text-xs font-semibold"><i class="fa-solid fa-diamond-turn-right"></i> 導航</a>
-                    </div>
-                </aside>
-            </div>
-            <div class="flex flex-wrap gap-2 mt-4" id="spotButtons"></div>
-        </section>
+  <section class="card" id="flights-section">
+    <h2><span class="n">✈️</span> 航班</h2>
+    <div class="flight-row booked"><span class="pill">已預訂</span> <b>去程 中華航空 CI108</b><br>12/26 桃園機場 T2 14:25 起飛 → 成田機場 T2 18:45 抵達</div>
+    <div class="flight-row booked"><span class="pill">已預訂</span> <b>回程 中華航空 CI105</b><br>01/04 成田機場 T2 17:45 起飛 → 桃園機場 T2 20:55 抵達</div>
+  </section>
 
-        <!-- 每日行程 Tabs -->
-        <section class="glass-card p-6 rounded-2xl">
-            <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-4"><i class="fa-solid fa-calendar-days text-sky-400"></i> 每日詳細行程</h2>
-            <div class="flex flex-wrap gap-2 mb-4 overflow-x-auto pb-2" id="dayTabs">
-                <button class="tab-btn active px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('all')">全行程</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day1')">Day 1</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day2')">Day 2</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day3')">Day 3</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day4')">Day 4</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day5')">Day 5</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day6')">Day 6</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day7')">Day 7</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day8')">Day 8</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day9')">Day 9</button>
-                <button class="tab-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-semibold transition" onclick="filterDay('day10')">Day 10</button>
-            </div>
-            <div class="space-y-4" id="dayCards">
-                <!-- Day 1 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day1">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 1 | 2026/12/26 (六)</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：YKB Ensign Building</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">抵達東京 ➔ 新宿 Check-in ➔ 潮流全家 & 聖誕夜景</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>14:25：</strong> 搭乘華航 CI108 抵達成田機場 (NRT T2)，辦理入境手續。</li>
-                        <li><strong>17:30：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=〒160-0004+Tokyo,+Shinjuku+City,+Yotsuya,+4-chōme−28−6+ＹＫＢエンサインビル" target="_blank" class="text-sky-400 underline">YKB Ensign Building</a> 辦理 Check-in。</li>
-                        <li><strong>19:30：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=FAMIMA+PARK+AZABUDAI" target="_blank" class="text-sky-400 underline">FAMIMA PARK AZABUDAI</a>（麻布台之丘潮流全家概念店）。</li>
-                        <li><strong>21:00：</strong> 東京車站 / 丸之內漫步欣賞冬季點燈。</li>
-                    </ul>
-                </div>
-                <!-- Day 2 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-amber-500" data-day="day2">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full w-fit">Day 2 | 2026/12/27 (日)</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：YKB Ensign Building</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">賽馬備案 ➔ 澀谷/原宿潮流漫步 ➔ SHIBUYA SKY 夜景</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>09:30：</strong> 賽馬體驗 <a href="https://www.google.com/maps/search/?api=1&query=Nakayama+Racecourse" target="_blank" class="text-sky-400 underline">中山競馬場</a>（備案：WINS 新宿或原宿/表參道散策）。</li>
-                        <li><strong>14:00：</strong> 原宿 cat street 與 <a href="https://www.google.com/maps/search/?api=1&query=MIYASHITA+PARK" target="_blank" class="text-sky-400 underline">宮下公園 (MIYASHITA PARK)</a> 購物。</li>
-                        <li><strong>18:00：</strong> <a href="https://www.google.com/maps/search/?api=1&query=SHIBUYA+SKY" target="_blank" class="text-sky-400 underline">SHIBUYA SKY</a> 展望台俯瞰夜景。</li>
-                        <li><strong>20:00：</strong> 澀谷/新宿人氣燒肉晚餐。</li>
-                    </ul>
-                </div>
-                <!-- Day 3 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day3">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 3 | 2026/12/28 (一) 【滑雪準備】</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：SUKINOZAWA</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">北陸新幹線 ➔ 野澤溫泉 Check-in ➔ 租雪具 & 外湯巡禮</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>09:00：</strong> 自東京車站搭乘北陸新幹線至 <a href="https://www.google.com/maps/search/?api=1&query=JR+Iiyama+Station" target="_blank" class="text-sky-400 underline">JR 飯山站</a>。</li>
-                        <li><strong>11:30：</strong> 轉乘 Nozawa Onsen Shuttle 巴士前往野澤溫泉村。</li>
-                        <li><strong>13:00：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=SUKINOZAWA+Nozawaonsen" target="_blank" class="text-sky-400 underline">SUKINOZAWA</a> 辦理 Check-in，支付現場尾款 ¥133,000 JPY。</li>
-                        <li><strong>14:30：</strong> 至長坂纜車口 / Salomon Station 租借未來 5 日滑雪裝備，購買雪票。</li>
-                        <li><strong>17:00：</strong> 開啟野澤十三外湯巡禮，造訪 <a href="https://www.google.com/maps/search/?api=1&query=Nozawa+Onsen+Oyu" target="_blank" class="text-sky-400 underline">大湯</a> 與 <a href="https://www.google.com/maps/search/?api=1&query=Ogama+Nozawa+Onsen" target="_blank" class="text-sky-400 underline">麻釜熱湯</a>。</li>
-                    </ul>
-                </div>
-                <!-- Day 4 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day4">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 4 | 2026/12/29 (二) 【滑雪 D1】</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：SUKINOZAWA</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">熱身適應 & 日影/上之平滑道</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>08:30：</strong> SUKINOZAWA 享用早餐，搭乘長坂/日影纜車開滑。</li>
-                        <li>主攻日影區域與上之平寬廣綠線熱身。</li>
-                        <li><strong>17:30：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=Kumanoteyu+Nozawa" target="_blank" class="text-sky-400 underline">熊之手湯 (Kumanoteyu)</a> 泡湯放鬆。</li>
-                    </ul>
-                </div>
-                <!-- Day 5 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day5">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 5 | 2026/12/30 (三) 【滑雪 D2】</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：SUKINOZAWA</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">全山巡航 ➔ 攻頂毛無山看樹冰</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>09:00：</strong> 搭乘 <a href="https://www.google.com/maps/search/?api=1&query=Nozawa+Onsen+Nagasaka+Gondola" target="_blank" class="text-sky-400 underline">長坂纜車 (Nagasaka Gondola)</a> 直達山頂。</li>
-                        <li>攻頂 <a href="https://www.google.com/maps/search/?api=1&query=Mount+Kenashi+Nozawa" target="_blank" class="text-sky-400 underline">毛無山 (Yamabiko)</a> 欣賞樹冰景致與頂級粉雪。</li>
-                        <li><strong>12:30：</strong> 山頂 Rest House Yamabiko 享用名物燒肉丼。</li>
-                        <li><strong>18:00：</strong> 野澤溫泉街散策，品嚐溫泉包子與信州和牛居酒屋。</li>
-                    </ul>
-                </div>
-                <!-- Day 6 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 6 | 2026/12/31 (四) 【滑雪 D3】</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：SUKINOZAWA</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">大晦日 ➔ 年越蕎麥麵 ➔ 野澤除夜之鐘跨年</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>09:00：</strong> 暢滑野澤各大雪道（Challenge & Paradise 區域）。</li>
-                        <li><strong>18:30：</strong> 晚餐享用日本過年傳統習俗「年越蕎麥麵」(Toshikoshi Soba)。</li>
-                        <li><strong>23:30：</strong> 深夜前往村內 <a href="https://www.google.com/maps/search/?api=1&query=Kenmeiji+Temple+Nozawa" target="_blank" class="text-sky-400 underline">藥師堂 / 健命寺</a> 聆聽 108 下「除夜之鐘」，體驗日式雪國跨年！</li>
-                    </ul>
-                </div>
-                <!-- Day 7 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day7">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 7 | 2027/01/01 (五) 【滑雪 D4】</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：SUKINOZAWA</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">元旦首滑 (First Tracks) ➔ 新年溫泉慶祝</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>08:30：</strong> 2027 元旦早晨迎曙光，進行元旦首滑 (First Tracks)。</li>
-                        <li><strong>15:00：</strong> 歸還雪具。</li>
-                        <li><strong>17:00：</strong> 外湯巡禮與新年慶祝大餐。</li>
-                    </ul>
-                </div>
-                <!-- Day 8 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-emerald-500" data-day="day8">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-full w-fit">Day 8 | 2027/01/02 (六)</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：高田馬場</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">退房 ➔ 飯山寺町初詣參拜 ➔ 返回東京高田馬場 ➔ 新春福袋</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>08:30：</strong> SUKINOZAWA 退房，搭接駁車至 <a href="https://www.google.com/maps/search/?api=1&query=JR+Iiyama+Station" target="_blank" class="text-sky-400 underline">JR 飯山站</a> 寄放行李。</li>
-                        <li><strong>09:30：</strong> 飯山「寺町通」散策，前往 <a href="https://www.google.com/maps/search/?api=1&query=Shojoan+Iiyama" target="_blank" class="text-sky-400 underline">正受庵 (Shojoan)</a> 進行新年初詣參拜。</li>
-                        <li><strong>11:30：</strong> 午餐享用飯山名物「富倉蕎麥麵」。</li>
-                        <li><strong>13:10：</strong> 搭乘北陸新幹線返抵東京，前往高田馬場/市區飯店 Check-in。</li>
-                        <li><strong>16:30：</strong> 新宿伊勢丹 / 池袋百貨搶購「新春初賣」福袋。</li>
-                    </ul>
-                </div>
-                <!-- Day 9 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-sky-400" data-day="day9">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-sky-400 bg-sky-950/80 px-3 py-1 rounded-full w-fit">Day 9 | 2027/01/03 (日)</span><span class="text-xs text-slate-400"><i class="fa-solid fa-bed mr-1"></i> 宿：高田馬場</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">明治神宮初詣 ➔ 吉祥寺漫步 ➔ Harmonica 橫丁</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>09:00：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=Meiji+Jingu" target="_blank" class="text-sky-400 underline">明治神宮 (Meiji Jingu)</a> 體驗日本最大規模初詣參拜。</li>
-                        <li><strong>11:30：</strong> 從高田馬場/新宿搭乘 JR 直達 <a href="https://www.google.com/maps/search/?api=1&query=Kichijoji+Station" target="_blank" class="text-sky-400 underline">吉祥寺 (Kichijoji)</a>。</li>
-                        <li><strong>12:30：</strong> <a href="https://www.google.com/maps/search/?api=1&query=Inokashira+Park" target="_blank" class="text-sky-400 underline">井之頭恩賜公園</a> 湖畔散步，品嚐 SATOU 炸牛肉丸。</li>
-                        <li><strong>15:00：</strong> 中道通雜貨街與 Sunroad 商店街採購。</li>
-                        <li><strong>18:00：</strong> <a href="https://www.google.com/maps/search/?api=1&query=Harmonica+Yokocho" target="_blank" class="text-sky-400 underline">Harmonica 橫丁 (Harmonica Yokocho)</a> 體驗復古居酒屋。</li>
-                    </ul>
-                </div>
-                <!-- Day 10 -->
-                <div class="day-card glass-card p-6 rounded-2xl relative border-l-4 border-rose-500" data-day="day10">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3"><span class="text-xs font-bold text-rose-400 bg-rose-950/80 px-3 py-1 rounded-full w-fit">Day 10 | 2027/01/04 (一)</span><span class="text-xs text-slate-400"><i class="fa-solid fa-plane-arrival mr-1"></i> 溫暖的家</span></div>
-                    <h3 class="text-lg font-bold text-white mb-2">東京車站補貨 ➔ 成田機場 2026 退稅新制 ➔ 返台</h3>
-                    <ul class="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                        <li><strong>10:00：</strong> 前往 <a href="https://www.google.com/maps/search/?api=1&query=Tokyo+Character+Street" target="_blank" class="text-sky-400 underline">東京車站一番街</a> 採購伴手禮。</li>
-                        <li><strong>14:00：</strong> 搭乘 N'EX 或 Skyliner 前往成田機場第 2 航廈 (NRT T2)。</li>
-                        <li><strong>14:45：</strong> <strong>【2026 退稅新制重點】</strong>：先至海關 KIOSK 機台完成退稅電子查驗，再進行行李托運與 Check-in。</li>
-                        <li><strong>17:45：</strong> 搭乘華航 CI105 班機愉快返抵台灣！</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+  <section class="card" id="hotels-section">
+    <h2><span class="n">🏨</span> 住宿（區域＋狀態）</h2>
+    <div class="hotel-area">
+      <div class="area-name">四谷／新宿</div>
+      <div class="reason">鄰近新宿與東京車站，方便入境當晚與隔日市區遊玩</div>
+      <div class="hotel-opt"><span><span class="pill">已預訂</span> YKB Ensign Building（ＹＫＢエンサインビル）</span><span>12/26–12/28，共 2 晚</span></div>
+    </div>
+    <div class="hotel-area">
+      <div class="area-name">野澤溫泉</div>
+      <div class="reason">位於野澤溫泉滑雪村內，鄰近長坂纜車站與多處外湯</div>
+      <div class="hotel-opt"><span><span class="pill">已預訂</span> SUKINOZAWA（スキーノザワ）<br><span style="color:var(--text-dim);font-size:.72rem;">三人房含每日早餐，總價 ¥190,000</span></span><span>12/28–01/02，共 5 晚<br><span style="color:var(--text-dim);font-size:.72rem;">Wise 訂金 ¥57,000／現場尾款 ¥133,000（約 ¥44,333/人）</span></span></div>
+    </div>
+    <div class="hotel-area">
+      <div class="area-name">高田馬場／市區周邊</div>
+      <div class="reason">後兩晚返回東京，方便前往新宿、澀谷、吉祥寺</div>
+      <div class="hotel-opt"><span><span class="pill pending">待訂</span> 高田馬場站周邊飯店</span><span>01/02–01/04，共 2 晚</span></div>
+    </div>
+  </section>
 
-        <!-- 預算試算 -->
-        <section class="glass-card p-6 rounded-2xl bg-slate-800/90">
-            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-calculator text-emerald-400"></i> 預算試算器 (JPY / TWD)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
-                <div><label class="text-xs text-slate-400 block mb-1">匯率 (JPY ➔ TWD)</label><input type="number" id="exchangeRate" value="0.21" step="0.01" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">機票 (TWD)</label><input type="number" id="flightCost" value="14208" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">SUKINOZAWA 尾款 (JPY/人)</label><input type="number" id="sukinozawaCost" value="44333" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">東京飯店 (JPY/人)</label><input type="number" id="tokyoHotelCost" value="32000" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">新幹線交通 (JPY/人)</label><input type="number" id="transportCost" value="30000" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">雪票與雪具 (JPY/人)</label><input type="number" id="skiCost" value="45000" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">餐費 (JPY/人)</label><input type="number" id="mealCost" value="25000" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-                <div><label class="text-xs text-slate-400 block mb-1">其他 (JPY/人)</label><input type="number" id="otherCost" value="15000" class="budget-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white" onchange="calculateBudget()"></div>
-            </div>
-            <div class="border-t border-slate-700 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                <div>
-                    <div class="text-sm font-semibold text-slate-300">總 JPY：</div>
-                    <div id="totalJPY" class="text-xl font-extrabold text-sky-400">JPY 0</div>
-                </div>
-                <div>
-                    <div class="text-sm font-semibold text-slate-300">總 TWD (含機票)：</div>
-                    <div id="totalTWD" class="text-xl font-extrabold text-emerald-400">NT$ 0</div>
-                </div>
-            </div>
-            <p class="text-xs text-slate-400 mt-3">計算公式：Total JPY = SUKINOZAWA 尾款 + 東京飯店 + 交通 + 雪票裝備 + 餐費 + 其他 | Total TWD = 機票 TWD + (Total JPY × 匯率)</p>
-        </section>
-    </main>
+  <section class="card">
+    <h2><span class="n">⚠️</span> 免責聲明</h2>
+    <div class="disclaimer-box" id="disclaimer-text">本頁全部資訊（天氣、航班、住宿、餐廳、景點、門票、價格、營業時間、評分、活動等）均為 AI 依公開資料整理的參考建議，可能不準確或已過時，不保證與即時情況一致；請務必在官方管道／訂票訂房／地圖等 App 上核實後再做決定或前往。</div>
+  </section>
 
-    <footer class="text-center text-xs text-slate-500 mt-12"><p>2026-2027 Tokyo & Nozawa Onsen Ski Trip Planner v1.0 | Generated for Personal Use</p></footer>
+  <section class="card" id="map-section">
+    <div class="map-head"><h2><span class="n">🗺️</span> 互動地圖</h2><span class="map-state" id="mapState"></span></div>
+    <div id="map"></div>
+  </section>
 
-    <script>
-        const MAP_DATA = {
-            Tokyo: {label:'東京', spots:[{id:'tokyo-station',name:'東京車站',tag:'東京',desc:'東京段轉乘核心，前兩晚住銀座或有樂町時特別好用。',lat:35.681236,lng:139.767125,hint:'銀座到東京站本來就近，Day 1、Day 3、Day 10 都常用。',zoom:14},{id:'ginza-station',name:'銀座站',tag:'住宿',desc:'前兩晚東京住宿建議點，回程購物與移動都方便。',lat:35.671967,lng:139.765345,hint:'到有樂町約步行 4～8 分鐘，到東京站也不遠。',zoom:16},{id:'ykb-ensign',name:'YKB Ensign Building',tag:'住宿',desc:'前兩晚住宿，位於四谷/新宿區域。',lat:35.689167,lng:139.723889,hint:'Day 1、Day 2 住宿點。',zoom:16},{id:'nakayama-racecourse',name:'中山競馬場',tag:'賽馬',desc:'Day 2 主目標，建議提早到場並預先準備 QR Ticket。',lat:35.723521,lng:139.959066,hint:'以船橋法典站進場最直覺，專用地下道步行約 10 分鐘。',zoom:15},{id:'shibuya-sky',name:'SHIBUYA SKY',tag:'夜景',desc:'Day 9 收尾夜景點，直接打到 Shibuya Scramble Square。',lat:35.658034,lng:139.701636,hint:'建議先預約時段。',zoom:17},{id:'meiji-jingu',name:'明治神宮',tag:'初詣',desc:'Day 9 上午重點，直接定位寺院主體。',lat:35.676398,lng:139.699326,hint:'Day 9 下午插入最順。',zoom:15},{id:'kichijoji',name:'吉祥寺 / 井之頭公園',tag:'散步',desc:'東京最後完整一天若想加入放鬆節奏，吉祥寺很適合作為白天主景點。',lat:35.703152,lng:139.579678,hint:'適合 Day 9 上午安排。',zoom:15},{id:'takadanobaba-station',name:'高田馬場站',tag:'住宿',desc:'後兩晚東京住宿候選，接新宿、澀谷、吉祥寺方便。',lat:35.712285,lng:139.703782,hint:'偏新宿生活圈，餐飲機能很好。',zoom:16}]},
-            Nozawa: {label:'野澤', spots:[{id:'nozawa-snow-resort',name:'野澤溫泉滑雪場',tag:'滑雪',desc:'主要滑雪區域，作為整個雪場中心點最實用。',lat:36.922678,lng:138.442312,hint:'Day 3 到 Day 7 以這個點當雪場主定位。',zoom:14},{id:'sukinozawa',name:'SUKINOZAWA',tag:'住宿',desc:'野澤溫泉住宿，三人房含每日早餐。',lat:36.922500,lng:138.445000,hint:'Day 3-7 住宿點。',zoom:16},{id:'nagasaka-gondola',name:'長坂纜車站',tag:'纜車',desc:'攻頂與上山的關鍵入口，滑雪日很常會用到。',lat:36.920895,lng:138.444962,hint:'若住宿靠近長坂區，這點更準。',zoom:16},{id:'oyu-onsen',name:'大湯',tag:'外湯',desc:'野澤代表性外湯，跨年前後泡湯巡禮時很值得直接定位。',lat:36.922166,lng:138.445413,hint:'可搭配溫泉街晚餐與散步。',zoom:17},{id:'ogama',name:'麻釜熱湯',tag:'外湯',desc:'另一個熱門外湯點，適合做村內小範圍切換。',lat:36.921651,lng:138.445988,hint:'外湯巡禮可從大湯與麻釜兩點切換。',zoom:17},{id:'kumanoteyu',name:'熊之手湯',tag:'外湯',desc:'Day 4 晚上泡湯放鬆好去處。',lat:36.923000,lng:138.446000,hint:'適合滑雪後放鬆。',zoom:17},{id:'kenmeiji',name:'藥師堂 / 健命寺',tag:'跨年',desc:'Day 6 跨年夜聽除夜之鐘。',lat:36.924000,lng:138.447000,hint:'跨年夜重要景點。',zoom:17}]},
-            Nagano: {label:'長野', spots:[{id:'zenkoji',name:'善光寺',tag:'初詣',desc:'Day 8 上午重點，直接定位寺院主體。',lat:36.661709,lng:138.187933,hint:'初詣主場景，建議早上先來。',zoom:15},{id:'nagano-station',name:'長野車站',tag:'轉乘',desc:'住宿、晚餐與回東京新幹線核心節點。',lat:36.643296,lng:138.188422,hint:'Day 7 晚上住宿與 Day 8 回東京都會經過。',zoom:15},{id:'iiyama-station',name:'飯山站',tag:'進出野澤',desc:'東京與野澤間的重要轉乘站。',lat:36.851058,lng:138.365325,hint:'Day 3 去程與 Day 8 回程都可直接導航到這裡。',zoom:15},{id:'shojoan',name:'正受庵 (Shojoan)',tag:'初詣',desc:'Day 8 上午初詣參拜。',lat:36.850000,lng:138.366000,hint:'飯山寺町通散步時順路。',zoom:16}]}
-        };
+  <section class="card" id="itinerary-section">
+    <h2><span class="n">📅</span> 每日詳細行程</h2>
+    <div class="tabs" id="dayTabs">
+      <button class="tab-btn active" data-day="all">全行程</button>
+      <button class="tab-btn" data-day="day1">Day1 12/26</button>
+      <button class="tab-btn" data-day="day2">Day2 12/27</button>
+      <button class="tab-btn" data-day="day3">Day3 12/28</button>
+      <button class="tab-btn" data-day="day4">Day4 12/29</button>
+      <button class="tab-btn" data-day="day5">Day5 12/30</button>
+      <button class="tab-btn" data-day="day6">Day6 12/31</button>
+      <button class="tab-btn" data-day="day7">Day7 01/01</button>
+      <button class="tab-btn" data-day="day8">Day8 01/02</button>
+      <button class="tab-btn" data-day="day9">Day9 01/03</button>
+      <button class="tab-btn" data-day="day10">Day10 01/04</button>
+    </div>
+    <div id="dayCards"></div>
+  </section>
 
-        function filterDay(day) {
-            const cards = document.querySelectorAll('.day-card');
-            const tabs = document.querySelectorAll('.tab-btn');
+  <section class="card" id="tips-section">
+    <h2><span class="n">💡</span> 全程實用小提醒</h2>
+    <ul class="tips-list">
+      <li>北陸新幹線東京⇄飯山來回自由席約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算，此行程不建議購買 JR Pass。</li>
+      <li>跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間。</li>
+      <li>野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用。</li>
+      <li>2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運。</li>
+      <li>滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨。</li>
+    </ul>
+  </section>
 
-            tabs.forEach(tab => {
-                tab.classList.toggle('active', tab.textContent.toLowerCase().includes(day) || (day === 'all' && tab.textContent === '全行程'));
-            });
+  <section class="card" id="budget-section">
+    <h2><span class="n">🧮</span> 預算試算器（JPY／TWD，選填）</h2>
+    <div class="budget-grid">
+      <div><label>匯率 (JPY→TWD)</label><input type="number" id="exchangeRate" value="0.21" step="0.01"></div>
+      <div><label>已知機票總額 (TWD)</label><input type="number" id="flightCost" value="28416"></div>
+      <div><label>SUKINOZAWA 尾款 (JPY/人)</label><input type="number" id="sukinozawaCost" value="44333"></div>
+      <div><label>高田馬場飯店 (JPY/人)</label><input type="number" id="tokyoHotelCost" value="32000"></div>
+      <div><label>新幹線交通 (JPY/人)</label><input type="number" id="transportCost" value="30000"></div>
+      <div><label>雪票與雪具 (JPY/人)</label><input type="number" id="skiCost" value="45000"></div>
+      <div><label>餐費 (JPY/人)</label><input type="number" id="mealCost" value="25000"></div>
+      <div><label>其他 (JPY/人)</label><input type="number" id="otherCost" value="15000"></div>
+    </div>
+    <div class="budget-total"><span>總 JPY</span><span id="totalJPY">JPY 0</span></div>
+    <div class="budget-total"><span>總 TWD（含機票）</span><span id="totalTWD">NT$ 0</span></div>
+  </section>
 
-            cards.forEach(card => {
-                if (day === 'all' || card.dataset.day === day) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · v2（travel-plan-viz skill 生成）</footer>
+</div>
 
-        function calculateBudget() {
-            const exchangeRate = +document.getElementById('exchangeRate').value || 0.21;
-            const flightCost = +document.getElementById('flightCost').value || 0;
-            const sukinozawaCost = +document.getElementById('sukinozawaCost').value || 0;
-            const tokyoHotelCost = +document.getElementById('tokyoHotelCost').value || 0;
-            const transportCost = +document.getElementById('transportCost').value || 0;
-            const skiCost = +document.getElementById('skiCost').value || 0;
-            const mealCost = +document.getElementById('mealCost').value || 0;
-            const otherCost = +document.getElementById('otherCost').value || 0;
+<script id="trip-data" type="application/json">
+{
+  "title": "東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅",
+  "startDate": "2026-12-26",
+  "colorScheme": "雪夜冰藍．跨年金",
+  "preTrip": {
+    "weather": {
+      "summary": "東京 12 月底～1 月初均溫約 5–12°C，晴朗乾燥；野澤溫泉／長野山區均溫約 -6–2°C，山頂體感更低，山區降雪頻繁、部分路段易積雪濕滑",
+      "typhoon": "12 月至隔年 1 月非颱風季，但野澤溫泉山區需留意強降雪與低溫特報，跨年夜（12/31）深夜戶外活動請加強保暖"
+    },
+    "packing": "羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫",
+    "payment": "推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金",
+    "apps": ["Suica（交通 IC 卡）", "Yahoo!天気（天氣預報）", "野澤溫泉滑雪場官方 App（雪況／纜車營運）", "JR東日本 App（新幹線時刻／誤點資訊）"],
+    "ticketTip": "有馬紀念(G1)、SHIBUYA SKY 建議提前上網預約時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存"
+  },
+  "flights": {
+    "booked": [
+      { "label": "去程 中華航空 CI108", "code": "CI108", "time": "12/26 桃園機場 T2 14:25 起飛 → 成田機場 T2 18:45 抵達" },
+      { "label": "回程 中華航空 CI105", "code": "CI105", "time": "01/04 成田機場 T2 17:45 起飛 → 桃園機場 T2 20:55 抵達" }
+    ],
+    "candidates": []
+  },
+  "hotelAreas": [
+    {
+      "area": "四谷／新宿（YKB Ensign Building）",
+      "reason": "鄰近新宿與東京車站，方便入境當晚與隔日市區遊玩",
+      "options": [
+        { "tier": "已預訂", "name": "YKB Ensign Building（ＹＫＢエンサインビル）", "priceRange": "—", "note": "12/26–12/28，共 2 晚" }
+      ]
+    },
+    {
+      "area": "野澤溫泉（SUKINOZAWA）",
+      "reason": "位於野澤溫泉滑雪村內，鄰近長坂纜車站與多處外湯",
+      "options": [
+        { "tier": "已預訂", "name": "SUKINOZAWA（スキーノザワ）", "priceRange": "總價 ¥190,000（三人房含每日早餐）", "note": "12/28–01/02，共 5 晚；Wise 訂金 ¥57,000，現場尾款 ¥133,000（約 ¥44,333/人）" }
+      ]
+    },
+    {
+      "area": "高田馬場／市區周邊",
+      "reason": "後兩晚返回東京，方便前往新宿、澀谷、吉祥寺",
+      "options": [
+        { "tier": "待訂", "name": "高田馬場站周邊飯店", "priceRange": "—", "note": "01/02–01/04，共 2 晚，尚待確定飯店" }
+      ]
+    }
+  ],
+  "disclaimer": "本頁全部資訊（天氣、航班、住宿、餐廳、景點、門票、價格、營業時間、評分、活動等）均為 AI 依公開資料整理的參考建議，可能不準確或已過時，不保證與即時情況一致；請務必在官方管道／訂票訂房／地圖等 App 上核實後再做決定或前往。",
+  "tips": [
+    "北陸新幹線東京⇄飯山來回自由席約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算，此行程不建議購買 JR Pass",
+    "跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間",
+    "野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用",
+    "2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運",
+    "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨"
+  ],
+  "reminders": [
+    { "item": "中山競馬場 有馬紀念 (G1) 入場門票／QR Ticket", "leadDays": 14 },
+    { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
+    { "item": "SHIBUYA SKY 展望台預約時段", "leadDays": 7 },
+    { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
+    { "item": "高田馬場／市區後兩晚飯店預訂（尚未確定）", "leadDays": 30 }
+  ],
+  "days": [
+    {
+      "date": "2026-12-26", "weekday": "週六", "theme": "跨海啟程．東京初夜",
+      "tips": ["長途飛行後首日行程從簡，抵達後以整理行李與熟悉住宿周邊為主"],
+      "slots": [
+        { "period": "evening", "name": "成田機場入境", "time": "18:45–20:30", "lat": 35.7719, "lng": 140.3929, "review": "18:45 抵達成田機場第二航廈，辦理入境、領行李與購買 N'EX／Skyliner 車票", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "四谷．新宿 Check-in", "time": "20:30–21:45", "lat": 35.689167, "lng": 139.723889, "review": "搭乘 N'EX 或 Skyliner 進市區，前往 YKB Ensign Building 辦理入住", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "東京車站丸之內冬季點燈", "time": "22:30–23:00", "lat": 35.681236, "lng": 139.767125, "review": "欣賞丸之內冬季點燈，或改往麻布台之丘潮流全家概念店（FAMIMA PARK AZABUDAI）", "needsBooking": false, "leadDays": 0 }
+      ]
+    },
+    {
+      "date": "2026-12-27", "weekday": "週日", "theme": "有馬紀念 G1 賽馬．澀谷原宿潮流",
+      "alternatives": [{ "label": "備案：WINS 新宿 或 原宿／表參道散策", "summary": "若無法前往中山競馬場現場，可改到 WINS 新宿場外投注所觀戰，或直接展開原宿表參道行程" }],
+      "tips": ["中山競馬場交通建議走船橋法典站進場，專用地下道步行約 10 分鐘"],
+      "slots": [
+        { "period": "morning", "name": "中山競馬場（有馬紀念 G1）", "time": "09:30–13:30", "lat": 35.723521, "lng": 139.959066, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nakayama_Racecourse04.jpg?width=600", "rating": 4.4, "review": "日本年度壓軸 G1 大賽，現場氣氛熱烈，建議提早入場並預先準備電子門票／QR Ticket", "ticketPrice": "依看台席別而定，建議上網預購", "needsBooking": true, "leadDays": 14 },
+        { "period": "noon", "name": "原宿 Cat Street．宮下公園 (MIYASHITA PARK)", "time": "14:00–17:00", "lat": 35.6620, "lng": 139.7024, "review": "原宿裏路巷弄與宮下公園逛街購物，感受東京潮流文化", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "SHIBUYA SKY 展望台", "time": "18:00–19:30", "lat": 35.658034, "lng": 139.701636, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Scramble_Square_(49997377906).jpg?width=600", "rating": 4.7, "review": "229 公尺高空展望台俯瞰澀谷夜景，建議事先預約入場時段", "ticketPrice": "成人約 ¥2,000–2,500（依日期時段浮動）", "needsBooking": true, "leadDays": 7 }
+      ],
+      "dining": [{ "meal": "晚餐", "place": "澀谷／新宿人氣燒肉店", "hours": "建議晚間 18:00 前入座避開排隊高峰", "dishes": [{ "name": "和牛拼盤", "price": "約 ¥4,000–6,000／人" }] }]
+    },
+    {
+      "date": "2026-12-28", "weekday": "週一", "theme": "北陸新幹線．野澤溫泉入村",
+      "tips": ["外湯多由當地居民自主管理，請務必依現場禮儀規範使用"],
+      "slots": [
+        { "period": "morning", "name": "JR 飯山站", "time": "09:00–11:30", "lat": 36.851058, "lng": 138.365325, "review": "自東京車站搭乘北陸新幹線至飯山站，轉乘 Nozawa Onsen Shuttle 巴士前往野澤溫泉村", "transport": { "mode": "北陸新幹線", "fare": "自由席約 ¥8,000–8,500（單程）", "duration": "約 1.5 小時" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "SUKINOZAWA Check-in", "time": "13:00–14:30", "lat": 36.9225, "lng": 138.445, "review": "辦理入住並支付現場尾款 ¥133,000 JPY（約 ¥44,333／人）", "needsBooking": true, "leadDays": 7 },
+        { "period": "noon", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "14:30–17:00", "lat": 36.920895, "lng": 138.444962, "review": "租借未來 5 日滑雪裝備並購買雪票，建議提早預約避開旺季排隊", "needsBooking": true, "leadDays": 14 },
+        { "period": "evening", "name": "外湯巡禮：大湯", "time": "17:00–18:30", "lat": 36.922166, "lng": 138.445413, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/O-Yu_onsen_on_rainy_night.jpg?width=600", "rating": 4.5, "review": "野澤代表性外湯之一，泡湯前請先投香油錢並保持安靜", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 }
+      ]
+    },
+    {
+      "date": "2026-12-29", "weekday": "週二", "theme": "熱身滑雪．日影上之平",
+      "tips": ["首日滑雪以熱身、熟悉雪道與裝備為主，避免逞強挑戰高難度雪道"],
+      "slots": [
+        { "period": "morning", "name": "長坂／日影纜車滑雪區", "time": "08:30–17:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nozawa_Onsen_Schanze_slopecar.jpg?width=600", "rating": 4.6, "review": "SUKINOZAWA 享用早餐後搭乘長坂／日影纜車開滑，主攻日影區域與上之平寬廣綠線熱身", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–19:00", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 }
+      ]
+    },
+    {
+      "date": "2026-12-30", "weekday": "週三", "theme": "全山巡航．毛無山樹冰",
+      "tips": ["攻頂前請先確認纜車與雪道開放狀況，山頂氣溫明顯較低，務必加強保暖"],
+      "slots": [
+        { "period": "morning", "name": "長坂纜車 (Nagasaka Gondola)", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "review": "搭乘長坂纜車直達山頂，攻頂毛無山欣賞樹冰景致與頂級粉雪", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "山頂 Rest House Yamabiko", "time": "12:30–13:30", "lat": 36.920895, "lng": 138.444962, "review": "山頂餐廳享用名物燒肉丼，補充體力後繼續全山巡航", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "野澤溫泉街散策", "time": "18:00–20:00", "lat": 36.922678, "lng": 138.442312, "review": "品嚐溫泉包子與信州和牛居酒屋，感受溫泉街夜晚氛圍", "needsBooking": false, "leadDays": 0 }
+      ],
+      "dining": [
+        { "meal": "午餐", "place": "山頂 Rest House Yamabiko", "hours": "約 09:00–15:00（依雪場營運時間）", "dishes": [{ "name": "名物燒肉丼", "price": "約 ¥1,500–1,800" }] },
+        { "meal": "晚餐", "place": "野澤溫泉街居酒屋", "hours": "約 17:00–22:00", "dishes": [{ "name": "信州和牛燒烤", "price": "約 ¥3,000–4,000／人" }, { "name": "溫泉饅頭", "price": "約 ¥150／個" }] }
+      ]
+    },
+    {
+      "date": "2026-12-31", "weekday": "週四", "theme": "大晦日．除夜之鐘跨年",
+      "tips": ["跨年夜山區氣溫更低，前往除夜之鐘請務必攜帶暖暖包與保暖衣物", "深夜活動請注意路面積雪濕滑，建議穿著防滑雪靴"],
+      "slots": [
+        { "period": "morning", "name": "Challenge ＆ Paradise 雪道", "time": "09:00–16:00", "lat": 36.922678, "lng": 138.442312, "review": "暢滑野澤各大雪道，感受大晦日限定的悠閒雪場氛圍", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 }
+      ],
+      "dining": [{ "meal": "晚餐", "place": "野澤溫泉街", "hours": "18:30 起", "dishes": [{ "name": "年越蕎麥麵 (Toshikoshi Soba)", "price": "約 ¥800–1,200" }] }]
+    },
+    {
+      "date": "2027-01-01", "weekday": "週五", "theme": "元旦首滑．新年溫泉慶祝",
+      "tips": ["元旦當天部分店家可能休息或縮短營業時間，請提前確認"],
+      "slots": [
+        { "period": "morning", "name": "元旦首滑 (First Tracks)", "time": "08:30–15:00", "lat": 36.922678, "lng": 138.442312, "review": "2027 元旦早晨迎曙光，進行元旦首滑，感受新年第一道雪道的清爽", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–20:00", "lat": 36.921651, "lng": 138.445988, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/麻釜湯.jpg?width=600", "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，晚間享用新年慶祝大餐", "needsBooking": false, "leadDays": 0 }
+      ],
+      "dining": [{ "meal": "晚餐", "place": "野澤溫泉街新年特別套餐", "hours": "依店家公告", "dishes": [{ "name": "御節料理／新年特餐", "price": "約 ¥3,000–5,000／人" }] }]
+    },
+    {
+      "date": "2027-01-02", "weekday": "週六", "theme": "飯山初詣．返回東京",
+      "tips": ["新春初賣福袋為人氣商品，建議提前到場排隊"],
+      "slots": [
+        { "period": "morning", "name": "JR 飯山站寄放行李", "time": "08:30–09:30", "lat": 36.851058, "lng": 138.365325, "review": "SUKINOZAWA 退房後搭接駁車至飯山站寄放行李", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "正受庵 (Shojoan) 新年初詣", "time": "09:30–11:30", "lat": 36.85, "lng": 138.366, "review": "飯山「寺町通」散策，前往正受庵進行新年初詣參拜", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "飯山名物富倉蕎麥麵午餐", "time": "11:30–13:00", "lat": 36.851058, "lng": 138.365325, "review": "午餐享用飯山名物富倉蕎麥麵，13:10 搭乘北陸新幹線返抵東京", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "高田馬場 Check-in．新春福袋", "time": "16:00–19:00", "lat": 35.712285, "lng": 139.703782, "review": "抵達高田馬場／市區飯店 Check-in，前往新宿伊勢丹或池袋百貨搶購新春初賣福袋", "needsBooking": false, "leadDays": 0 }
+      ],
+      "dining": [{ "meal": "午餐", "place": "飯山名物富倉蕎麥麵", "hours": "約 11:00–14:00", "dishes": [{ "name": "富倉蕎麥麵", "price": "約 ¥1,000–1,300" }] }]
+    },
+    {
+      "date": "2027-01-03", "weekday": "週日", "theme": "明治神宮初詣．吉祥寺慢活",
+      "tips": ["明治神宮初詣期間參道人潮眾多，建議上午儘早前往"],
+      "slots": [
+        { "period": "morning", "name": "明治神宮初詣", "time": "09:00–11:00", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Meiji_Jingu_(24727530638).jpg?width=600", "rating": 4.8, "review": "體驗日本最大規模初詣參拜，建議提早前往避開人潮高峰", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "吉祥寺．井之頭恩賜公園", "time": "11:30–15:00", "lat": 35.703152, "lng": 139.579678, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_Park.jpg?width=600", "rating": 4.6, "review": "從高田馬場／新宿搭乘 JR 直達吉祥寺，湖畔散步、品嚐 SATOU 炸牛肉丸，中道通與 Sunroad 商店街採購", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "Harmonica 橫丁", "time": "18:00–20:00", "lat": 35.7027, "lng": 139.5798, "review": "體驗吉祥寺復古居酒屋橫丁氛圍", "needsBooking": false, "leadDays": 0 }
+      ],
+      "dining": [
+        { "meal": "午餐", "place": "SATOU 吉祥寺總本店", "hours": "約 10:00–19:00", "dishes": [{ "name": "炸牛肉丸 (Menchi Katsu)", "price": "約 ¥350／個" }] },
+        { "meal": "晚餐", "place": "Harmonica 橫丁居酒屋", "hours": "約 17:00–23:00", "dishes": [{ "name": "串燒拼盤", "price": "約 ¥2,000–3,000／人" }] }
+      ]
+    },
+    {
+      "date": "2027-01-04", "weekday": "週一", "theme": "東京車站補貨．賦歸",
+      "tips": ["2026 年 12 月起日本機場退稅新制上路，務必預留時間先完成海關電子查驗"],
+      "slots": [
+        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:00–11:30", "lat": 35.681236, "lng": 139.767125, "review": "高田馬場飯店退房，前往東京車站補貨或寄放行李", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "前往成田機場", "time": "13:30–14:45", "lat": 35.7719, "lng": 140.3929, "review": "從市區出發前往成田機場，建議 15:00 前抵達", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "成田機場退稅與登機", "time": "14:45–17:45", "lat": 35.7719, "lng": 140.3929, "review": "【2026 退稅新制重點】先至海關 KIOSK 機台完成退稅電子查驗，再辦理行李托運與 Check-in", "seasonal": "2026 年新制：電子查驗需在托運前完成", "needsBooking": false, "leadDays": 0 }
+      ]
+    }
+  ]
+}
+</script>
 
-            const totalJPY = sukinozawaCost + tokyoHotelCost + transportCost + skiCost + mealCost + otherCost;
-            const totalTWD = flightCost + (totalJPY * exchangeRate);
+<script>
+// ===== map.js（原樣內聯，來自 travel-plan-viz skill assets/map.js） =====
+function escapeHTML(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+function buildNavLink(lat, lng, label, ua) {
+  if (ua && /iPhone|iPad|iPod/.test(ua)) {
+    return 'https://maps.apple.com/?ll=' + lat + ',' + lng + '&q=' + encodeURIComponent(label);
+  }
+  return 'geo:' + lat + ',' + lng + '?q=' + lat + ',' + lng + '(' + encodeURIComponent(label) + ')';
+}
+function buildMapAppLinks(lat, lng, label) {
+  var google = {
+    label: 'Google 地圖',
+    url: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(lat + ',' + lng),
+  };
+  var apple = {
+    label: 'Apple 地圖',
+    url: 'https://maps.apple.com/?ll=' + lat + ',' + lng + '&q=' + encodeURIComponent(label),
+  };
+  return [google, apple];
+}
+var GCJ_A = 6378245.0;
+var GCJ_EE = 0.00669342162296594323;
+function isInChinaBBox(lat, lng) {
+  return lng >= 72.004 && lng <= 137.8347 && lat >= 0.8293 && lat <= 55.8271;
+}
+function gcjTransformLat(x, y) {
+  var ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+  ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(y * Math.PI) + 40.0 * Math.sin(y / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (160.0 * Math.sin(y / 12.0 * Math.PI) + 320.0 * Math.sin(y * Math.PI / 30.0)) * 2.0 / 3.0;
+  return ret;
+}
+function gcjTransformLng(x, y) {
+  var ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+  ret += (20.0 * Math.sin(6.0 * x * Math.PI) + 20.0 * Math.sin(2.0 * x * Math.PI)) * 2.0 / 3.0;
+  ret += (20.0 * Math.sin(x * Math.PI) + 40.0 * Math.sin(x / 3.0 * Math.PI)) * 2.0 / 3.0;
+  ret += (150.0 * Math.sin(x / 12.0 * Math.PI) + 300.0 * Math.sin(x / 30.0 * Math.PI)) * 2.0 / 3.0;
+  return ret;
+}
+function gcj02ToWgs84(lat, lng) {
+  if (!isInChinaBBox(lat, lng)) return { lat: lat, lng: lng };
+  var dLat = gcjTransformLat(lng - 105.0, lat - 35.0);
+  var dLng = gcjTransformLng(lng - 105.0, lat - 35.0);
+  var radLat = lat / 180.0 * Math.PI;
+  var magic = Math.sin(radLat);
+  magic = 1 - GCJ_EE * magic * magic;
+  var sqrtMagic = Math.sqrt(magic);
+  dLat = (dLat * 180.0) / ((GCJ_A * (1 - GCJ_EE)) / (magic * sqrtMagic) * Math.PI);
+  dLng = (dLng * 180.0) / (GCJ_A / sqrtMagic * Math.cos(radLat) * Math.PI);
+  return { lat: lat - dLat, lng: lng - dLng };
+}
+function routeCoordinates(points) {
+  return points.map(function (p) { return [p.lat, p.lng]; });
+}
+function initTravelMap(elementId, points, opts) {
+  opts = opts || {};
+  var map = L.map(elementId);
+  L.tileLayer(opts.tileUrl || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: opts.attribution || '© OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(map);
+  var markerLayer = L.layerGroup().addTo(map);
+  var routeLine;
+  var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+  map.setTravelPoints = function (nextPoints) {
+    markerLayer.clearLayers();
+    if (routeLine) map.removeLayer(routeLine);
+    nextPoints.forEach(function (p, i) {
+      var number = p.number || (i + 1);
+      var icon = L.divIcon({
+        className: 'route-pin',
+        html: '<span style="background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #fff;">' + number + '</span>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      });
+      var navLinks = [{ label: '導航', url: buildNavLink(p.lat, p.lng, p.name, ua) }]
+        .concat(buildMapAppLinks(p.lat, p.lng, p.name));
+      L.marker([p.lat, p.lng], { icon: icon }).addTo(markerLayer).bindPopup(
+        '<b>地圖 #' + number + ' · ' + escapeHTML(p.name) + '</b><br>'
+        + (p.time ? escapeHTML(p.time) + '<br>' : '')
+        + navLinks.map(function (l) {
+            return '<a href="' + l.url + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
+          }).join(' · ')
+      );
+    });
+    var coords = routeCoordinates(nextPoints);
+    if (coords.length > 1) {
+      routeLine = L.polyline(coords, { dashArray: '6 8', weight: 2, color: '#38bdf8' }).addTo(map);
+    }
+    if (coords.length) map.fitBounds(coords, { padding: [30, 30] });
+  };
+  map.setTravelPoints(points);
+  return map;
+}
+</script>
 
-            document.getElementById('totalJPY').innerText = 'JPY ' + totalJPY.toLocaleString('zh-TW');
-            document.getElementById('totalTWD').innerText = 'NT$ ' + totalTWD.toLocaleString('zh-TW');
-        }
+<script>
+// ===== reminders.js（原樣內聯，來自 travel-plan-viz skill assets/reminders.js） =====
+function computeReminders(startDateISO, items) {
+  return items
+    .map(function (it) {
+      var d = new Date(startDateISO + 'T00:00:00Z');
+      d.setUTCDate(d.getUTCDate() - it.leadDays);
+      return { item: it.item, leadDays: it.leadDays, deadline: d.toISOString().slice(0, 10) };
+    })
+    .sort(function (a, b) {
+      return a.deadline < b.deadline ? -1 : a.deadline > b.deadline ? 1 : 0;
+    });
+}
+function renderChecklistHTML(reminders) {
+  var lis = reminders.map(function (r) {
+    return '<li class="todo-item">'
+      + '<input type="checkbox"> '
+      + '<span class="todo-deadline">' + r.deadline + '前</span> '
+      + '<span class="todo-text">' + escapeHTML(r.item) + '（建議提前' + r.leadDays + '天）</span>'
+      + '</li>';
+  }).join('');
+  return '<ul class="pretrip-todo">' + lis + '</ul>';
+}
+function reminderBadgeHTML(leadDays) {
+  return '<span class="reminder-badge animate__animated animate__pulse animate__slower animate__infinite">⚠️ 建議提前' + leadDays + '天訂</span>';
+}
+</script>
 
-        function renderSpots(regionKey, activeSpotId){ 
-            const region = MAP_DATA[regionKey]; 
-            document.querySelectorAll('#regionButtons button').forEach(btn => { 
-                const active = btn.dataset.region === regionKey; 
-                btn.className = `px-3 py-1.5 ${active ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-sky-600 hover:bg-sky-500'} text-white rounded-lg text-xs font-semibold transition`;
-            }); 
-            const activeSpot = region.spots.find(s => s.id === activeSpotId) || region.spots[0]; 
-            document.getElementById('mapFrame').src = `https://maps.google.com/maps?ll=${activeSpot.lat},${activeSpot.lng}&z=${activeSpot.zoom}&t=&output=embed`; 
-            document.getElementById('spotTitle').textContent = activeSpot.name; 
-            document.getElementById('spotTag').textContent = activeSpot.tag; 
-            document.getElementById('spotDesc').textContent = activeSpot.desc; 
-            document.getElementById('spotCoord').textContent = `${activeSpot.lat}, ${activeSpot.lng}`; 
-            document.getElementById('spotHint').textContent = activeSpot.hint; 
-            document.getElementById('openPlaceLink').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeSpot.name + ' ' + activeSpot.lat + ',' + activeSpot.lng)}`; 
-            document.getElementById('openDirLink').href = `https://www.google.com/maps/dir/?api=1&destination=${activeSpot.lat},${activeSpot.lng}&travelmode=transit`; 
-            document.getElementById('spotButtons').innerHTML = region.spots.map(spot => `<button class="spot-chip ${spot.id === activeSpot.id ? 'active' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600'} px-3 py-2 rounded-lg text-xs font-semibold transition" onclick="renderSpots('${regionKey}', '${spot.id}')"><span class="inline-flex items-center gap-2"><i class="fa-solid fa-location-dot text-[11px]"></i>${spot.name}</span></button>`).join(''); 
-        }
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+  var trip = JSON.parse(document.getElementById('trip-data').textContent);
 
-        document.querySelectorAll('#regionButtons button').forEach(btn => btn.addEventListener('click', () => renderSpots(btn.dataset.region)));
-        renderSpots('Tokyo', 'tokyo-station');
-        calculateBudget();
-    </script>
+  // 頁頂待辦清單
+  var reminders = computeReminders(trip.startDate, trip.reminders);
+  document.getElementById('checklist').innerHTML = renderChecklistHTML(reminders);
+
+  // 地圖：彙整所有 slot 座標
+  var points = [];
+  var pointsByDay = {};
+  trip.days.forEach(function (day, di) {
+    var dayId = 'day' + (di + 1);
+    pointsByDay[dayId] = [];
+    (day.slots || []).forEach(function (s) {
+      s.mapNumber = points.length + 1;
+      var point = { lat: s.lat, lng: s.lng, name: s.name, time: s.time, number: s.mapNumber };
+      points.push(point);
+      pointsByDay[dayId].push(point);
+    });
+  });
+  var travelMap = initTravelMap('map', points);
+  var mapStateEl = document.getElementById('mapState');
+  function updateTravelMap(day) {
+    var selectedPoints = day === 'all' ? points : (pointsByDay[day] || []);
+    var displayedPoints = day === 'all' ? selectedPoints : selectedPoints.map(function (point, index) {
+      return { lat: point.lat, lng: point.lng, name: point.name, time: point.time, number: index + 1 };
+    });
+    travelMap.setTravelPoints(displayedPoints);
+    mapStateEl.textContent = day === 'all'
+      ? '全行程 · ' + points.length + ' 個標記'
+      : 'Day ' + day.slice(3) + ' · ' + selectedPoints.length + ' 個標記';
+  }
+  updateTravelMap('all');
+
+  // 每日時間軸卡片
+  var periodLabel = { morning: '早', noon: '中', evening: '晚' };
+  var dayCardsEl = document.getElementById('dayCards');
+  var html = '';
+  trip.days.forEach(function (day, di) {
+    var dayId = 'day' + (di + 1);
+    html += '<div class="day-card show" data-day="' + dayId + '">';
+    html += '<div class="day-head"><span class="pill gold">Day ' + (di + 1) + ' ｜ ' + day.date + '（' + day.weekday + '）</span></div>';
+    html += '<div class="day-theme">' + escapeHTML(day.theme || '') + '</div>';
+    (day.tips || []).forEach(function (t) {
+      html += '<div class="day-tips">💡 ' + escapeHTML(t) + '</div>';
+    });
+    if (day.alternatives && day.alternatives.length) {
+      html += '<div class="alt-box">';
+      day.alternatives.forEach(function (a) {
+        html += '<div class="alt-item"><b>' + escapeHTML(a.label) + '</b>　' + escapeHTML(a.summary) + '</div>';
+      });
+      html += '</div>';
+    }
+    (day.slots || []).forEach(function (s) {
+      html += '<div class="slot">';
+      html += '<div class="period-tag">' + (periodLabel[s.period] || s.period) + '</div>';
+      html += '<div class="slot-name">' + escapeHTML(s.name) + '<span class="map-number" data-map-number="' + s.mapNumber + '">地圖 #' + s.mapNumber + '</span>' + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
+      html += '<div class="slot-time">' + escapeHTML(s.time || '') + '</div>';
+      if (s.photo) {
+        html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
+          + '<img src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+      }
+      if (s.review) html += '<div class="review">' + escapeHTML(s.review) + (s.rating ? '　★ ' + s.rating : '') + '</div>';
+      var slotMapLinks = buildMapAppLinks(s.lat, s.lng, s.name);
+      html += '<div class="slot-maplinks">' + slotMapLinks.map(function (l) {
+        return '<a href="' + l.url + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
+      }).join('') + '</div>';
+      var tags = [];
+      if (s.openingHours) tags.push('🕒 ' + s.openingHours);
+      if (s.closedDays) tags.push('🚫 ' + s.closedDays);
+      if (s.ticketPrice) tags.push('🎫 ' + s.ticketPrice);
+      if (s.transport) tags.push('🚃 ' + s.transport.mode + '｜' + s.transport.fare + '｜' + s.transport.duration);
+      if (s.seasonal) tags.push('✨ ' + s.seasonal);
+      if (tags.length) {
+        html += '<div class="meta-tags">' + tags.map(function (t) { return '<span>' + escapeHTML(t) + '</span>'; }).join('') + '</div>';
+      }
+      html += '</div>';
+    });
+    if (day.dining && day.dining.length) {
+      day.dining.forEach(function (d) {
+        html += '<div class="dining-item"><b>🍜 ' + escapeHTML(d.meal) + '：' + escapeHTML(d.place) + '</b>　' + escapeHTML(d.hours || '')
+          + '<div class="dishes">' + (d.dishes || []).map(function (dd) { return escapeHTML(dd.name) + ' ' + escapeHTML(dd.price); }).join('　·　') + '</div></div>';
+      });
+    }
+    html += '</div>';
+  });
+  dayCardsEl.innerHTML = html;
+
+  // 快速導覽列：逢日快捷鍵
+  var quickNavDaysEl = document.getElementById('quickNavDays');
+  var itinerarySection = document.getElementById('itinerary-section');
+  trip.days.forEach(function (day, di) {
+    var dayId = 'day' + (di + 1);
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = 'Day' + (di + 1);
+    b.addEventListener('click', function () {
+      selectDay(dayId);
+      itinerarySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    quickNavDaysEl.appendChild(b);
+  });
+
+  // Tab 切換（切換時淡入新內容），抽成可重用函數供快速導覽列直接呼叫
+  function selectDay(day) {
+    document.querySelectorAll('#dayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
+    document.querySelectorAll('.day-card').forEach(function (card) {
+      var willShow = day === 'all' || card.dataset.day === day;
+      card.classList.toggle('show', willShow);
+      if (willShow) {
+        card.classList.remove('animate__fadeIn');
+        void card.offsetWidth;
+        card.classList.add('animate__animated', 'animate__fadeIn');
+      }
+    });
+    var numberLabels = day === 'all'
+      ? document.querySelectorAll('.map-number')
+      : document.querySelectorAll('.day-card.show .map-number');
+    numberLabels.forEach(function (label, index) {
+      label.textContent = '地圖 #' + (day === 'all' ? label.dataset.mapNumber : index + 1);
+    });
+    updateTravelMap(day);
+  }
+  document.getElementById('dayTabs').addEventListener('click', function (e) {
+    var btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    selectDay(btn.dataset.day);
+  });
+
+  // 預算試算器
+  function calcBudget() {
+    var rate = +document.getElementById('exchangeRate').value || 0;
+    var flight = +document.getElementById('flightCost').value || 0;
+    var jpy = (+document.getElementById('sukinozawaCost').value || 0)
+      + (+document.getElementById('tokyoHotelCost').value || 0)
+      + (+document.getElementById('transportCost').value || 0)
+      + (+document.getElementById('skiCost').value || 0)
+      + (+document.getElementById('mealCost').value || 0)
+      + (+document.getElementById('otherCost').value || 0);
+    document.getElementById('totalJPY').textContent = 'JPY ' + jpy.toLocaleString('zh-TW');
+    document.getElementById('totalTWD').textContent = 'NT$ ' + Math.round(flight + jpy * rate).toLocaleString('zh-TW');
+  }
+  document.querySelectorAll('.budget-grid input').forEach(function (el) { el.addEventListener('input', calcBudget); });
+  calcBudget();
+})();
+</script>
 </body>
 </html>
