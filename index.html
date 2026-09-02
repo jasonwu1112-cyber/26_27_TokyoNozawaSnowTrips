@@ -20,8 +20,8 @@
     font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;padding-bottom:3rem;}
   a{color:var(--accent);}
   .wrap{max-width:480px;margin:0 auto;padding:0 1rem;}
-  header.hero{background:radial-gradient(circle at 20% -10%,rgba(56,189,248,.25),transparent 60%),#0f1a2e;
-    border-bottom:1px solid var(--border);padding:2rem 0 1.5rem;}
+    header.hero{background:radial-gradient(circle at 20% -10%,rgba(56,189,248,.35),transparent 65%),linear-gradient(135deg,#0f1a2e,#0b1220 70%);
+      border-bottom:1px solid var(--border);padding:2rem 0 1.5rem;width:100%;box-shadow:inset 0 -1px 0 rgba(56,189,248,.08);}
   header.hero .tag{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent2);font-weight:700;font-size:.8rem;margin-bottom:.4rem;}
   header.hero h1{font-size:1.5rem;margin:.2rem 0;font-weight:800;letter-spacing:.02em;}
   header.hero .dates{color:var(--text-dim);font-size:.85rem;}
@@ -78,11 +78,6 @@
   ul.tips-list{margin:0;padding-left:1.1rem;font-size:.85rem;}
   ul.tips-list li{margin-bottom:.4rem;}
   footer{text-align:center;color:var(--text-dim);font-size:.72rem;margin-top:2rem;}
-  .budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.8rem;}
-  .budget-grid label{display:block;color:var(--text-dim);font-size:.72rem;margin-bottom:.2rem;}
-  .budget-grid input{width:100%;background:#0f1a2e;border:1px solid var(--border);border-radius:8px;padding:.4rem;color:#fff;}
-  .budget-total{display:flex;justify-content:space-between;margin-top:.8rem;font-weight:800;border-top:1px solid var(--border);padding-top:.7rem;}
-
   html{scroll-behavior:smooth;}
   section.card[id]{scroll-margin-top:4.2rem;}
   .quicknav{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.92);backdrop-filter:blur(8px);
@@ -110,12 +105,14 @@
 </style>
 </head>
 <body>
+<header class="hero animate__animated animate__fadeInDown">
 <div class="wrap">
-  <header class="hero animate__animated animate__fadeInDown">
     <div class="tag">❄️ 跨年滑雪與觀光全攻略</div>
     <h1>東京＆野澤溫泉 10 天 9 夜跨年之旅</h1>
     <div class="dates">2026/12/26（六）－ 2027/01/04（一）</div>
-  </header>
+</div>
+</header>
+<div class="wrap">
 
   <nav class="quicknav" id="quickNav" aria-label="快速導覽">
     <div class="quicknav-row">
@@ -125,7 +122,6 @@
       <a href="#map-section">地圖</a>
       <a href="#itinerary-section">每日行程</a>
       <a href="#tips-section">小提醒</a>
-      <a href="#budget-section">預算</a>
     </div>
     <div class="quicknav-row quicknav-days" id="quickNavDays"></div>
   </nav>
@@ -142,7 +138,7 @@
     <div class="kv"><b>穿搭：</b>羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫。</div>
     <div class="kv"><b>支付：</b>推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金。</div>
     <div class="kv"><b>必備 App：</b>Suica（交通 IC 卡）、Yahoo!天気（天氣預報）、野澤溫泉滑雪場官方 App（雪況／纜車營運）、JR東日本 App（新幹線時刻／誤點資訊）。</div>
-    <div class="kv"><b>購票時機：</b>有馬紀念(G1)、SHIBUYA SKY 建議提前上網預約時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存。</div>
+    <div class="kv"><b>購票時機：</b>teamLab Planets 建議提前上網預約入場時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存。</div>
   </section>
 
   <section class="card" id="flights-section">
@@ -206,26 +202,11 @@
       <li>野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用。</li>
       <li>2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運。</li>
       <li>滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨。</li>
+      <li>teamLab Planets 需赤腳涉水，建議穿著可捲高褲管的長褲、避免裙裝與跟鞋，並自備小毛巾擦腳。</li>
     </ul>
   </section>
 
-  <section class="card" id="budget-section">
-    <h2><span class="n">🧮</span> 預算試算器（JPY／TWD，選填）</h2>
-    <div class="budget-grid">
-      <div><label>匯率 (JPY→TWD)</label><input type="number" id="exchangeRate" value="0.21" step="0.01"></div>
-      <div><label>已知機票總額 (TWD)</label><input type="number" id="flightCost" value="28416"></div>
-      <div><label>SUKINOZAWA 尾款 (JPY/人)</label><input type="number" id="sukinozawaCost" value="44333"></div>
-      <div><label>高田馬場飯店 (JPY/人)</label><input type="number" id="tokyoHotelCost" value="32000"></div>
-      <div><label>新幹線交通 (JPY/人)</label><input type="number" id="transportCost" value="30000"></div>
-      <div><label>雪票與雪具 (JPY/人)</label><input type="number" id="skiCost" value="45000"></div>
-      <div><label>餐費 (JPY/人)</label><input type="number" id="mealCost" value="25000"></div>
-      <div><label>其他 (JPY/人)</label><input type="number" id="otherCost" value="15000"></div>
-    </div>
-    <div class="budget-total"><span>總 JPY</span><span id="totalJPY">JPY 0</span></div>
-    <div class="budget-total"><span>總 TWD（含機票）</span><span id="totalTWD">NT$ 0</span></div>
-  </section>
-
-  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · v2（travel-plan-viz skill 生成）</footer>
+  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · v3（travel-plan-viz skill 生成）</footer>
 </div>
 
 <script id="trip-data" type="application/json">
@@ -241,7 +222,7 @@
     "packing": "羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫",
     "payment": "推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金",
     "apps": ["Suica（交通 IC 卡）", "Yahoo!天気（天氣預報）", "野澤溫泉滑雪場官方 App（雪況／纜車營運）", "JR東日本 App（新幹線時刻／誤點資訊）"],
-    "ticketTip": "有馬紀念(G1)、SHIBUYA SKY 建議提前上網預約時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存"
+    "ticketTip": "teamLab Planets 建議提前上網預約入場時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存"
   },
   "flights": {
     "booked": [
@@ -279,12 +260,12 @@
     "跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間",
     "野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用",
     "2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運",
-    "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨"
+    "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨",
+    "teamLab Planets 需赤腳涉水，建議穿著可捲高褲管的長褲、避免裙裝與跟鞋，並自備小毛巾擦腳"
   ],
   "reminders": [
-    { "item": "中山競馬場 有馬紀念 (G1) 入場門票／QR Ticket", "leadDays": 14 },
+    { "item": "teamLab Planets TOKYO（豐洲）入場時段預約門票", "leadDays": 14 },
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
-    { "item": "SHIBUYA SKY 展望台預約時段", "leadDays": 7 },
     { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
     { "item": "高田馬場／市區後兩晚飯店預訂（尚未確定）", "leadDays": 30 }
   ],
@@ -294,18 +275,17 @@
       "tips": ["長途飛行後首日行程從簡，抵達後以整理行李與熟悉住宿周邊為主"],
       "slots": [
         { "period": "evening", "name": "成田機場入境", "time": "18:45–20:30", "lat": 35.7719, "lng": 140.3929, "review": "18:45 抵達成田機場第二航廈，辦理入境、領行李與購買 N'EX／Skyliner 車票", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "四谷．新宿 Check-in", "time": "20:30–21:45", "lat": 35.689167, "lng": 139.723889, "review": "搭乘 N'EX 或 Skyliner 進市區，前往 YKB Ensign Building 辦理入住", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "東京車站丸之內冬季點燈", "time": "22:30–23:00", "lat": 35.681236, "lng": 139.767125, "review": "欣賞丸之內冬季點燈，或改往麻布台之丘潮流全家概念店（FAMIMA PARK AZABUDAI）", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "四谷．新宿 Check-in", "time": "20:30–21:45", "lat": 35.687813, "lng": 139.715563, "review": "搭乘 N'EX 或 Skyliner 進市區，前往 YKB Ensign Building 辦理入住", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "丸之內冬季點燈（Marunouchi Illumination）", "time": "22:00–23:00", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Marunouchi_Illumination_2022_%2852646781419%29.jpg", "rating": 4.5, "review": "【簡易攻略】以東京車站丸之內站舍為起點，沿「行幸通」走向「丸之內仲通」，約 250 棵行道樹披上香檳金 LED、全長約 1.2 公里；點燈期間約 11 月中旬～隔年 2 月中旬，每日 16:00–23:00（12 月延長至 24:00），免費入場、無需預約。路線建議：丸之內口出站→行幸通拍站舍夜景全景→仲通北段往南散策至有樂町方向，約 40–60 分鐘。", "openingHours": "16:00–24:00（12 月）／11 月中～2 月中每日開放", "ticketPrice": "免費入場，無需預約", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "23:00 後", "lat": 35.687813, "lng": 139.715563, "review": "返回 YKB Ensign Building 休息，準備隔日行程。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
-      "date": "2026-12-27", "weekday": "週日", "theme": "有馬紀念 G1 賽馬．澀谷原宿潮流",
-      "alternatives": [{ "label": "備案：WINS 新宿 或 原宿／表參道散策", "summary": "若無法前往中山競馬場現場，可改到 WINS 新宿場外投注所觀戰，或直接展開原宿表參道行程" }],
-      "tips": ["中山競馬場交通建議走船橋法典站進場，專用地下道步行約 10 分鐘"],
+      "date": "2026-12-27", "weekday": "週日", "theme": "teamLab Planets 豐洲．澀谷原宿潮流",
       "slots": [
-        { "period": "morning", "name": "中山競馬場（有馬紀念 G1）", "time": "09:30–13:30", "lat": 35.723521, "lng": 139.959066, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nakayama_Racecourse04.jpg?width=600", "rating": 4.4, "review": "日本年度壓軸 G1 大賽，現場氣氛熱烈，建議提早入場並預先準備電子門票／QR Ticket", "ticketPrice": "依看台席別而定，建議上網預購", "needsBooking": true, "leadDays": 14 },
+        { "period": "morning", "name": "teamLab Planets TOKYO（豐洲）", "time": "10:00–13:00", "lat": 35.655300, "lng": 139.793000, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/TEAM_LAB_univers_r.jpg/500px-TEAM_LAB_univers_r.jpg", "rating": 4.7, "review": "沉浸式光影互動美術館，館內需赤腳涉水體驗（水深可及膝），建議穿著可捲高褲管的長褲、避免裙裝與跟鞋；「水晶宇宙」「無限錦鯉」等展區為必看亮點，建議停留 2–2.5 小時。採 30 分鐘分時預約入場制，請提前於官方 Ticket Store 或 KKday／KLOOK 預訂時段。", "ticketPrice": "成人約 ¥3,800–5,000（依日期時段浮動）", "openingHours": "約 09:00–22:00（最後入場為閉館前 1 小時，依季節與平假日調整）", "needsBooking": true, "leadDays": 14 },
         { "period": "noon", "name": "原宿 Cat Street．宮下公園 (MIYASHITA PARK)", "time": "14:00–17:00", "lat": 35.6620, "lng": 139.7024, "review": "原宿裏路巷弄與宮下公園逛街購物，感受東京潮流文化", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "SHIBUYA SKY 展望台", "time": "18:00–19:30", "lat": 35.658034, "lng": 139.701636, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Scramble_Square_(49997377906).jpg?width=600", "rating": 4.7, "review": "229 公尺高空展望台俯瞰澀谷夜景，建議事先預約入場時段", "ticketPrice": "成人約 ¥2,000–2,500（依日期時段浮動）", "needsBooking": true, "leadDays": 7 }
+        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [{ "meal": "晚餐", "place": "澀谷／新宿人氣燒肉店", "hours": "建議晚間 18:00 前入座避開排隊高峰", "dishes": [{ "name": "和牛拼盤", "price": "約 ¥4,000–6,000／人" }] }]
     },
@@ -314,9 +294,10 @@
       "tips": ["外湯多由當地居民自主管理，請務必依現場禮儀規範使用"],
       "slots": [
         { "period": "morning", "name": "JR 飯山站", "time": "09:00–11:30", "lat": 36.851058, "lng": 138.365325, "review": "自東京車站搭乘北陸新幹線至飯山站，轉乘 Nozawa Onsen Shuttle 巴士前往野澤溫泉村", "transport": { "mode": "北陸新幹線", "fare": "自由席約 ¥8,000–8,500（單程）", "duration": "約 1.5 小時" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "SUKINOZAWA Check-in", "time": "13:00–14:30", "lat": 36.9225, "lng": 138.445, "review": "辦理入住並支付現場尾款 ¥133,000 JPY（約 ¥44,333／人）", "needsBooking": true, "leadDays": 7 },
+        { "period": "noon", "name": "SUKINOZAWA Check-in", "time": "13:00–14:30", "lat": 36.921063, "lng": 138.445188, "review": "辦理入住並支付現場尾款 ¥133,000 JPY（約 ¥44,333／人）", "needsBooking": true, "leadDays": 7 },
         { "period": "noon", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "14:30–17:00", "lat": 36.920895, "lng": 138.444962, "review": "租借未來 5 日滑雪裝備並購買雪票，建議提早預約避開旺季排隊", "needsBooking": true, "leadDays": 14 },
-        { "period": "evening", "name": "外湯巡禮：大湯", "time": "17:00–18:30", "lat": 36.922166, "lng": 138.445413, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/O-Yu_onsen_on_rainy_night.jpg?width=600", "rating": 4.5, "review": "野澤代表性外湯之一，泡湯前請先投香油錢並保持安靜", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "外湯巡禮：大湯", "time": "17:00–18:30", "lat": 36.922166, "lng": 138.445413, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/O-Yu_onsen_on_rainy_night.jpg?width=600", "rating": 4.5, "review": "野澤代表性外湯之一，泡湯前請先投香油錢並保持安靜", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "18:30 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -324,16 +305,18 @@
       "tips": ["首日滑雪以熱身、熟悉雪道與裝備為主，避免逞強挑戰高難度雪道"],
       "slots": [
         { "period": "morning", "name": "長坂／日影纜車滑雪區", "time": "08:30–17:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nozawa_Onsen_Schanze_slopecar.jpg?width=600", "rating": 4.6, "review": "SUKINOZAWA 享用早餐後搭乘長坂／日影纜車開滑，主攻日影區域與上之平寬廣綠線熱身", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–19:00", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–19:00", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "19:00 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
       "date": "2026-12-30", "weekday": "週三", "theme": "全山巡航．毛無山樹冰",
       "tips": ["攻頂前請先確認纜車與雪道開放狀況，山頂氣溫明顯較低，務必加強保暖"],
       "slots": [
-        { "period": "morning", "name": "長坂纜車 (Nagasaka Gondola)", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "review": "搭乘長坂纜車直達山頂，攻頂毛無山欣賞樹冰景致與頂級粉雪", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "長坂纜車 (Nagasaka Gondola)", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "搭乘長坂纜車直達山頂，攻頂毛無山欣賞樹冰景致與頂級粉雪", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "山頂 Rest House Yamabiko", "time": "12:30–13:30", "lat": 36.920895, "lng": 138.444962, "review": "山頂餐廳享用名物燒肉丼，補充體力後繼續全山巡航", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "野澤溫泉街散策", "time": "18:00–20:00", "lat": 36.922678, "lng": 138.442312, "review": "品嚐溫泉包子與信州和牛居酒屋，感受溫泉街夜晚氛圍", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "野澤溫泉街散策", "time": "18:00–20:00", "lat": 36.922678, "lng": 138.442312, "review": "品嚐溫泉包子與信州和牛居酒屋，感受溫泉街夜晚氛圍", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:00 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [
         { "meal": "午餐", "place": "山頂 Rest House Yamabiko", "hours": "約 09:00–15:00（依雪場營運時間）", "dishes": [{ "name": "名物燒肉丼", "price": "約 ¥1,500–1,800" }] },
@@ -344,8 +327,9 @@
       "date": "2026-12-31", "weekday": "週四", "theme": "大晦日．除夜之鐘跨年",
       "tips": ["跨年夜山區氣溫更低，前往除夜之鐘請務必攜帶暖暖包與保暖衣物", "深夜活動請注意路面積雪濕滑，建議穿著防滑雪靴"],
       "slots": [
-        { "period": "morning", "name": "Challenge ＆ Paradise 雪道", "time": "09:00–16:00", "lat": 36.922678, "lng": 138.442312, "review": "暢滑野澤各大雪道，感受大晦日限定的悠閒雪場氛圍", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "Challenge ＆ Paradise 雪道", "time": "09:00–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "暢滑野澤各大雪道，感受大晦日限定的悠閒雪場氛圍", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "00:30 後", "lat": 36.921063, "lng": 138.445188, "review": "跨年活動結束後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [{ "meal": "晚餐", "place": "野澤溫泉街", "hours": "18:30 起", "dishes": [{ "name": "年越蕎麥麵 (Toshikoshi Soba)", "price": "約 ¥800–1,200" }] }]
     },
@@ -354,7 +338,8 @@
       "tips": ["元旦當天部分店家可能休息或縮短營業時間，請提前確認"],
       "slots": [
         { "period": "morning", "name": "元旦首滑 (First Tracks)", "time": "08:30–15:00", "lat": 36.922678, "lng": 138.442312, "review": "2027 元旦早晨迎曙光，進行元旦首滑，感受新年第一道雪道的清爽", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–20:00", "lat": 36.921651, "lng": 138.445988, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/麻釜湯.jpg?width=600", "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，晚間享用新年慶祝大餐", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–20:00", "lat": 36.921651, "lng": 138.445988, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/麻釜湯.jpg?width=600", "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，晚間享用新年慶祝大餐", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "晚餐後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [{ "meal": "晚餐", "place": "野澤溫泉街新年特別套餐", "hours": "依店家公告", "dishes": [{ "name": "御節料理／新年特餐", "price": "約 ¥3,000–5,000／人" }] }]
     },
@@ -362,10 +347,11 @@
       "date": "2027-01-02", "weekday": "週六", "theme": "飯山初詣．返回東京",
       "tips": ["新春初賣福袋為人氣商品，建議提前到場排隊"],
       "slots": [
-        { "period": "morning", "name": "JR 飯山站寄放行李", "time": "08:30–09:30", "lat": 36.851058, "lng": 138.365325, "review": "SUKINOZAWA 退房後搭接駁車至飯山站寄放行李", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "JR 飯山站寄放行李", "time": "08:30–09:30", "lat": 36.851058, "lng": 138.365325, "photo": "https://upload.wikimedia.org/wikipedia/commons/3/37/In_front_of_Iiyama_Station.JPG", "review": "SUKINOZAWA 退房後搭接駁車至飯山站寄放行李", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "正受庵 (Shojoan) 新年初詣", "time": "09:30–11:30", "lat": 36.85, "lng": 138.366, "review": "飯山「寺町通」散策，前往正受庵進行新年初詣參拜", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "飯山名物富倉蕎麥麵午餐", "time": "11:30–13:00", "lat": 36.851058, "lng": 138.365325, "review": "午餐享用飯山名物富倉蕎麥麵，13:10 搭乘北陸新幹線返抵東京", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "高田馬場 Check-in．新春福袋", "time": "16:00–19:00", "lat": 35.712285, "lng": 139.703782, "review": "抵達高田馬場／市區飯店 Check-in，前往新宿伊勢丹或池袋百貨搶購新春初賣福袋", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "name": "高田馬場 Check-in．新春福袋", "time": "16:00–19:00", "lat": 35.712285, "lng": 139.703782, "review": "抵達高田馬場／市區飯店 Check-in，前往新宿伊勢丹或池袋百貨搶購新春初賣福袋", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：高田馬場站周邊飯店（待訂）", "time": "19:00 後", "lat": 35.712285, "lng": 139.703782, "review": "返回高田馬場站周邊飯店休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [{ "meal": "午餐", "place": "飯山名物富倉蕎麥麵", "hours": "約 11:00–14:00", "dishes": [{ "name": "富倉蕎麥麵", "price": "約 ¥1,000–1,300" }] }]
     },
@@ -373,9 +359,10 @@
       "date": "2027-01-03", "weekday": "週日", "theme": "明治神宮初詣．吉祥寺慢活",
       "tips": ["明治神宮初詣期間參道人潮眾多，建議上午儘早前往"],
       "slots": [
-        { "period": "morning", "name": "明治神宮初詣", "time": "09:00–11:00", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Meiji_Jingu_(24727530638).jpg?width=600", "rating": 4.8, "review": "體驗日本最大規模初詣參拜，建議提早前往避開人潮高峰", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "吉祥寺．井之頭恩賜公園", "time": "11:30–15:00", "lat": 35.703152, "lng": 139.579678, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Inokashira_Park.jpg?width=600", "rating": 4.6, "review": "從高田馬場／新宿搭乘 JR 直達吉祥寺，湖畔散步、品嚐 SATOU 炸牛肉丸，中道通與 Sunroad 商店街採購", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "Harmonica 橫丁", "time": "18:00–20:00", "lat": 35.7027, "lng": 139.5798, "review": "體驗吉祥寺復古居酒屋橫丁氛圍", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "明治神宮初詣", "time": "09:00–11:00", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Canopy_of_trees_at_Meiji_Shrine.jpg?width=1200", "rating": 4.8, "review": "體驗日本最大規模初詣參拜，建議提早前往避開人潮高峰", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "吉祥寺．井之頭恩賜公園", "time": "11:30–15:00", "lat": 35.703152, "lng": 139.579678, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/TamagawaJosui%40InokashiraPark.JPG?width=1200", "rating": 4.6, "review": "從高田馬場／新宿搭乘 JR 直達吉祥寺，湖畔散步、品嚐 SATOU 炸牛肉丸，中道通與 Sunroad 商店街採購", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "Harmonica 橫丁", "time": "18:00–20:00", "lat": 35.7027, "lng": 139.5798, "review": "體驗吉祥寺復古居酒屋橫丁氛圍", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：高田馬場站周邊飯店（待訂）", "time": "20:00 後", "lat": 35.712285, "lng": 139.703782, "review": "返回高田馬場站周邊飯店休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [
         { "meal": "午餐", "place": "SATOU 吉祥寺總本店", "hours": "約 10:00–19:00", "dishes": [{ "name": "炸牛肉丸 (Menchi Katsu)", "price": "約 ¥350／個" }] },
@@ -386,7 +373,7 @@
       "date": "2027-01-04", "weekday": "週一", "theme": "東京車站補貨．賦歸",
       "tips": ["2026 年 12 月起日本機場退稅新制上路，務必預留時間先完成海關電子查驗"],
       "slots": [
-        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:00–11:30", "lat": 35.681236, "lng": 139.767125, "review": "高田馬場飯店退房，前往東京車站補貨或寄放行李", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:00–11:30", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Marunouchi_%26_Tokyo_Station_1.jpg", "review": "高田馬場飯店退房，前往東京車站補貨或寄放行李", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "前往成田機場", "time": "13:30–14:45", "lat": 35.7719, "lng": 140.3929, "review": "從市區出發前往成田機場，建議 15:00 前抵達", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "成田機場退稅與登機", "time": "14:45–17:45", "lat": 35.7719, "lng": 140.3929, "review": "【2026 退稅新制重點】先至海關 KIOSK 機台完成退稅電子查驗，再辦理行李托運與 Check-in", "seasonal": "2026 年新制：電子查驗需在托運前完成", "needsBooking": false, "leadDays": 0 }
       ]
@@ -563,7 +550,7 @@ function reminderBadgeHTML(leadDays) {
   updateTravelMap('all');
 
   // 每日時間軸卡片
-  var periodLabel = { morning: '早', noon: '中', evening: '晚' };
+  var periodLabel = { morning: '早', noon: '中', evening: '晚', stay: '住宿' };
   var dayCardsEl = document.getElementById('dayCards');
   var html = '';
   trip.days.forEach(function (day, di) {
@@ -588,7 +575,7 @@ function reminderBadgeHTML(leadDays) {
       html += '<div class="slot-time">' + escapeHTML(s.time || '') + '</div>';
       if (s.photo) {
         html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
-          + '<img src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+          + '<img data-src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
       }
       if (s.review) html += '<div class="review">' + escapeHTML(s.review) + (s.rating ? '　★ ' + s.rating : '') + '</div>';
       var slotMapLinks = buildMapAppLinks(s.lat, s.lng, s.name);
@@ -638,6 +625,12 @@ function reminderBadgeHTML(leadDays) {
       var willShow = day === 'all' || card.dataset.day === day;
       card.classList.toggle('show', willShow);
       if (willShow) {
+        card.querySelectorAll('img[data-src]').forEach(function (image) {
+          image.src = image.dataset.src;
+          image.removeAttribute('data-src');
+        });
+      }
+      if (willShow) {
         card.classList.remove('animate__fadeIn');
         void card.offsetWidth;
         card.classList.add('animate__animated', 'animate__fadeIn');
@@ -656,22 +649,7 @@ function reminderBadgeHTML(leadDays) {
     if (!btn) return;
     selectDay(btn.dataset.day);
   });
-
-  // 預算試算器
-  function calcBudget() {
-    var rate = +document.getElementById('exchangeRate').value || 0;
-    var flight = +document.getElementById('flightCost').value || 0;
-    var jpy = (+document.getElementById('sukinozawaCost').value || 0)
-      + (+document.getElementById('tokyoHotelCost').value || 0)
-      + (+document.getElementById('transportCost').value || 0)
-      + (+document.getElementById('skiCost').value || 0)
-      + (+document.getElementById('mealCost').value || 0)
-      + (+document.getElementById('otherCost').value || 0);
-    document.getElementById('totalJPY').textContent = 'JPY ' + jpy.toLocaleString('zh-TW');
-    document.getElementById('totalTWD').textContent = 'NT$ ' + Math.round(flight + jpy * rate).toLocaleString('zh-TW');
-  }
-  document.querySelectorAll('.budget-grid input').forEach(function (el) { el.addEventListener('input', calcBudget); });
-  calcBudget();
+  selectDay('day1');
 })();
 </script>
 </body>
