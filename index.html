@@ -3,15 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  try { document.documentElement.dataset.theme = localStorage.getItem('trip-theme') || 'dark'; }
+  catch (e) { document.documentElement.dataset.theme = 'dark'; }
+</script>
 <title>東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <style>
   :root{
+    color-scheme:dark;
+    --app-header-height:0px;
     --bg:#0b1220; --bg-card:rgba(30,41,59,.72); --bg-card-solid:#1a2436;
     --text:#e6edf7; --text-dim:#93a1b8; --accent:#38bdf8; --accent2:#fbbf24;
     --border:rgba(148,163,184,.18); --danger:#f87171; --ok:#34d399;
     --animate-duration: .7s;
+  }
+  :root[data-theme="light"]{
+    color-scheme:light;
+    --bg:#edf3f7; --bg-card:rgba(255,255,255,.92); --bg-card-solid:#fff;
+    --text:#172235; --text-dim:#5d6b7d; --accent:#087ba5; --accent2:#9a6500;
+    --border:rgba(51,65,85,.18); --danger:#c23d4b; --ok:#087b5b;
   }
 </style>
 <style>
@@ -64,13 +76,23 @@
   .slot{border:1px solid var(--border);border-radius:14px;padding:.8rem;margin-bottom:.7rem;background:rgba(15,23,42,.4);}
   .slot .period-tag{font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--accent);}
   .slot .slot-name{font-size:.95rem;font-weight:800;color:#fff;margin:.15rem 0;}
-  .map-number{display:inline-block;margin-left:.4rem;padding:.08rem .42rem;border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);font-size:.67rem;font-weight:700;vertical-align:middle;}
+  .map-number{display:inline-block;margin-left:.4rem;padding:.08rem .42rem;border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);font:inherit;font-size:.67rem;font-weight:700;vertical-align:middle;cursor:pointer;}
   .slot .slot-time{font-size:.75rem;color:var(--text-dim);}
   .photo-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin:.5rem 0;
     background:linear-gradient(135deg,var(--accent),var(--accent2));}
   .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#0b1220;font-weight:800;font-size:.85rem;text-align:center;padding:.5rem;}
   .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
   .slot .review{font-size:.82rem;margin:.4rem 0;}
+  .review-details{margin:.4rem 0;color:var(--text-dim);font-size:.78rem;}
+  .review-details summary{list-style:none;cursor:pointer;}
+  .review-details summary::-webkit-details-marker{display:none;}
+  .review-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;}
+  .review-toggle{display:inline-block;margin-top:.35rem;color:var(--accent);font-size:.72rem;font-weight:700;}
+  .review-toggle .close-label{display:none;}
+  .review-details[open] .review-preview{display:none;}
+  .review-details[open] .open-label{display:none;}
+  .review-details[open] .close-label{display:inline;}
+  .review-full{margin-top:.25rem;}
   .meta-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0;}
   .meta-tags span{font-size:.68rem;background:rgba(148,163,184,.12);border:1px solid var(--border);border-radius:999px;padding:.15rem .5rem;color:var(--text-dim);}
   .dining-item{border-left:3px solid var(--accent2);padding:.5rem .7rem;background:rgba(251,191,36,.05);border-radius:0 10px 10px 0;margin-bottom:.5rem;font-size:.82rem;}
@@ -88,10 +110,12 @@
     background:rgba(148,163,184,.08);color:var(--text-dim);font-size:.74rem;font-weight:700;text-decoration:none;cursor:pointer;}
   .quicknav-row a:hover, .quicknav-row button:hover{color:#fff;border-color:var(--accent);}
   .quicknav-days{margin-top:.4rem;}
-  .slot-maplinks{display:flex;gap:.5rem;margin-top:.3rem;}
-  .slot-maplinks a{font-size:.72rem;color:var(--accent);text-decoration:none;border:1px solid rgba(56,189,248,.3);
-    border-radius:999px;padding:.15rem .55rem;background:rgba(56,189,248,.08);}
-  .slot-maplinks a:hover{background:rgba(56,189,248,.2);}
+  .slot-maplinks{display:flex;margin-top:.55rem;}
+  .slot-maplinks a{font-size:.64rem;color:#062033;text-decoration:none;border:1px solid transparent;
+    border-radius:6px;padding:.22rem .42rem;background:var(--accent);font-weight:800;}
+  .slot-maplinks a:hover{background:#7dd3fc;}
+  .slot-maplinks a.booking-action{background:var(--accent2);color:#241800;}
+  .slot-maplinks a.booking-action:hover{background:#fcd34d;}
 
   @media (min-width: 768px){
     .wrap{max-width:920px;}
@@ -103,117 +127,231 @@
     .day-cards-desktop{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
   }
 </style>
+<style>
+  body{padding-bottom:6.5rem;overflow-x:clip;background:
+    radial-gradient(circle at 15% 0,rgba(56,189,248,.12),transparent 26rem),
+    linear-gradient(180deg,#08111f 0%,#0b1424 55%,#08111f 100%);}
+  .app-wrap{max-width:520px;margin:0 auto;padding:0 1rem;}
+  header.hero{position:sticky;top:0;z-index:30;padding:1rem 0 .85rem;background:rgba(8,17,31,.9);backdrop-filter:blur(16px);transition:transform .24s ease,opacity .2s ease;}
+  body.header-hidden:not(.home-active) header.hero{transform:translateY(calc(-100% - 1px));opacity:0;pointer-events:none;}
+  header.hero .app-wrap{padding-right:4.5rem;}
+  body.home-active header.hero{display:none;}
+  header.hero .tag{font-size:.7rem;margin:0;text-transform:uppercase;}
+  header.hero h1{font-size:1.12rem;margin:.1rem 0;letter-spacing:0;}
+  header.hero .dates{font-size:.72rem;}
+  .quicknav{display:none;}
+  .app-view{display:none;animation:app-view-in .28s ease both;}
+  .app-view.active{display:block;}
+  @keyframes app-view-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .view-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:1.25rem 0 .75rem;}
+  .view-heading h2{font-size:1.35rem;margin:0;line-height:1.2;}
+  .view-heading p{margin:.2rem 0 0;color:var(--text-dim);font-size:.78rem;}
+  .today-hero{position:relative;isolation:isolate;overflow:hidden;width:100vw;min-height:calc(100svh - 70px);margin:0 0 0 calc(50% - 50vw);padding:0;border:0;border-radius:0;background:#152338;display:flex;align-items:flex-end;}
+  .today-hero::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(4,12,24,.08) 18%,rgba(4,12,24,.48) 54%,rgba(4,12,24,.96) 100%);}
+  .cover-image{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+  .cover-content{position:relative;z-index:2;width:min(100%,520px);margin:0 auto;padding:1.5rem 1rem 2rem;text-shadow:0 2px 16px rgba(0,0,0,.6);}
+  .cover-location{position:absolute;z-index:2;top:max(1rem,env(safe-area-inset-top));right:1rem;padding:.35rem .55rem;border:1px solid rgba(255,255,255,.22);border-radius:6px;background:rgba(4,12,24,.36);backdrop-filter:blur(8px);color:rgba(255,255,255,.86);font-size:.68rem;font-weight:700;}
+  .cover-trip-title{font-size:2.15rem;line-height:1.08;margin:.35rem 0 .25rem;color:#fff;letter-spacing:0;max-width:11em;}
+  .cover-trip-subtitle{margin:0 0 .3rem;color:rgba(255,255,255,.9);font-size:1rem;font-weight:700;}
+  .cover-dates{font-size:.78rem;color:rgba(255,255,255,.78);}
+  .today-kicker{color:var(--accent);font-size:.7rem;font-weight:800;text-transform:uppercase;}
+  .today-date{color:var(--accent2);font-size:.78rem;font-weight:700;margin-top:1.25rem;}
+  .today-hero h2{font-size:1.4rem;line-height:1.25;margin:.2rem 0 .25rem;max-width:90%;}
+  .today-theme{color:rgba(255,255,255,.78);font-size:.84rem;}
+  .next-card{margin-top:1rem;border-left:3px solid var(--accent);padding:.75rem .85rem;background:rgba(4,12,24,.54);border-radius:0 8px 8px 0;backdrop-filter:blur(8px);}
+  .next-label{font-size:.68rem;font-weight:800;color:var(--accent);text-transform:uppercase;}
+  .next-time{font-size:1.35rem;font-weight:800;color:#fff;margin:.15rem 0;}
+  .next-name{font-size:.9rem;}
+  .action-row{display:flex;gap:.55rem;margin-top:.85rem;}
+  .app-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.65rem .9rem;border:1px solid rgba(56,189,248,.35);
+    border-radius:8px;background:rgba(56,189,248,.12);color:#fff;font:inherit;font-size:.78rem;font-weight:700;text-decoration:none;cursor:pointer;}
+  .action-row .app-action{flex:1;}
+  .app-action.primary{background:var(--accent);color:#062033;border-color:transparent;}
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1rem 0;}
+  .summary-card{margin:0;padding:.9rem;min-height:112px;}
+  .summary-card:last-child{grid-column:auto;min-height:112px;}
+  .summary-label{color:var(--text-dim);font-size:.7rem;font-weight:700;}
+  .summary-value{margin-top:.35rem;color:#fff;font-size:.9rem;font-weight:800;line-height:1.35;}
+  .summary-note{margin-top:.3rem;color:var(--text-dim);font-size:.72rem;}
+  .weather-value{display:flex;align-items:center;gap:.4rem;}
+  .weather-icon{font-size:1.15rem;}
+  .weather-head{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
+  .weather-location-select{max-width:6.2rem;border:1px solid var(--border);border-radius:6px;background:#111d30;color:var(--text);padding:.2rem .3rem;font:inherit;font-size:.65rem;}
+  .weather-links{display:flex;gap:.55rem;margin-top:.35rem;font-size:.66rem;}
+  .weather-links a{text-decoration:none;font-weight:700;}
+  .mini-timeline{display:flex;flex-direction:column;}
+  .mini-stop{display:grid;grid-template-columns:3.8rem 1fr;gap:.8rem;position:relative;padding:.65rem 0;}
+  .mini-stop:not(:last-child)::after{content:"";position:absolute;left:4.25rem;top:2rem;bottom:-.5rem;width:1px;background:var(--border);}
+  .mini-time{color:var(--accent2);font-size:.76rem;font-weight:800;}
+  .mini-name{font-size:.84rem;font-weight:700;}
+  .reminder-item{align-items:center;}
+  .reminder-item::before{content:"";flex:0 0 9px;height:9px;border-radius:50%;background:var(--danger);box-shadow:0 0 0 4px rgba(248,113,113,.14);}
+  .todo-deadline{font-size:.72rem;}
+  .todo-text{font-size:.8rem;}
+  .bottom-nav{position:fixed;z-index:50;left:50%;bottom:max(.65rem,env(safe-area-inset-bottom));transform:translate(-50%,0);width:min(calc(100% - 1.5rem),420px);display:grid;grid-template-columns:repeat(3,1fr);
+    padding:.25rem .35rem;background:rgba(8,17,31,.9);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(18px);box-shadow:0 10px 32px rgba(0,0,0,.3);transition:transform .24s ease,opacity .2s ease;}
+  body.nav-hidden .bottom-nav{transform:translate(-50%,calc(100% + 1.5rem));opacity:0;pointer-events:none;}
+  .nav-btn{min-height:48px;border:0;border-radius:8px;background:transparent;color:var(--text-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;font:inherit;font-size:.64rem;cursor:pointer;}
+  .nav-btn .nav-icon{font-size:1.05rem;line-height:1;}
+  .nav-btn.active{color:var(--accent);}
+  .nav-btn.active{background:rgba(56,189,248,.1);}
+  .nav-btn.active .nav-icon{transform:translateY(-1px);}
+  .theme-toggle{position:fixed;z-index:70;top:max(.75rem,env(safe-area-inset-top));right:1rem;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;background:rgba(8,17,31,.78);color:#fff;font-size:1.05rem;cursor:pointer;backdrop-filter:blur(12px);box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .24s ease,opacity .2s ease;}
+  body.home-active .theme-toggle{right:auto;left:1rem;}
+  body.header-hidden:not(.home-active) .theme-toggle{transform:translateY(calc(-100% - 1rem));opacity:0;pointer-events:none;}
+  #map-section.card{padding:.8rem;}
+  #map{height:calc(100vh - 245px);min-height:390px;}
+  #mapDayTabs{margin-bottom:.7rem;}
+  #itinerary-section.card{background:transparent;border:0;padding:0;backdrop-filter:none;}
+  #itinerary-section.app-view.active{animation:none;}
+  #dayTabs{position:sticky;top:var(--app-header-height);z-index:60;margin:0 -1rem .8rem;padding:.55rem 1rem;background:rgba(8,17,31,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.18);scrollbar-width:none;transition:top .24s ease;}
+  body.header-hidden #dayTabs{top:0;}
+  #dayTabs::-webkit-scrollbar{display:none;}
+  .slot{position:relative;margin:0 0 0 4.6rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
+  .slot::before{content:"";position:absolute;left:-5px;top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0b1424;}
+  .slot .slot-time{position:absolute;right:calc(100% + 1.35rem);top:.12rem;width:3.4rem;text-align:right;color:var(--accent2);font-weight:800;}
+  .slot .period-tag{display:none;}
+  .slot .slot-name{font-size:.92rem;margin:0 0 .35rem;}
+  .slot .review{color:var(--text-dim);font-size:.78rem;}
+  .slot-flight::before{background:var(--accent2);}
+  .slot-stay::before{background:var(--ok);}
+  .timeline-detail{padding:.65rem .7rem;border:1px solid var(--border);border-radius:8px;background:rgba(148,163,184,.06);font-size:.78rem;color:var(--text-dim);}
+  .timeline-detail strong{display:block;margin-bottom:.2rem;color:#fff;font-size:.86rem;}
+  .timeline-detail-row{margin-top:.25rem;}
+  .slot-maplinks a{min-height:28px;display:inline-flex;align-items:center;}
+  .photo-frame{max-height:210px;}
+  .section-stack .card{margin:.75rem 0;}
+  @media (max-width:520px){.hotel-opt{flex-direction:column;}.hotel-opt .hotel-note{text-align:left;}}
+  @media (min-width:768px){
+    .app-wrap{max-width:960px;}
+    .bottom-nav{width:420px;}
+    .summary-grid{grid-template-columns:repeat(4,1fr);}
+    .summary-card:last-child{grid-column:auto;min-height:112px;}
+    .cover-content{width:min(100%,960px);padding:2.5rem 2rem 3rem;}
+    .cover-trip-title{font-size:3.5rem;}
+    .cover-trip-subtitle{font-size:1.25rem;}
+    #map{height:580px;}
+    .section-stack{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem;align-items:start;}
+    .section-stack .card{margin:.5rem 0;}
+  }
+  html[data-theme="light"] body{background:radial-gradient(circle at 15% 0,rgba(14,165,233,.1),transparent 26rem),linear-gradient(180deg,#f6fafc 0%,#edf3f7 55%,#e7eef4 100%);}
+  html[data-theme="light"] header.hero{background:rgba(246,250,252,.92);box-shadow:0 1px 0 var(--border);}
+  html[data-theme="light"] .card h2,
+  html[data-theme="light"] .kv b,
+  html[data-theme="light"] .hotel-area .area-name,
+  html[data-theme="light"] .day-theme,
+  html[data-theme="light"] .alt-item b,
+  html[data-theme="light"] .slot .slot-name,
+  html[data-theme="light"] .summary-value,
+  html[data-theme="light"] .timeline-detail strong{color:#172235;}
+  html[data-theme="light"] .today-hero h2,
+  html[data-theme="light"] .today-hero .summary-value{color:#fff;}
+  html[data-theme="light"] .todo-item,
+  html[data-theme="light"] .hotel-opt,
+  html[data-theme="light"] .tab-btn,
+  html[data-theme="light"] .meta-tags span,
+  html[data-theme="light"] .timeline-detail{background:rgba(71,85,105,.07);}
+  html[data-theme="light"] #dayTabs{background:rgba(246,250,252,.95);}
+  html[data-theme="light"] #dayTabs .tab-btn.active{background:#087ba5;color:#fff;border-color:#06698d;box-shadow:0 2px 8px rgba(8,123,165,.28);}
+  html[data-theme="light"] #dayTabs .tab-btn:not(.active){background:#e3eaf0;color:#526174;border-color:#cbd5df;}
+  html[data-theme="light"] .slot::before{box-shadow:0 0 0 4px #edf3f7;}
+  html[data-theme="light"] .weather-location-select{background:#fff;color:#172235;}
+  html[data-theme="light"] .bottom-nav{background:rgba(248,251,253,.96);}
+  html[data-theme="light"] .theme-toggle{background:rgba(255,255,255,.9);color:#172235;}
+  @media (prefers-reduced-motion:reduce){.bottom-nav,header.hero,.theme-toggle,#dayTabs{transition:none;}}
+</style>
 </head>
 <body>
-<header class="hero animate__animated animate__fadeInDown">
-<div class="wrap">
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="切換為明亮主題" title="切換為明亮主題"><span aria-hidden="true">☀</span></button>
+<header class="hero">
+<div class="app-wrap">
     <div class="tag">❄️ 跨年滑雪與觀光全攻略</div>
-    <h1>東京＆野澤溫泉 10 天 9 夜跨年之旅</h1>
-    <div class="dates">2026/12/26（六）－ 2027/01/04（一）</div>
+  <h1 id="tripTitle">東京＆野澤溫泉 10 天 9 夜跨年之旅</h1>
+  <div class="dates" id="tripDates">2026/12/26（六）－ 2027/01/04（一）</div>
 </div>
 </header>
-<div class="wrap">
+<div class="app-wrap">
 
-  <nav class="quicknav" id="quickNav" aria-label="快速導覽">
-    <div class="quicknav-row">
-      <a href="#pretrip-section">行前須知</a>
-      <a href="#flights-section">航班</a>
-      <a href="#hotels-section">住宿</a>
-      <a href="#map-section">地圖</a>
-      <a href="#itinerary-section">每日行程</a>
-      <a href="#tips-section">小提醒</a>
-    </div>
-    <div class="quicknav-row quicknav-days" id="quickNavDays"></div>
-  </nav>
+  <section class="app-view active" data-view="home" id="home-view">
+    <article class="card today-hero">
+      <img class="cover-image" id="coverImage" alt="" onerror="this.style.display='none'">
+      <div class="cover-location" id="coverLocation"></div>
+      <div class="cover-content">
+        <div class="today-kicker" id="homeMode">旅程總覽</div>
+        <h1 class="cover-trip-title" id="coverTripTitle"></h1>
+        <div class="cover-trip-subtitle" id="coverTripSubtitle"></div>
+        <div class="cover-dates" id="coverDates"></div>
+        <div class="today-date" id="homeDate"></div>
+        <h2 id="homeDayTitle"></h2>
+        <div class="today-theme" id="homeTheme"></div>
+        <div class="next-card" id="homeNext"></div>
+        <div class="action-row">
+          <button class="app-action primary" type="button" data-open-view="schedule">查看行程</button>
+          <button class="app-action" type="button" data-open-view="schedule" data-scroll-target="map-section">開啟地圖</button>
+        </div>
+      </div>
+    </article>
+    <div class="summary-grid" id="homeSummary"></div>
+    <section class="card">
+      <h2 id="homeTimelineTitle"><span class="n">今日</span> 行程摘要</h2>
+      <div class="mini-timeline" id="homeTimeline"></div>
+    </section>
+  </section>
 
-  <section class="card" id="checklist-section">
-    <h2><span class="n">📋</span> 出發前待辦清單</h2>
+  <section class="card app-view" data-view="more" id="checklist-section">
+    <h2><span class="n">!</span> 重要提醒</h2>
     <div id="checklist"></div>
   </section>
 
-  <section class="card" id="pretrip-section">
+  <section class="card app-view" data-view="more" id="pretrip-section">
     <h2><span class="n">🌦️</span> 行前須知</h2>
-    <div class="kv"><b>天氣：</b>東京 12 月底～1 月初均溫約 5–12°C，晴朗乾燥；野澤溫泉／長野山區均溫約 -6–2°C，山頂體感更低，山區降雪頻繁、部分路段易積雪濕滑。</div>
-    <div class="kv"><b>季節提醒：</b>12 月至隔年 1 月非颱風季，但野澤溫泉山區需留意強降雪與低溫特報，跨年夜（12/31）深夜戶外活動請加強保暖。</div>
-    <div class="kv"><b>穿搭：</b>羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫。</div>
-    <div class="kv"><b>支付：</b>推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金。</div>
-    <div class="kv"><b>必備 App：</b>Suica（交通 IC 卡）、Yahoo!天気（天氣預報）、野澤溫泉滑雪場官方 App（雪況／纜車營運）、JR東日本 App（新幹線時刻／誤點資訊）。</div>
-    <div class="kv"><b>購票時機：</b>teamLab Planets 建議提前上網預約入場時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存。</div>
+    <div id="pretripContent"></div>
   </section>
 
-  <section class="card" id="flights-section">
-    <h2><span class="n">✈️</span> 航班</h2>
-    <div class="flight-row booked"><span class="pill">已預訂</span> <b>去程 中華航空 CI108</b><br>12/26 桃園機場 T2 14:25 起飛 → 成田機場 T2 18:45 抵達</div>
-    <div class="flight-row booked"><span class="pill">已預訂</span> <b>回程 中華航空 CI105</b><br>01/04 成田機場 T2 17:45 起飛 → 桃園機場 T2 20:55 抵達</div>
-  </section>
-
-  <section class="card" id="hotels-section">
-    <h2><span class="n">🏨</span> 住宿（區域＋狀態）</h2>
-    <div class="hotel-area">
-      <div class="area-name">四谷／新宿</div>
-      <div class="reason">鄰近新宿與東京車站，方便入境當晚與隔日市區遊玩</div>
-      <div class="hotel-opt"><span><span class="pill">已預訂</span> YKB Ensign Building（ＹＫＢエンサインビル）</span><span>12/26–12/28，共 2 晚</span></div>
-    </div>
-    <div class="hotel-area">
-      <div class="area-name">野澤溫泉</div>
-      <div class="reason">位於野澤溫泉滑雪村內，鄰近長坂纜車站與多處外湯</div>
-      <div class="hotel-opt"><span><span class="pill">已預訂</span> SUKINOZAWA（スキーノザワ）<br><span style="color:var(--text-dim);font-size:.72rem;">三人房含每日早餐，總價 ¥190,000</span></span><span>12/28–01/02，共 5 晚<br><span style="color:var(--text-dim);font-size:.72rem;">Wise 訂金 ¥57,000／現場尾款 ¥133,000（約 ¥44,333/人）</span></span></div>
-    </div>
-    <div class="hotel-area">
-      <div class="area-name">高田馬場／市區周邊</div>
-      <div class="reason">後兩晚返回東京，方便前往新宿、澀谷、吉祥寺</div>
-      <div class="hotel-opt"><span><span class="pill pending">待訂</span> 高田馬場站周邊飯店</span><span>01/02–01/04，共 2 晚</span></div>
-    </div>
-  </section>
-
-  <section class="card">
+  <section class="card app-view" data-view="more">
     <h2><span class="n">⚠️</span> 免責聲明</h2>
     <div class="disclaimer-box" id="disclaimer-text">本頁全部資訊（天氣、航班、住宿、餐廳、景點、門票、價格、營業時間、評分、活動等）均為 AI 依公開資料整理的參考建議，可能不準確或已過時，不保證與即時情況一致；請務必在官方管道／訂票訂房／地圖等 App 上核實後再做決定或前往。</div>
   </section>
 
-  <section class="card" id="map-section">
-    <div class="map-head"><h2><span class="n">🗺️</span> 互動地圖</h2><span class="map-state" id="mapState"></span></div>
-    <div id="map"></div>
-  </section>
-
-  <section class="card" id="itinerary-section">
+  <section class="card app-view" data-view="schedule" id="itinerary-section">
     <h2><span class="n">📅</span> 每日詳細行程</h2>
-    <div class="tabs" id="dayTabs">
-      <button class="tab-btn active" data-day="all">全行程</button>
-      <button class="tab-btn" data-day="day1">Day1 12/26</button>
-      <button class="tab-btn" data-day="day2">Day2 12/27</button>
-      <button class="tab-btn" data-day="day3">Day3 12/28</button>
-      <button class="tab-btn" data-day="day4">Day4 12/29</button>
-      <button class="tab-btn" data-day="day5">Day5 12/30</button>
-      <button class="tab-btn" data-day="day6">Day6 12/31</button>
-      <button class="tab-btn" data-day="day7">Day7 01/01</button>
-      <button class="tab-btn" data-day="day8">Day8 01/02</button>
-      <button class="tab-btn" data-day="day9">Day9 01/03</button>
-      <button class="tab-btn" data-day="day10">Day10 01/04</button>
-    </div>
+    <div class="tabs" id="dayTabs"></div>
     <div id="dayCards"></div>
   </section>
 
-  <section class="card" id="tips-section">
-    <h2><span class="n">💡</span> 全程實用小提醒</h2>
-    <ul class="tips-list">
-      <li>北陸新幹線東京⇄飯山來回自由席約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算，此行程不建議購買 JR Pass。</li>
-      <li>跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間。</li>
-      <li>野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用。</li>
-      <li>2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運。</li>
-      <li>滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨。</li>
-      <li>teamLab Planets 需赤腳涉水，建議穿著可捲高褲管的長褲、避免裙裝與跟鞋，並自備小毛巾擦腳。</li>
-    </ul>
+  <section class="card app-view" data-view="schedule" id="map-section">
+    <div class="map-head"><h2><span class="n">🗺️</span> 互動地圖</h2><span class="map-state" id="mapState"></span></div>
+    <div class="tabs" id="mapDayTabs"></div>
+    <div id="map"></div>
   </section>
 
-  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · v3（travel-plan-viz skill 生成）</footer>
+  <section class="card app-view" data-view="more" id="tips-section">
+    <h2><span class="n">💡</span> 全程實用小提醒</h2>
+    <ul class="tips-list" id="tipsList"></ul>
+  </section>
+
+  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · App 版</footer>
 </div>
+
+<nav class="bottom-nav" aria-label="主要導覽">
+  <button class="nav-btn active" type="button" data-view-target="home"><span class="nav-icon">⌂</span><span>首頁</span></button>
+  <button class="nav-btn" type="button" data-view-target="schedule"><span class="nav-icon">▦</span><span>行程</span></button>
+  <button class="nav-btn" type="button" data-view-target="more"><span class="nav-icon">•••</span><span>更多</span></button>
+</nav>
 
 <script id="trip-data" type="application/json">
 {
   "title": "東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅",
   "startDate": "2026-12-26",
   "colorScheme": "雪夜冰藍．跨年金",
+  "coverPhoto": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg",
+  "coverTitle": "東京 × 野澤溫泉",
+  "coverSubtitle": "10 天 9 夜跨年滑雪之旅",
+  "coverLocation": "野澤溫泉 · 毛無山",
+  "weatherLocations": {
+    "tokyo": { "label": "東京", "lat": 35.681236, "lng": 139.767125, "seasonal": "5–12°C，晴朗乾燥", "tenkiUrl": "https://tenki.jp/forecast/3/16/4410/13101/" },
+    "nozawa": { "label": "野澤溫泉", "lat": 36.922678, "lng": 138.442312, "seasonal": "-6–2°C，山區降雪", "tenkiUrl": "https://tenki.jp/forecast/3/23/4810/20563/" }
+  },
   "preTrip": {
     "weather": {
       "summary": "東京 12 月底～1 月初均溫約 5–12°C，晴朗乾燥；野澤溫泉／長野山區均溫約 -6–2°C，山頂體感更低，山區降雪頻繁、部分路段易積雪濕滑",
@@ -236,21 +374,21 @@
       "area": "四谷／新宿（YKB Ensign Building）",
       "reason": "鄰近新宿與東京車站，方便入境當晚與隔日市區遊玩",
       "options": [
-        { "tier": "已預訂", "name": "YKB Ensign Building（ＹＫＢエンサインビル）", "priceRange": "—", "note": "12/26–12/28，共 2 晚" }
+        { "tier": "已預訂", "name": "YKB Ensign Building（ＹＫＢエンサインビル）", "priceRange": "—", "note": "12/26–12/28，共 2 晚", "checkIn": "2026-12-26", "checkOut": "2026-12-28" }
       ]
     },
     {
       "area": "野澤溫泉（SUKINOZAWA）",
       "reason": "位於野澤溫泉滑雪村內，鄰近長坂纜車站與多處外湯",
       "options": [
-        { "tier": "已預訂", "name": "SUKINOZAWA（スキーノザワ）", "priceRange": "總價 ¥190,000（三人房含每日早餐）", "note": "12/28–01/02，共 5 晚；Wise 訂金 ¥57,000，現場尾款 ¥133,000（約 ¥44,333/人）" }
+        { "tier": "已預訂", "name": "SUKINOZAWA（スキーノザワ）", "priceRange": "總價 ¥190,000（三人房含每日早餐）", "note": "12/28–01/02，共 5 晚；Wise 訂金 ¥57,000，現場尾款 ¥133,000（約 ¥44,333/人）", "checkIn": "2026-12-28", "checkOut": "2027-01-02" }
       ]
     },
     {
       "area": "高田馬場／市區周邊",
       "reason": "後兩晚返回東京，方便前往新宿、澀谷、吉祥寺",
       "options": [
-        { "tier": "待訂", "name": "高田馬場站周邊飯店", "priceRange": "—", "note": "01/02–01/04，共 2 晚，尚待確定飯店" }
+        { "tier": "待訂", "name": "高田馬場站周邊飯店", "priceRange": "—", "note": "01/02–01/04，共 2 晚，尚待確定飯店", "checkIn": "2027-01-02", "checkOut": "2027-01-04" }
       ]
     }
   ],
@@ -259,13 +397,15 @@
     "北陸新幹線東京⇄飯山來回自由席約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算，此行程不建議購買 JR Pass",
     "跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間",
     "野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用",
+    "Day 3–7 晚餐依 Nozawa Holidays 當地餐飲指南安排；村內店家常有固定休息日，12/31～1/1 請以訂位頁或店家公告確認是否營業",
     "2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運",
     "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨",
     "teamLab Planets 需赤腳涉水，建議穿著可捲高褲管的長褲、避免裙裝與跟鞋，並自備小毛巾擦腳"
   ],
   "reminders": [
-    { "item": "teamLab Planets TOKYO（豐洲）入場時段預約門票", "leadDays": 14 },
+    { "item": "SHIBUYA SKY 12/27 20:00 入場門票", "leadDays": 28 },
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
+    { "item": "野澤溫泉 12/28–1/1 晚餐：優先店家訂位並確認跨年營業日", "leadDays": 21 },
     { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
     { "item": "高田馬場／市區後兩晚飯店預訂（尚未確定）", "leadDays": 30 }
   ],
@@ -281,67 +421,73 @@
       ]
     },
     {
-      "date": "2026-12-27", "weekday": "週日", "theme": "teamLab Planets 豐洲．澀谷原宿潮流",
+      "date": "2026-12-27", "weekday": "週日", "theme": "築地早餐．台場購物．澀谷夜景",
+      "tips": ["豐洲市場週日原則上休市，本日改逛築地場外市場；個別店家仍可能休息，請出發前確認", "SHIBUYA SKY 建議 19:30 前抵達 14 樓入場口，預留排隊與安檢時間"],
       "slots": [
-        { "period": "morning", "name": "teamLab Planets TOKYO（豐洲）", "time": "10:00–13:00", "lat": 35.655300, "lng": 139.793000, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/TEAM_LAB_univers_r.jpg/500px-TEAM_LAB_univers_r.jpg", "rating": 4.7, "review": "沉浸式光影互動美術館，館內需赤腳涉水體驗（水深可及膝），建議穿著可捲高褲管的長褲、避免裙裝與跟鞋；「水晶宇宙」「無限錦鯉」等展區為必看亮點，建議停留 2–2.5 小時。採 30 分鐘分時預約入場制，請提前於官方 Ticket Store 或 KKday／KLOOK 預訂時段。", "ticketPrice": "成人約 ¥3,800–5,000（依日期時段浮動）", "openingHours": "約 09:00–22:00（最後入場為閉館前 1 小時，依季節與平假日調整）", "needsBooking": true, "leadDays": 14 },
-        { "period": "noon", "name": "原宿 Cat Street．宮下公園 (MIYASHITA PARK)", "time": "14:00–17:00", "lat": 35.6620, "lng": 139.7024, "review": "原宿裏路巷弄與宮下公園逛街購物，感受東京潮流文化", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息。", "needsBooking": false, "leadDays": 0 }
-      ],
-      "dining": [{ "meal": "晚餐", "place": "澀谷／新宿人氣燒肉店", "hours": "建議晚間 18:00 前入座避開排隊高峰", "dishes": [{ "name": "和牛拼盤", "price": "約 ¥4,000–6,000／人" }] }]
-    },
-    {
-      "date": "2026-12-28", "weekday": "週一", "theme": "北陸新幹線．野澤溫泉入村",
-      "tips": ["外湯多由當地居民自主管理，請務必依現場禮儀規範使用"],
-      "slots": [
-        { "period": "morning", "name": "JR 飯山站", "time": "09:00–11:30", "lat": 36.851058, "lng": 138.365325, "review": "自東京車站搭乘北陸新幹線至飯山站，轉乘 Nozawa Onsen Shuttle 巴士前往野澤溫泉村", "transport": { "mode": "北陸新幹線", "fare": "自由席約 ¥8,000–8,500（單程）", "duration": "約 1.5 小時" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "SUKINOZAWA Check-in", "time": "13:00–14:30", "lat": 36.921063, "lng": 138.445188, "review": "辦理入住並支付現場尾款 ¥133,000 JPY（約 ¥44,333／人）", "needsBooking": true, "leadDays": 7 },
-        { "period": "noon", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "14:30–17:00", "lat": 36.920895, "lng": 138.444962, "review": "租借未來 5 日滑雪裝備並購買雪票，建議提早預約避開旺季排隊", "needsBooking": true, "leadDays": 14 },
-        { "period": "evening", "name": "外湯巡禮：大湯", "time": "17:00–18:30", "lat": 36.922166, "lng": 138.445413, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/O-Yu_onsen_on_rainy_night.jpg?width=600", "rating": 4.5, "review": "野澤代表性外湯之一，泡湯前請先投香油錢並保持安靜", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "18:30 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "築地場外市場早餐", "time": "08:00–10:30", "lat": 35.665486, "lng": 139.770667, "photo": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Tsukiji_Outer_Market_-04.jpg", "review": "逛築地場外市場並享用海鮮丼、玉子燒等早餐。週日上午部分店家可能休息，建議優先選擇現場已營業且排隊合理的店家。", "openingHours": "多數店家約 06:00–14:00；各店營業日不同", "transport": { "mode": "都營地鐵／步行", "fare": "依出發站計費", "duration": "飯店至築地約 30–40 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "台場購物散策", "time": "11:15–16:30", "lat": 35.625149, "lng": 139.775683, "review": "從築地步行或搭地鐵前往新橋，再轉百合海鷗線至台場。依興趣安排 DiverCity Tokyo Plaza、AQUA CiTY 或 DECKS Tokyo Beach，保留午餐與休息時間。", "transport": { "mode": "都營地鐵／百合海鷗線", "fare": "約 ¥500–700", "duration": "築地至台場約 35–45 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "澀谷逛街與晚餐", "time": "17:30–19:20", "lat": 35.659517, "lng": 139.700455, "review": "從台場經新橋轉 JR 前往澀谷，先在澀谷站周邊用餐，再步行前往 SHIBUYA SKY。建議 19:20 前結束晚餐。", "transport": { "mode": "百合海鷗線／JR", "fare": "約 ¥600", "duration": "台場至澀谷約 40–50 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "SHIBUYA SKY 夜景", "time": "20:00–21:00", "lat": 35.658439, "lng": 139.702154, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Scramble_Square_2020.jpg?width=1200", "review": "預約 20:00 入場，從澀谷 Scramble Square 14 樓入口報到。冬季屋頂風大且體感低，部分隨身物品需寄放；若屋頂因天候關閉，仍可使用室內展望區。", "openingHours": "依官方公告與預約時段為準", "ticketPrice": "採分時預約，價格請以官方售票頁為準", "needsBooking": true, "leadDays": 28, "actionLink": { "label": "官方購票資訊", "url": "https://www.shibuya-scramble-square.com/sky/ticket/" } },
+        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "21:30 後", "lat": 35.687813, "lng": 139.715563, "review": "SHIBUYA SKY 結束後搭乘 JR／地鐵返回 YKB Ensign Building 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
-      "date": "2026-12-29", "weekday": "週二", "theme": "熱身滑雪．日影上之平",
-      "tips": ["首日滑雪以熱身、熟悉雪道與裝備為主，避免逞強挑戰高難度雪道"],
+      "date": "2026-12-28", "weekday": "週一", "theme": "提早入村．日影上之平半日滑",
+      "tips": ["前一晚先整理雪具隨身物品，搭早班北陸新幹線才能保留半日滑雪時間", "15:30 開始往山下移動，務必依當日纜車末班與雪道關閉時間調整", "Gochisou Pizza 的 TableCheck 目前可能顯示未開放訂位，請出發前再次確認"],
       "slots": [
-        { "period": "morning", "name": "長坂／日影纜車滑雪區", "time": "08:30–17:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nozawa_Onsen_Schanze_slopecar.jpg?width=600", "rating": 4.6, "review": "SUKINOZAWA 享用早餐後搭乘長坂／日影纜車開滑，主攻日影區域與上之平寬廣綠線熱身", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–19:00", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "19:00 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "東京站 → JR 飯山站", "time": "07:30–10:10", "lat": 36.851058, "lng": 138.365325, "review": "搭早班北陸新幹線至飯山站，再轉乘 Nozawa Onsen Liner／接駁巴士進村。實際車次與冬季接駁時刻需於出發前核對。", "transport": { "mode": "北陸新幹線／接駁巴士", "fare": "新幹線自由席約 ¥8,000–8,500（單程）", "duration": "東京至飯山約 1.5–2 小時，接駁約 25 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "SUKINOZAWA 寄放行李／辦理入住資料", "time": "10:40–11:15", "lat": 36.921063, "lng": 138.445188, "review": "先寄放行李並確認正式入住與尾款流程；若客房尚未整理完成，滑雪後再領房。現場尾款 ¥133,000 JPY（約 ¥44,333／人）。", "needsBooking": true, "leadDays": 7 },
+        { "period": "morning", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "11:15–12:15", "lat": 36.920895, "lng": 138.444962, "review": "領取未來 5 日滑雪裝備與雪票，現場確認尺寸、固定器及歸還時間。旺季建議預約避免排隊或缺貨。", "needsBooking": true, "leadDays": 14 },
+        { "period": "noon", "name": "Day 3｜日影・上之平・Paradise 半日滑", "time": "12:30–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "抵達日以日影服務區出發，利用纜車前往上之平與 Paradise 的寬緩雪道熟悉裝備和雪況。15:30 起收尾並依官方末班資訊下山，不追求里程。", "seasonal": "抵達日半日滑；依纜車與雪道開放狀況調整", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "外湯巡禮：大湯", "time": "16:30–18:00", "lat": 36.922166, "lng": 138.445413, "rating": 4.5, "review": "滑雪後前往野澤代表性外湯泡湯，入湯前請投香油錢並遵守現場禮儀。", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：Gochisou Pizza", "time": "19:00–20:30", "lat": 36.9245084, "lng": 138.4459862, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/10/Screen-Shot-2023-10-03-at-11.50.30-AM.png", "review": "現做手工披薩吧，招牌為茄子披薩，平均單品約 ¥2,200。TableCheck 頁面目前可能顯示未開放訂位，請用下方連結查看最新狀態。", "openingHours": "17:00–23:00；跨年營業日請以店家公告確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/gochisoupizzabar/reserve" } },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
-      "date": "2026-12-30", "weekday": "週三", "theme": "全山巡航．毛無山樹冰",
-      "tips": ["攻頂前請先確認纜車與雪道開放狀況，山頂氣溫明顯較低，務必加強保暖"],
+      "date": "2026-12-29", "weekday": "週二", "theme": "上部巡航．Yamabiko 粉雪",
+      "tips": ["主攻 Yamabiko A–E 與上之平區域；出發前先看官方纜車、能見度與雪道狀態", "Tengu Sushi at Tanuki 晚間座位有限，建議先完成線上訂位"],
       "slots": [
-        { "period": "morning", "name": "長坂纜車 (Nagasaka Gondola)", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "搭乘長坂纜車直達山頂，攻頂毛無山欣賞樹冰景致與頂級粉雪", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "Day 4｜Yamabiko A–E・上之平巡航", "time": "08:30–16:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "rating": 4.6, "review": "搭長坂纜車前往上部雪場，以 Yamabiko A–E 與上之平為主軸進行完整巡航。上部雪況通常較佳，但風大或能見度差時改留在上之平與 Paradise。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–18:15", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：Tengu Sushi at Tanuki", "time": "18:30–20:00", "lat": 36.922166, "lng": 138.445413, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-04-at-5.39.31-PM.png", "review": "大湯路口的江戶前壽司店，主打握壽司、刺身拼盤與熟食；套餐每人約 ¥12,000 起。雪季熱門，建議事先線上訂位。", "openingHours": "17:30–20:00（每席約 1.5 小時）；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/tanukinozawa-tengu-sushi/reserve/" } },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:00 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+      ]
+    },
+    {
+      "date": "2026-12-30", "weekday": "週三", "theme": "中段長距離．Paradise 林間線",
+      "tips": ["主軸為 Paradise → Forest Trail → 日影／柄澤回圈；林間段較窄，同行者請約定集合點避免走散", "Wagyutei 目前無法核實穩定的官方訂位頁，先以官方雪場介紹頁確認資訊"],
+      "slots": [
+        { "period": "morning", "name": "Day 5｜Paradise・Forest Trail・柄澤回圈", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "從 Paradise 進入約 5 公里的 Forest Trail，再銜接日影或柄澤回圈，體驗和前一日不同的中段長距離路線。林間段多處較窄，請控制速度。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "山頂 Rest House Yamabiko", "time": "12:30–13:30", "lat": 36.920895, "lng": 138.444962, "review": "山頂餐廳享用名物燒肉丼，補充體力後繼續全山巡航", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "野澤溫泉街散策", "time": "18:00–20:00", "lat": 36.922678, "lng": 138.442312, "review": "品嚐溫泉包子與信州和牛居酒屋，感受溫泉街夜晚氛圍", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:00 後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "noon", "name": "日影／柄澤中段巡航", "time": "13:30–16:00", "lat": 36.922678, "lng": 138.442312, "review": "午餐後不再返回 Yamabiko，留在日影與柄澤區域練習中段雪道，16:00 前收尾下山。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：Wagyutei", "time": "18:30–20:30", "lat": 36.922300, "lng": 138.445300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/09/Screen-Shot-2023-09-11-at-12.35.02-PM.png", "review": "溫泉街主路旁的和牛壽喜燒、涮涮鍋專門店，適合三人分享；官方參考價每人約 ¥3,800–8,000。尚無穩定可核實的官方訂位頁，先查看官方介紹並於出發前聯絡店家。", "openingHours": "18:00–22:00；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "官方資訊", "url": "https://en.nozawaski.com/shop_restaurant/2241/" } },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [
-        { "meal": "午餐", "place": "山頂 Rest House Yamabiko", "hours": "約 09:00–15:00（依雪場營運時間）", "dishes": [{ "name": "名物燒肉丼", "price": "約 ¥1,500–1,800" }] },
-        { "meal": "晚餐", "place": "野澤溫泉街居酒屋", "hours": "約 17:00–22:00", "dishes": [{ "name": "信州和牛燒烤", "price": "約 ¥3,000–4,000／人" }, { "name": "溫泉饅頭", "price": "約 ¥150／個" }] }
+        { "meal": "午餐", "place": "山頂 Rest House Yamabiko", "hours": "約 09:00–15:00（依雪場營運時間）", "dishes": [{ "name": "名物燒肉丼", "price": "約 ¥1,500–1,800" }] }
       ]
     },
     {
       "date": "2026-12-31", "weekday": "週四", "theme": "大晦日．除夜之鐘跨年",
-      "tips": ["跨年夜山區氣溫更低，前往除夜之鐘請務必攜帶暖暖包與保暖衣物", "深夜活動請注意路面積雪濕滑，建議穿著防滑雪靴"],
+      "tips": ["主攻 Skyline 與一般 Challenge 路線；避開 Challenge 39°、Schneider 等高難度區", "跨年夜山區氣溫更低，前往除夜之鐘請務必攜帶暖暖包與防滑雪靴", "Pots TableCheck 目前可能顯示未開放訂位，12/31 營業必須再次確認"],
       "slots": [
-        { "period": "morning", "name": "Challenge ＆ Paradise 雪道", "time": "09:00–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "暢滑野澤各大雪道，感受大晦日限定的悠閒雪場氛圍", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "Day 6｜Skyline・Challenge 中階挑戰", "time": "09:00–15:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "以 Skyline 與一般 Challenge 雪道為主，避開 Challenge 39°、Schneider 與 Utopia A 等上級路線。Skyline 入口部分路段較窄，請降低速度並視能見度調整。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：Pots Bar and Kitchen", "time": "18:00–20:00", "lat": 36.921400, "lng": 138.444100, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-16-at-13.34.53.png", "review": "野澤計程車站後方的韓式居酒屋，主打火鍋、涮涮鍋與韓式炸雞。TableCheck 目前可能顯示未開放訂位；大晦日若未營業，改用 Kongo 美食廣場或外帶，並於下午先購入年越蕎麥。", "openingHours": "18:00–23:00；12/31 營業與座位請優先確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/potsbar-kitchen/reserve" } },
         { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "00:30 後", "lat": 36.921063, "lng": 138.445188, "review": "跨年活動結束後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
-      ],
-      "dining": [{ "meal": "晚餐", "place": "野澤溫泉街", "hours": "18:30 起", "dishes": [{ "name": "年越蕎麥麵 (Toshikoshi Soba)", "price": "約 ¥800–1,200" }] }]
+      ]
     },
     {
-      "date": "2027-01-01", "weekday": "週五", "theme": "元旦首滑．新年溫泉慶祝",
-      "tips": ["元旦當天部分店家可能休息或縮短營業時間，請提前確認"],
+      "date": "2027-01-01", "weekday": "週五", "theme": "元旦恢復滑．柄澤日影",
+      "tips": ["最後一個滑雪日改走柄澤寬緩雪道與日影區，降低連滑疲勞並預留歸還雪具時間", "元旦店家可能休息或縮短營業；Winterland 請先完成線上訂位並再次確認營業"],
       "slots": [
-        { "period": "morning", "name": "元旦首滑 (First Tracks)", "time": "08:30–15:00", "lat": 36.922678, "lng": 138.442312, "review": "2027 元旦早晨迎曙光，進行元旦首滑，感受新年第一道雪道的清爽", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–20:00", "lat": 36.921651, "lng": 138.445988, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/麻釜湯.jpg?width=600", "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，晚間享用新年慶祝大餐", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "晚餐後", "lat": 36.921063, "lng": 138.445188, "review": "返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
-      ],
-      "dining": [{ "meal": "晚餐", "place": "野澤溫泉街新年特別套餐", "hours": "依店家公告", "dishes": [{ "name": "御節料理／新年特餐", "price": "約 ¥3,000–5,000／人" }] }]
+        { "period": "morning", "name": "Day 7｜柄澤・日影恢復滑", "time": "08:30–14:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "元旦以柄澤寬緩雪道與日影區輕鬆巡航，視體力補 1–2 趟上之平，不再安排 Skyline 或 Yamabiko 長距離路線。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "歸還雪具", "time": "14:30–15:30", "lat": 36.920895, "lng": 138.444962, "review": "提早結束最後一日滑雪，在租借店營業時間內完成雪具檢查與歸還。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–18:15", "lat": 36.921651, "lng": 138.445988, "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，再前往預訂的新年晚餐。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：Winterland Taproom and Gyoza Bar", "time": "18:30–20:30", "lat": 36.922100, "lng": 138.444300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Winterland-Nozawa-Onsen-Gyoza.jpg", "review": "中央巴士站旁的餃子啤酒吧，主打使用在地食材的手工餃子，平均單品約 ¥1,200。元旦若未營業，改用 Kongo 美食廣場或 Genki Burger 外帶。", "openingHours": "07:00–22:00；1/1 營業與座位請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/winterlandtaproom-gyozabar/reserve/landing" } },
+        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+      ]
     },
     {
       "date": "2027-01-02", "weekday": "週六", "theme": "飯山初詣．返回東京",
@@ -392,22 +538,11 @@ function escapeHTML(s) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
-function buildNavLink(lat, lng, label, ua) {
-  if (ua && /iPhone|iPad|iPod/.test(ua)) {
-    return 'https://maps.apple.com/?ll=' + lat + ',' + lng + '&q=' + encodeURIComponent(label);
-  }
-  return 'geo:' + lat + ',' + lng + '?q=' + lat + ',' + lng + '(' + encodeURIComponent(label) + ')';
-}
 function buildMapAppLinks(lat, lng, label) {
-  var google = {
-    label: 'Google 地圖',
+  return [{
+    label: 'Google 地圖導航',
     url: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(lat + ',' + lng),
-  };
-  var apple = {
-    label: 'Apple 地圖',
-    url: 'https://maps.apple.com/?ll=' + lat + ',' + lng + '&q=' + encodeURIComponent(label),
-  };
-  return [google, apple];
+  }];
 }
 var GCJ_A = 6378245.0;
 var GCJ_EE = 0.00669342162296594323;
@@ -452,9 +587,10 @@ function initTravelMap(elementId, points, opts) {
   }).addTo(map);
   var markerLayer = L.layerGroup().addTo(map);
   var routeLine;
-  var ua = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+  var markersByNumber = {};
   map.setTravelPoints = function (nextPoints) {
     markerLayer.clearLayers();
+    markersByNumber = {};
     if (routeLine) map.removeLayer(routeLine);
     nextPoints.forEach(function (p, i) {
       var number = p.number || (i + 1);
@@ -464,21 +600,27 @@ function initTravelMap(elementId, points, opts) {
         iconSize: [28, 28],
         iconAnchor: [14, 14],
       });
-      var navLinks = [{ label: '導航', url: buildNavLink(p.lat, p.lng, p.name, ua) }]
-        .concat(buildMapAppLinks(p.lat, p.lng, p.name));
-      L.marker([p.lat, p.lng], { icon: icon }).addTo(markerLayer).bindPopup(
+      var navLinks = buildMapAppLinks(p.lat, p.lng, p.name);
+      var marker = L.marker([p.lat, p.lng], { icon: icon }).addTo(markerLayer).bindPopup(
         '<b>地圖 #' + number + ' · ' + escapeHTML(p.name) + '</b><br>'
         + (p.time ? escapeHTML(p.time) + '<br>' : '')
         + navLinks.map(function (l) {
             return '<a href="' + l.url + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
           }).join(' · ')
       );
+          markersByNumber[number] = marker;
     });
     var coords = routeCoordinates(nextPoints);
     if (coords.length > 1) {
       routeLine = L.polyline(coords, { dashArray: '6 8', weight: 2, color: '#38bdf8' }).addTo(map);
     }
     if (coords.length) map.fitBounds(coords, { padding: [30, 30] });
+  };
+  map.openTravelPoint = function (number) {
+    var marker = markersByNumber[number];
+    if (!marker) return;
+    map.panTo(marker.getLatLng());
+    marker.openPopup();
   };
   map.setTravelPoints(points);
   return map;
@@ -500,8 +642,7 @@ function computeReminders(startDateISO, items) {
 }
 function renderChecklistHTML(reminders) {
   var lis = reminders.map(function (r) {
-    return '<li class="todo-item">'
-      + '<input type="checkbox"> '
+    return '<li class="todo-item reminder-item">'
       + '<span class="todo-deadline">' + r.deadline + '前</span> '
       + '<span class="todo-text">' + escapeHTML(r.item) + '（建議提前' + r.leadDays + '天）</span>'
       + '</li>';
@@ -518,9 +659,148 @@ function reminderBadgeHTML(leadDays) {
 (function () {
   var trip = JSON.parse(document.getElementById('trip-data').textContent);
 
-  // 頁頂待辦清單
+  // 依出發日計算重要提醒，不提供勾選狀態。
   var reminders = computeReminders(trip.startDate, trip.reminders);
   document.getElementById('checklist').innerHTML = renderChecklistHTML(reminders);
+
+  function startTime(value) {
+    var match = String(value || '').match(/\d{1,2}:\d{2}/);
+    return match ? match[0] : String(value || '彈性');
+  }
+
+  function dateKey(date) {
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
+  }
+
+  function shortDate(value) {
+    var parts = value.split('-');
+    return Number(parts[1]) + '/' + Number(parts[2]);
+  }
+
+  function lodgingForDate(date) {
+    var match = null;
+    (trip.hotelAreas || []).some(function (hotel) {
+      return (hotel.options || []).some(function (option) {
+        if (option.checkIn && option.checkOut && date >= option.checkIn && date < option.checkOut) {
+          match = { area: hotel.area, reason: hotel.reason, option: option };
+          return true;
+        }
+        return false;
+      });
+    });
+    return match;
+  }
+
+  function renderFlightSlot(flight) {
+    if (!flight) return '';
+    return '<div class="slot slot-flight">'
+      + '<div class="slot-name">✈️ ' + escapeHTML(flight.label) + ' <span class="pill">已預訂</span></div>'
+      + '<div class="slot-time">' + escapeHTML(startTime(flight.time)) + '</div>'
+      + '<div class="timeline-detail"><strong>' + escapeHTML(flight.code || flight.label) + '</strong>' + escapeHTML(flight.time) + '</div>'
+      + '</div>';
+  }
+
+  function weatherDescription(code) {
+    if (code === 0) return { icon: '☀', text: '晴朗' };
+    if (code <= 2) return { icon: '🌤', text: '晴時多雲' };
+    if (code === 3) return { icon: '☁', text: '陰天' };
+    if (code === 45 || code === 48) return { icon: '🌫', text: '有霧' };
+    if (code >= 51 && code <= 67) return { icon: '🌧', text: '有雨' };
+    if (code >= 71 && code <= 77) return { icon: '❄', text: '降雪' };
+    if (code >= 80 && code <= 82) return { icon: '🌦', text: '陣雨' };
+    if (code === 85 || code === 86) return { icon: '🌨', text: '陣雪' };
+    if (code >= 95) return { icon: '⛈', text: '雷雨' };
+    return { icon: '◌', text: '天氣資料' };
+  }
+
+  var weatherRequestToken = 0;
+
+  function weatherSelectorHTML(selectedKey) {
+    return '<select class="weather-location-select" aria-label="選擇天氣地點">'
+      + '<option value="current"' + (selectedKey === 'current' ? ' selected' : '') + '>目前位置</option>'
+      + '<option value="tokyo"' + (selectedKey === 'tokyo' ? ' selected' : '') + '>東京</option>'
+      + '<option value="nozawa"' + (selectedKey === 'nozawa' ? ' selected' : '') + '>野澤</option>'
+      + '</select>';
+  }
+
+  function weatherHeaderHTML(selectedKey) {
+    return '<div class="weather-head"><div class="summary-label">目前天氣</div>' + weatherSelectorHTML(selectedKey) + '</div>';
+  }
+
+  function weatherLinksHTML(location) {
+    return '<div class="weather-links"><a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>'
+      + (location.tenkiUrl ? '<a href="' + location.tenkiUrl + '" target="_blank" rel="noopener">Tenki.jp 詳細預報</a>' : '') + '</div>';
+  }
+
+  function renderWeatherFallback(card, location, selectedKey) {
+    card.innerHTML = weatherHeaderHTML(selectedKey) + '<div class="summary-value weather-value"><span class="weather-icon">◌</span><span>' + escapeHTML(location.label) + '</span></div>'
+      + '<div class="summary-note">' + escapeHTML(location.seasonal) + ' · 動態資料暫時無法取得</div>' + weatherLinksHTML(location);
+  }
+
+  function updateHomeWeather(dayIndex, selectedKey, customLocation) {
+    var locations = trip.weatherLocations || {};
+    var defaultKey = dayIndex >= 2 && dayIndex <= 6 ? 'nozawa' : 'tokyo';
+    var weatherKey = selectedKey || defaultKey;
+    var location = customLocation || locations[weatherKey] || locations[defaultKey];
+    var card = document.getElementById('weatherCard');
+    if (!location || !card) return;
+    var requestToken = ++weatherRequestToken;
+    card.innerHTML = weatherHeaderHTML(weatherKey) + '<div class="summary-value">載入中…</div><div class="summary-note">' + escapeHTML(location.label) + '</div>';
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + location.lat + '&longitude=' + location.lng
+      + '&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1';
+    fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('Weather request failed');
+      return response.json();
+    }).then(function (data) {
+      if (requestToken !== weatherRequestToken) return;
+      var current = data.current;
+      var daily = data.daily;
+      var weather = weatherDescription(current.weather_code);
+      var updatedAt = String(current.time || '').slice(11, 16);
+      card.innerHTML = weatherHeaderHTML(weatherKey)
+        + '<div class="summary-value weather-value"><span class="weather-icon">' + weather.icon + '</span><span>' + Math.round(current.temperature_2m) + '°C</span></div>'
+        + '<div class="summary-note">' + escapeHTML(location.label) + ' · ' + weather.text + ' · 體感 ' + Math.round(current.apparent_temperature) + '°C<br>今日 ' + Math.round(daily.temperature_2m_min[0]) + '–' + Math.round(daily.temperature_2m_max[0]) + '°C · ' + updatedAt + ' 更新</div>'
+        + weatherLinksHTML(location);
+    }).catch(function () {
+      if (requestToken === weatherRequestToken) renderWeatherFallback(card, location, weatherKey);
+    });
+  }
+
+  function renderTripSummary() {
+    var preTrip = trip.preTrip || {};
+    var weather = preTrip.weather || {};
+    document.getElementById('tripTitle').textContent = trip.title;
+    document.getElementById('tripDates').textContent = shortDate(trip.days[0].date) + '－' + shortDate(trip.days[trip.days.length - 1].date);
+    document.getElementById('coverTripTitle').textContent = trip.coverTitle || trip.title;
+    document.getElementById('coverTripSubtitle').textContent = trip.coverSubtitle || '';
+    document.getElementById('coverLocation').textContent = trip.coverLocation || '';
+    document.getElementById('coverDates').textContent = shortDate(trip.days[0].date) + '－' + shortDate(trip.days[trip.days.length - 1].date);
+    document.getElementById('coverImage').src = trip.coverPhoto || '';
+    document.getElementById('pretripContent').innerHTML = [
+      ['天氣', weather.summary],
+      ['季節提醒', weather.typhoon],
+      ['穿搭', preTrip.packing],
+      ['支付', preTrip.payment],
+      ['必備 App', (preTrip.apps || []).join('、')],
+      ['購票時機', preTrip.ticketTip]
+    ].filter(function (item) { return item[1]; }).map(function (item) {
+      return '<div class="kv"><b>' + escapeHTML(item[0]) + '：</b>' + escapeHTML(item[1]) + '</div>';
+    }).join('');
+
+    document.getElementById('disclaimer-text').textContent = trip.disclaimer;
+    document.getElementById('tipsList').innerHTML = (trip.tips || []).map(function (tip) {
+      return '<li>' + escapeHTML(tip) + '</li>';
+    }).join('');
+  }
+
+  renderTripSummary();
+
+  function isRestaurantSlot(slot) {
+    return /^晚餐[：:]/.test(slot.name || '');
+  }
 
   // 地圖：彙整所有 slot 座標
   var points = [];
@@ -529,13 +809,20 @@ function reminderBadgeHTML(leadDays) {
     var dayId = 'day' + (di + 1);
     pointsByDay[dayId] = [];
     (day.slots || []).forEach(function (s) {
+      if (isRestaurantSlot(s)) {
+        delete s.mapNumber;
+        return;
+      }
       s.mapNumber = points.length + 1;
       var point = { lat: s.lat, lng: s.lng, name: s.name, time: s.time, number: s.mapNumber };
       points.push(point);
       pointsByDay[dayId].push(point);
     });
   });
-  var travelMap = initTravelMap('map', points);
+  var travelMap = initTravelMap('map', points, {
+    tileUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri'
+  });
   var mapStateEl = document.getElementById('mapState');
   function updateTravelMap(day) {
     var selectedPoints = day === 'all' ? points : (pointsByDay[day] || []);
@@ -553,8 +840,24 @@ function reminderBadgeHTML(leadDays) {
   var periodLabel = { morning: '早', noon: '中', evening: '晚', stay: '住宿' };
   var dayCardsEl = document.getElementById('dayCards');
   var html = '';
+  var dayTabsEl = document.getElementById('dayTabs');
+  [{ id: 'all', label: '全行程' }].concat(trip.days.map(function (day, index) {
+    return { id: 'day' + (index + 1), label: 'D' + (index + 1) + ' ' + shortDate(day.date) };
+  })).forEach(function (item) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tab-btn' + (item.id === 'all' ? ' active' : '');
+    button.dataset.day = item.id;
+    button.textContent = item.label;
+    dayTabsEl.appendChild(button);
+  });
   trip.days.forEach(function (day, di) {
     var dayId = 'day' + (di + 1);
+    var featuredPhotoShown = false;
+    var daySlots = day.slots || [];
+    var staySlots = daySlots.filter(function (slot) { return slot.period === 'stay'; });
+    var bookedFlights = ((trip.flights || {}).booked || []);
+    var lodging = lodgingForDate(day.date);
     html += '<div class="day-card show" data-day="' + dayId + '">';
     html += '<div class="day-head"><span class="pill gold">Day ' + (di + 1) + ' ｜ ' + day.date + '（' + day.weekday + '）</span></div>';
     html += '<div class="day-theme">' + escapeHTML(day.theme || '') + '</div>';
@@ -568,18 +871,26 @@ function reminderBadgeHTML(leadDays) {
       });
       html += '</div>';
     }
-    (day.slots || []).forEach(function (s) {
-      html += '<div class="slot">';
+    if (di === 0) html += renderFlightSlot(bookedFlights[0]);
+    daySlots.filter(function (slot) { return slot.period !== 'stay'; }).forEach(function (s) {
+      var restaurantSlot = isRestaurantSlot(s);
+      html += '<div class="slot' + (restaurantSlot ? ' slot-restaurant' : '') + '">';
       html += '<div class="period-tag">' + (periodLabel[s.period] || s.period) + '</div>';
-      html += '<div class="slot-name">' + escapeHTML(s.name) + '<span class="map-number" data-map-number="' + s.mapNumber + '">地圖 #' + s.mapNumber + '</span>' + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
-      html += '<div class="slot-time">' + escapeHTML(s.time || '') + '</div>';
-      if (s.photo) {
+      html += '<div class="slot-name">' + escapeHTML(s.name) + (restaurantSlot ? '' : '<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(s.name) + '">地圖 #' + s.mapNumber + '</button>') + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
+      html += '<div class="slot-time">' + escapeHTML(startTime(s.time)) + '</div>';
+      if (s.photo && !featuredPhotoShown) {
         html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
           + '<img data-src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+        featuredPhotoShown = true;
       }
-      if (s.review) html += '<div class="review">' + escapeHTML(s.review) + (s.rating ? '　★ ' + s.rating : '') + '</div>';
-      var slotMapLinks = buildMapAppLinks(s.lat, s.lng, s.name);
-      html += '<div class="slot-maplinks">' + slotMapLinks.map(function (l) {
+      if (s.review) {
+        var reviewText = escapeHTML(s.review) + (s.rating ? '　★ ' + s.rating : '');
+        html += s.review.length > 80
+          ? '<details class="review-details"><summary><span class="review-preview">' + reviewText + '</span><span class="review-toggle"><span class="open-label">展開詳細資訊</span><span class="close-label">收合詳細資訊</span></span></summary><div class="review-full">' + reviewText + '</div></details>'
+          : '<div class="review">' + reviewText + '</div>';
+      }
+      var slotMapLinks = restaurantSlot ? [] : buildMapAppLinks(s.lat, s.lng, s.name);
+      html += '<div class="slot-maplinks">' + (s.actionLink ? '<a class="booking-action" href="' + escapeHTML(s.actionLink.url) + '" target="_blank" rel="noopener">' + escapeHTML(s.actionLink.label) + '</a>' : '') + slotMapLinks.map(function (l) {
         return '<a href="' + l.url + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
       }).join('') + '</div>';
       var tags = [];
@@ -599,28 +910,49 @@ function reminderBadgeHTML(leadDays) {
           + '<div class="dishes">' + (d.dishes || []).map(function (dd) { return escapeHTML(dd.name) + ' ' + escapeHTML(dd.price); }).join('　·　') + '</div></div>';
       });
     }
+    staySlots.forEach(function (s) {
+      lodging = lodgingForDate(day.date);
+      var lodgingName = lodging ? lodging.option.name : s.name.replace('今晚住宿：', '');
+      html += '<div class="slot slot-stay">';
+      html += '<div class="slot-name">🏨 今晚住宿<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(lodgingName) + '">地圖 #' + s.mapNumber + '</button></div>';
+      html += '<div class="slot-time">' + escapeHTML(startTime(s.time)) + '</div>';
+      html += '<div class="timeline-detail"><strong>' + escapeHTML(lodgingName) + '</strong>';
+      if (lodging) {
+        var pending = lodging.option.tier.indexOf('待') >= 0 ? ' pending' : '';
+        html += '<div class="timeline-detail-row"><span class="pill' + pending + '">' + escapeHTML(lodging.option.tier) + '</span> ' + escapeHTML(lodging.area) + '</div>';
+        html += '<div class="timeline-detail-row">' + escapeHTML(lodging.reason) + '</div>';
+        if (lodging.option.priceRange && lodging.option.priceRange !== '—') html += '<div class="timeline-detail-row">' + escapeHTML(lodging.option.priceRange) + '</div>';
+        if (lodging.option.note) html += '<div class="timeline-detail-row">' + escapeHTML(lodging.option.note) + '</div>';
+      } else if (s.review) {
+        html += '<div class="timeline-detail-row">' + escapeHTML(s.review) + '</div>';
+      }
+      html += '</div>';
+      var lodgingMapLink = buildMapAppLinks(s.lat, s.lng, lodgingName)[0];
+      html += '<div class="slot-maplinks"><a href="' + lodgingMapLink.url + '" target="_blank" rel="noopener">' + escapeHTML(lodgingMapLink.label) + '</a></div>';
+      html += '</div>';
+    });
+    if (di === trip.days.length - 1) html += renderFlightSlot(bookedFlights[bookedFlights.length - 1]);
     html += '</div>';
   });
   dayCardsEl.innerHTML = html;
 
-  // 快速導覽列：逢日快捷鍵
-  var quickNavDaysEl = document.getElementById('quickNavDays');
-  var itinerarySection = document.getElementById('itinerary-section');
-  trip.days.forEach(function (day, di) {
-    var dayId = 'day' + (di + 1);
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = 'Day' + (di + 1);
-    b.addEventListener('click', function () {
-      selectDay(dayId);
-      itinerarySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    quickNavDaysEl.appendChild(b);
+  // 地圖頁也能直接切換全程或單日標記。
+  var mapDayTabsEl = document.getElementById('mapDayTabs');
+  [{ id: 'all', label: '全部' }].concat(trip.days.map(function (day, index) {
+    return { id: 'day' + (index + 1), label: 'D' + (index + 1) + ' ' + shortDate(day.date) };
+  })).forEach(function (item) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tab-btn' + (item.id === 'all' ? ' active' : '');
+    button.dataset.day = item.id;
+    button.textContent = item.label;
+    mapDayTabsEl.appendChild(button);
   });
 
   // Tab 切換（切換時淡入新內容），抽成可重用函數供快速導覽列直接呼叫
   function selectDay(day) {
     document.querySelectorAll('#dayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
+    document.querySelectorAll('#mapDayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
     document.querySelectorAll('.day-card').forEach(function (card) {
       var willShow = day === 'all' || card.dataset.day === day;
       card.classList.toggle('show', willShow);
@@ -640,16 +972,206 @@ function reminderBadgeHTML(leadDays) {
       ? document.querySelectorAll('.map-number')
       : document.querySelectorAll('.day-card.show .map-number');
     numberLabels.forEach(function (label, index) {
-      label.textContent = '地圖 #' + (day === 'all' ? label.dataset.mapNumber : index + 1);
+      var displayNumber = day === 'all' ? Number(label.dataset.mapNumber) : index + 1;
+      label.dataset.displayNumber = displayNumber;
+      label.textContent = '地圖 #' + displayNumber;
     });
     updateTravelMap(day);
   }
   document.getElementById('dayTabs').addEventListener('click', function (e) {
     var btn = e.target.closest('.tab-btn');
     if (!btn) return;
+    var keepPinned = dayTabsEl.getBoundingClientRect().top <= 1;
+    selectDay(btn.dataset.day);
+    if (keepPinned) {
+      window.requestAnimationFrame(function () {
+        var offset = dayTabsEl.getBoundingClientRect().top;
+        if (Math.abs(offset) > 1) window.scrollBy({ top: offset, behavior: 'auto' });
+      });
+    }
+  });
+  mapDayTabsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.tab-btn');
+    if (!btn) return;
     selectDay(btn.dataset.day);
   });
-  selectDay('day1');
+  dayCardsEl.addEventListener('click', function (e) {
+    var mapButton = e.target.closest('.map-number');
+    if (!mapButton) return;
+    document.getElementById('map-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.setTimeout(function () {
+      travelMap.invalidateSize();
+      travelMap.openTravelPoint(Number(mapButton.dataset.displayNumber || mapButton.dataset.mapNumber));
+    }, 450);
+  });
+
+  function currentTripState() {
+    var today = dateKey(new Date());
+    var firstDate = trip.days[0].date;
+    var lastDate = trip.days[trip.days.length - 1].date;
+    var exactIndex = trip.days.findIndex(function (day) { return day.date === today; });
+    if (exactIndex >= 0) return { mode: 'today', dayIndex: exactIndex };
+    if (today < firstDate) return { mode: 'before', dayIndex: 0 };
+    if (today > lastDate) return { mode: 'after', dayIndex: trip.days.length - 1 };
+    var nextIndex = trip.days.findIndex(function (day) { return day.date > today; });
+    return { mode: 'between', dayIndex: Math.max(0, nextIndex) };
+  }
+
+  function renderHome() {
+    var state = currentTripState();
+    var day = trip.days[state.dayIndex];
+    var slots = day.slots || [];
+    var timelineSlots = slots.slice();
+    var homeFlights = ((trip.flights || {}).booked || []);
+    if (state.dayIndex === 0 && homeFlights[0]) {
+      timelineSlots.unshift({ name: homeFlights[0].label, time: homeFlights[0].time, period: 'flight' });
+    }
+    if (state.dayIndex === trip.days.length - 1 && homeFlights.length) {
+      timelineSlots.push({ name: homeFlights[homeFlights.length - 1].label, time: homeFlights[homeFlights.length - 1].time, period: 'flight' });
+    }
+    var modeText = state.mode === 'today' ? '今日行程' : state.mode === 'before' ? '旅程即將開始' : state.mode === 'after' ? '旅程回顧' : '下一個行程日';
+    document.getElementById('homeMode').textContent = modeText;
+    document.getElementById('homeDate').textContent = 'DAY ' + (state.dayIndex + 1) + ' · ' + shortDate(day.date) + ' · ' + day.weekday;
+    document.getElementById('homeDayTitle').textContent = day.theme || trip.title;
+    document.getElementById('homeTheme').textContent = state.mode === 'before' ? '出發前先確認提醒與交通資訊' : '今天的重點已整理在下方';
+    document.getElementById('homeTimelineTitle').innerHTML = state.mode === 'today' ? '<span class="n">今日</span> 行程摘要' : '<span class="n">預覽</span> 行程摘要';
+
+    var nextSlot = timelineSlots[0];
+    if (state.mode === 'today') {
+      var now = new Date();
+      var currentMinutes = now.getHours() * 60 + now.getMinutes();
+      nextSlot = timelineSlots.find(function (slot) {
+        var match = String(slot.time || '').match(/(\d{1,2}):(\d{2})/);
+        return match && Number(match[1]) * 60 + Number(match[2]) >= currentMinutes;
+      }) || timelineSlots[timelineSlots.length - 1];
+    }
+    document.getElementById('homeNext').innerHTML = nextSlot
+      ? '<div class="next-label">' + (state.mode === 'today' ? '下一站' : '行程起點') + '</div><div class="next-time">' + escapeHTML(startTime(nextSlot.time)) + '</div><div class="next-name">' + escapeHTML(nextSlot.name) + '</div>'
+      : '<div class="next-label">行程</div><div class="next-name">尚無行程資料</div>';
+
+    var stay = slots.filter(function (slot) { return slot.period === 'stay'; })[0];
+    var today = dateKey(new Date());
+    var firstReminder = reminders.find(function (reminder) { return reminder.deadline >= today; }) || reminders[reminders.length - 1];
+    document.getElementById('homeSummary').innerHTML = [
+      '<article class="card summary-card" id="weatherCard"><div class="summary-label">目前天氣</div><div class="summary-value">載入中…</div></article>',
+      '<article class="card summary-card"><div class="summary-label">重要提醒</div><div class="summary-value">' + escapeHTML(firstReminder ? firstReminder.item : '目前沒有提醒') + '</div><div class="summary-note">' + (firstReminder ? firstReminder.deadline + ' 前' : '') + '</div></article>',
+      '<article class="card summary-card"><div class="summary-label">今晚住宿</div><div class="summary-value">' + escapeHTML(stay ? stay.name.replace('今晚住宿：', '') : '依旅程安排') + '</div></article>',
+      '<article class="card summary-card"><div class="summary-label">今日站點</div><div class="summary-value">' + timelineSlots.length + ' 個行程</div><div class="summary-note">地圖與時間軸同步</div></article>'
+    ].join('');
+    updateHomeWeather(state.dayIndex);
+    document.getElementById('homeTimeline').innerHTML = timelineSlots.slice(0, 4).map(function (slot) {
+      return '<div class="mini-stop"><div class="mini-time">' + escapeHTML(startTime(slot.time)) + '</div><div class="mini-name">' + escapeHTML(slot.name) + '</div></div>';
+    }).join('');
+    selectDay('day' + (state.dayIndex + 1));
+  }
+
+  function switchView(view) {
+    document.body.classList.remove('nav-hidden');
+    document.body.classList.remove('header-hidden');
+    document.body.classList.toggle('home-active', view === 'home');
+    updateHeaderHeight();
+    document.querySelectorAll('.app-view').forEach(function (section) {
+      section.classList.toggle('active', section.dataset.view === view);
+    });
+    document.querySelectorAll('.nav-btn').forEach(function (button) {
+      button.classList.toggle('active', button.dataset.viewTarget === view);
+    });
+    if (view === 'schedule') {
+      window.setTimeout(function () {
+        travelMap.invalidateSize();
+        updateTravelMap(document.querySelector('#mapDayTabs .active').dataset.day);
+      }, 50);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelector('.bottom-nav').addEventListener('click', function (e) {
+    var button = e.target.closest('[data-view-target]');
+    if (button) switchView(button.dataset.viewTarget);
+  });
+  var lastScrollY = window.scrollY;
+  var scrollTicking = false;
+  function updateHeaderHeight() {
+    var header = document.querySelector('header.hero');
+    document.documentElement.style.setProperty('--app-header-height', header.offsetHeight + 'px');
+  }
+  updateHeaderHeight();
+  window.addEventListener('resize', updateHeaderHeight);
+  window.addEventListener('scroll', function () {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    window.requestAnimationFrame(function () {
+      var currentScrollY = window.scrollY;
+      var delta = currentScrollY - lastScrollY;
+      if (currentScrollY < 80 || delta < -8) {
+        document.body.classList.remove('nav-hidden', 'header-hidden');
+      } else if (currentScrollY > 160 && delta > 8) {
+        document.body.classList.add('nav-hidden', 'header-hidden');
+      }
+      lastScrollY = currentScrollY;
+      scrollTicking = false;
+    });
+  }, { passive: true });
+  document.querySelector('.bottom-nav').addEventListener('focusin', function () {
+    document.body.classList.remove('nav-hidden');
+  });
+  document.querySelectorAll('[data-open-view]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      switchView(button.dataset.openView);
+      if (button.dataset.scrollTarget) {
+        window.setTimeout(function () {
+          document.getElementById(button.dataset.scrollTarget).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+  });
+  document.getElementById('homeSummary').addEventListener('change', function (e) {
+    var select = e.target.closest('.weather-location-select');
+    if (!select) return;
+    var state = currentTripState();
+    if (select.value !== 'current') {
+      updateHomeWeather(state.dayIndex, select.value);
+      return;
+    }
+    var card = document.getElementById('weatherCard');
+    var locationToken = ++weatherRequestToken;
+    card.innerHTML = weatherHeaderHTML('current') + '<div class="summary-value">定位中…</div><div class="summary-note">請依瀏覽器提示允許位置存取</div>';
+    if (!navigator.geolocation) {
+      card.innerHTML = weatherHeaderHTML('current') + '<div class="summary-value">無法取得位置</div><div class="summary-note">此瀏覽器不支援定位，請選擇東京或野澤</div>';
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      if (locationToken !== weatherRequestToken) return;
+      updateHomeWeather(state.dayIndex, 'current', {
+        label: '目前位置',
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        seasonal: '請查看當地預報',
+        tenkiUrl: ''
+      });
+    }, function () {
+      if (locationToken !== weatherRequestToken) return;
+      card.innerHTML = weatherHeaderHTML('current') + '<div class="summary-value">定位未開啟</div><div class="summary-note">允許位置權限後重試，或選擇東京／野澤</div>';
+    }, { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 });
+  });
+
+  function applyTheme(theme) {
+    var nextTheme = theme === 'light' ? 'light' : 'dark';
+    var toggle = document.getElementById('themeToggle');
+    document.documentElement.dataset.theme = nextTheme;
+    toggle.querySelector('span').textContent = nextTheme === 'dark' ? '☀' : '☾';
+    toggle.setAttribute('aria-label', nextTheme === 'dark' ? '切換為明亮主題' : '切換為暗色主題');
+    toggle.title = toggle.getAttribute('aria-label');
+    try { localStorage.setItem('trip-theme', nextTheme); } catch (e) {}
+  }
+
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+  });
+
+  renderHome();
+  applyTheme(document.documentElement.dataset.theme);
+  switchView('home');
 })();
 </script>
 </body>
