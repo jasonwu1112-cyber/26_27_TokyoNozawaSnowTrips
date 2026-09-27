@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-  try { document.documentElement.dataset.theme = localStorage.getItem('trip-theme') || 'dark'; }
-  catch (e) { document.documentElement.dataset.theme = 'dark'; }
-</script>
 <title>東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -207,9 +203,9 @@
   #dayTabs{position:sticky;top:var(--app-header-height);z-index:60;margin:0 -1rem .8rem;padding:.55rem 1rem;background:rgba(8,17,31,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.18);scrollbar-width:none;transition:top .24s ease;}
   body.header-hidden #dayTabs{top:0;}
   #dayTabs::-webkit-scrollbar{display:none;}
-  .slot{position:relative;margin:0 0 0 4.6rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
+  .slot{position:relative;margin:0 0 0 5.8rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
   .slot::before{content:"";position:absolute;left:-5px;top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0b1424;}
-  .slot .slot-time{position:absolute;right:calc(100% + 1.35rem);top:.12rem;width:3.4rem;text-align:right;color:var(--accent2);font-weight:800;}
+  .slot .slot-time{position:absolute;right:calc(100% + 1.1rem);top:.12rem;width:4.6rem;text-align:right;color:var(--accent2);font-size:.7rem;font-weight:800;white-space:nowrap;}
   .slot .period-tag{display:none;}
   .slot .slot-name{font-size:.92rem;margin:0 0 .35rem;}
   .slot .review{color:var(--text-dim);font-size:.78rem;}
@@ -236,6 +232,11 @@
   }
   html[data-theme="light"] body{background:radial-gradient(circle at 15% 0,rgba(14,165,233,.1),transparent 26rem),linear-gradient(180deg,#f6fafc 0%,#edf3f7 55%,#e7eef4 100%);}
   html[data-theme="light"] header.hero{background:rgba(246,250,252,.92);box-shadow:0 1px 0 var(--border);}
+  html[data-theme="light"] .today-hero{color:#fff;}
+  html[data-theme="light"] .today-kicker,
+  html[data-theme="light"] .next-label{color:#7dd3fc;}
+  html[data-theme="light"] .today-date{color:#fbbf24;}
+  html[data-theme="light"] .today-hero .app-action.primary{color:#fff;}
   html[data-theme="light"] .card h2,
   html[data-theme="light"] .kv b,
   html[data-theme="light"] .hotel-area .area-name,
@@ -262,7 +263,7 @@
 </style>
 </head>
 <body>
-<button class="theme-toggle" id="themeToggle" type="button" aria-label="切換為明亮主題" title="切換為明亮主題"><span aria-hidden="true">☀</span></button>
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="切換為暗色主題" title="切換為暗色主題"><span aria-hidden="true">☾</span></button>
 <header class="hero">
 <div class="app-wrap">
     <div class="tag">❄️ 跨年滑雪與觀光全攻略</div>
@@ -360,7 +361,7 @@
     "packing": "羽絨外套＋防水防風滑雪衣褲＋多層次發熱衣＋雪靴／雪鞋＋防水手套＋毛帽圍巾＋暖暖包；東京市區室內暖氣充足，建議洋蔥式穿搭方便穿脫",
     "payment": "推薦 Suica／PASMO 交通 IC 卡（東京、飯山、野澤巴士均可用），主要商店／餐廳可刷卡或行動支付，溫泉外湯與小型店家建議備妥日圓現金",
     "apps": ["Suica（交通 IC 卡）", "Yahoo!天気（天氣預報）", "野澤溫泉滑雪場官方 App（雪況／纜車營運）", "JR東日本 App（新幹線時刻／誤點資訊）"],
-    "ticketTip": "teamLab Planets 建議提前上網預約入場時段；SUKINOZAWA 現場尾款與滑雪裝備租借建議出發前再次確認金額與庫存"
+    "ticketTip": "江之島 Escar／展望設施若要入場，請出發前確認當日營運與票價；SUKINOZAWA 現場尾款與滑雪裝備租借請再次確認金額與庫存"
   },
   "flights": {
     "booked": [
@@ -400,10 +401,9 @@
     "Day 3–7 晚餐依 Nozawa Holidays 當地餐飲指南安排；村內店家常有固定休息日，12/31～1/1 請以訂位頁或店家公告確認是否營業",
     "2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運",
     "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨",
-    "teamLab Planets 需赤腳涉水，建議穿著可捲高褲管的長褲、避免裙裝與跟鞋，並自備小毛巾擦腳"
+    "江之島冬季午後天色較早變暗，島上坡道與階梯請慢行；Escar 僅供上行，下島仍須步行"
   ],
   "reminders": [
-    { "item": "SHIBUYA SKY 12/27 20:00 入場門票", "leadDays": 28 },
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
     { "item": "野澤溫泉 12/28–1/1 晚餐：優先店家訂位並確認跨年營業日", "leadDays": 21 },
     { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
@@ -421,14 +421,23 @@
       ]
     },
     {
-      "date": "2026-12-27", "weekday": "週日", "theme": "築地早餐．台場購物．澀谷夜景",
-      "tips": ["豐洲市場週日原則上休市，本日改逛築地場外市場；個別店家仍可能休息，請出發前確認", "SHIBUYA SKY 建議 19:30 前抵達 14 樓入場口，預留排隊與安檢時間"],
+      "date": "2026-12-27", "weekday": "週日", "theme": "東京出發．江之島慢遊",
+      "tips": ["本日依江之島慢遊行程安排，沒有進入鎌倉市區；小田急往返班次與轉乘方式請於出發前確認", "Escar 僅供上行，16:15 下島仍須步行；冬季傍晚天色較暗，請留意階梯與步道", "あさひ本店「頂上店」位於山上，和仲見世通的本店不同；若排隊太久，可略過並保留咖啡休息時間"],
       "slots": [
-        { "period": "morning", "name": "築地場外市場早餐", "time": "08:00–10:30", "lat": 35.665486, "lng": 139.770667, "photo": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Tsukiji_Outer_Market_-04.jpg", "review": "逛築地場外市場並享用海鮮丼、玉子燒等早餐。週日上午部分店家可能休息，建議優先選擇現場已營業且排隊合理的店家。", "openingHours": "多數店家約 06:00–14:00；各店營業日不同", "transport": { "mode": "都營地鐵／步行", "fare": "依出發站計費", "duration": "飯店至築地約 30–40 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "台場購物散策", "time": "11:15–16:30", "lat": 35.625149, "lng": 139.775683, "review": "從築地步行或搭地鐵前往新橋，再轉百合海鷗線至台場。依興趣安排 DiverCity Tokyo Plaza、AQUA CiTY 或 DECKS Tokyo Beach，保留午餐與休息時間。", "transport": { "mode": "都營地鐵／百合海鷗線", "fare": "約 ¥500–700", "duration": "築地至台場約 35–45 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "澀谷逛街與晚餐", "time": "17:30–19:20", "lat": 35.659517, "lng": 139.700455, "review": "從台場經新橋轉 JR 前往澀谷，先在澀谷站周邊用餐，再步行前往 SHIBUYA SKY。建議 19:20 前結束晚餐。", "transport": { "mode": "百合海鷗線／JR", "fare": "約 ¥600", "duration": "台場至澀谷約 40–50 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "SHIBUYA SKY 夜景", "time": "20:00–21:00", "lat": 35.658439, "lng": 139.702154, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Shibuya_Scramble_Square_2020.jpg?width=1200", "review": "預約 20:00 入場，從澀谷 Scramble Square 14 樓入口報到。冬季屋頂風大且體感低，部分隨身物品需寄放；若屋頂因天候關閉，仍可使用室內展望區。", "openingHours": "依官方公告與預約時段為準", "ticketPrice": "採分時預約，價格請以官方售票頁為準", "needsBooking": true, "leadDays": 28, "actionLink": { "label": "官方購票資訊", "url": "https://www.shibuya-scramble-square.com/sky/ticket/" } },
-        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "21:30 後", "lat": 35.687813, "lng": 139.715563, "review": "SHIBUYA SKY 結束後搭乘 JR／地鐵返回 YKB Ensign Building 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "新宿早餐", "time": "08:00–09:00", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站周邊吃早餐，餐後前往小田急線搭車。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "新宿 → 片瀨江之島", "time": "09:00–10:30", "lat": 35.308873, "lng": 139.483502, "review": "搭小田急線往片瀨江之島，視班次可能需轉乘；預留進出站與候車時間。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "片瀨江之島站 → 江之島", "time": "10:30–11:00", "lat": 35.3021, "lng": 139.4810, "review": "從片瀨江之島站步行過弁天橋到江之島入口，按自己的步調前進。", "transport": { "mode": "步行", "fare": "免費", "duration": "約 30 分鐘（含拍照）" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "江之島入口、弁財天仲見世通慢逛", "time": "11:00–12:00", "lat": 35.301439, "lng": 139.480702, "review": "從入口沿弁財天仲見世通慢慢走逛，遇到喜歡的店就停留，不趕景點。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "江之島午餐＋休息", "time": "12:00–13:30", "lat": 35.301439, "lng": 139.480702, "review": "在仲見世通或島上餐廳用餐，留足坐著休息的時間；週日熱門店可能需候位。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "視體力決定是否搭 Escar 上島", "time": "13:30–14:00", "lat": 35.300414, "lng": 139.480344, "review": "需要省力就從江之島 Escar 入口搭上行手扶梯；若不搭，可徒步上行或在山下延長休息。Escar 沒有下行服務。", "openingHours": "營業時間以當日官方公告為準", "ticketPrice": "搭乘另計，請以現場公告為準", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "江之島神社／展望區，二選一即可", "time": "14:00–15:00", "lat": 35.300486, "lng": 139.479541, "review": "只選一處：想輕鬆參拜可去江島神社邊津宮；想看景則往江之島 Sea Candle 展望區（可能另需門票），不必兩個都去。地圖標記為神社位置。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "あさひ本店 頂上店・丸燒章魚仙貝", "time": "15:00–15:25", "lat": 35.2990229, "lng": 139.4796798, "review": "前往江之島山頂分店，買現烤丸燒章魚仙貝當點心；與仲見世通的本店不同。週日若排隊較久，可視體力略過並保留休息時間。", "openingHours": "Google 地圖標示 10:00–18:00；12/27 營業請再次確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "店家地圖位置", "url": "https://maps.app.goo.gl/kvLpsZwmUcJY4R3m6?g_st=il" } },
+        { "period": "noon", "name": "海景咖啡／甜點／坐著休息", "time": "15:25–16:15", "lat": 35.299756, "lng": 139.478479, "review": "在山上找有座位的咖啡店休息；若從神社過來，可就近找店坐著，不必為了咖啡特地走到展望塔。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "慢慢下島", "time": "16:15–16:45", "lat": 35.3021, "lng": 139.4810, "review": "沿步道慢慢走回島口，再往片瀨江之島站；Escar 僅上行，回程需步行下坡。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "江之島 → 新宿", "time": "16:45–18:00", "lat": 35.308873, "lng": 139.483502, "review": "從江之島步行至片瀨江之島站，搭小田急線返回新宿；約 18:00 抵達為行程預估，實際依車次及人潮調整。", "transport": { "mode": "步行／小田急線", "fare": "依當日車次與票種", "duration": "預留約 75 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "回東京（新宿）", "time": "約 18:00", "lat": 35.690921, "lng": 139.700258, "review": "抵達新宿，視當天體力決定晚餐地點。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐：新宿周邊用餐", "time": "18:30 後", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站或飯店附近吃晚餐，無須再安排其他景點。", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息，隔天一早前往野澤溫泉。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -877,7 +886,7 @@ function reminderBadgeHTML(leadDays) {
       html += '<div class="slot' + (restaurantSlot ? ' slot-restaurant' : '') + '">';
       html += '<div class="period-tag">' + (periodLabel[s.period] || s.period) + '</div>';
       html += '<div class="slot-name">' + escapeHTML(s.name) + (restaurantSlot ? '' : '<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(s.name) + '">地圖 #' + s.mapNumber + '</button>') + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
-      html += '<div class="slot-time">' + escapeHTML(startTime(s.time)) + '</div>';
+      html += '<div class="slot-time">' + escapeHTML(s.time) + '</div>';
       if (s.photo && !featuredPhotoShown) {
         html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
           + '<img data-src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
@@ -915,7 +924,7 @@ function reminderBadgeHTML(leadDays) {
       var lodgingName = lodging ? lodging.option.name : s.name.replace('今晚住宿：', '');
       html += '<div class="slot slot-stay">';
       html += '<div class="slot-name">🏨 今晚住宿<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(lodgingName) + '">地圖 #' + s.mapNumber + '</button></div>';
-      html += '<div class="slot-time">' + escapeHTML(startTime(s.time)) + '</div>';
+      html += '<div class="slot-time">' + escapeHTML(s.time) + '</div>';
       html += '<div class="timeline-detail"><strong>' + escapeHTML(lodgingName) + '</strong>';
       if (lodging) {
         var pending = lodging.option.tier.indexOf('待') >= 0 ? ' pending' : '';
@@ -1162,7 +1171,6 @@ function reminderBadgeHTML(leadDays) {
     toggle.querySelector('span').textContent = nextTheme === 'dark' ? '☀' : '☾';
     toggle.setAttribute('aria-label', nextTheme === 'dark' ? '切換為明亮主題' : '切換為暗色主題');
     toggle.title = toggle.getAttribute('aria-label');
-    try { localStorage.setItem('trip-theme', nextTheme); } catch (e) {}
   }
 
   document.getElementById('themeToggle').addEventListener('click', function () {
