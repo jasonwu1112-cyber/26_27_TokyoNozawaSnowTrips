@@ -66,6 +66,17 @@
   .day-theme{font-size:1.05rem;font-weight:800;color:#fff;margin:.2rem 0 .6rem;}
   .day-lodge{font-size:.75rem;color:var(--text-dim);}
   .day-tips{font-size:.78rem;color:var(--accent2);background:rgba(251,191,36,.08);border-radius:10px;padding:.5rem .7rem;margin:.5rem 0;}
+  .transport-guide{margin:.8rem 0 1.35rem;padding:1rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;background:var(--bg-card);}
+  .transport-guide h3{margin:0 0 .2rem;font-size:.96rem;color:var(--text);}
+  .transport-route{margin:0 0 .8rem;color:var(--accent);font-size:.78rem;font-weight:700;}
+  .transport-steps{list-style:none;counter-reset:transport;margin:0;padding:0;}
+  .transport-steps li{counter-increment:transport;position:relative;padding:.45rem 0 .45rem 2rem;border-top:1px solid var(--border);font-size:.78rem;}
+  .transport-steps li::before{content:counter(transport);position:absolute;top:.55rem;left:0;width:1.35rem;height:1.35rem;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:#fff;font-size:.7rem;font-weight:800;}
+  .transport-steps b{display:block;color:var(--text);font-size:.82rem;}
+  .transport-steps p{margin:.15rem 0 0;color:var(--text-dim);}
+  .transport-note{margin:.65rem 0 0;padding:.55rem .7rem;border-radius:8px;background:rgba(148,163,184,.09);font-size:.76rem;}
+  .transport-warning{border-left:2px solid var(--accent2);}
+  .transport-sources{display:flex;flex-wrap:wrap;gap:.35rem .8rem;margin-top:.7rem;font-size:.73rem;}
   .alt-box{display:flex;flex-direction:column;gap:.5rem;margin:.6rem 0;}
   .alt-item{border:1px dashed var(--border);border-radius:10px;padding:.5rem .6rem;font-size:.78rem;}
   .alt-item b{color:#fff;}
@@ -423,9 +434,27 @@
     {
       "date": "2026-12-27", "weekday": "週日", "theme": "東京出發．江之島慢遊",
       "tips": ["本日依江之島慢遊行程安排，沒有進入鎌倉市區；小田急往返班次與轉乘方式請於出發前確認", "Escar 僅供上行，16:15 下島仍須步行；冬季傍晚天色較暗，請留意階梯與步道", "あさひ本店「頂上店」位於山上，和仲見世通的本店不同；若排隊太久，可略過並保留咖啡休息時間"],
+      "transportGuide": {
+        "title": "新宿 → 江之島交通攻略",
+        "route": "小田急新宿站 → 藤澤站（視車次轉乘）→ 片瀨江之島站 → 步行過弁天橋",
+        "steps": [
+          { "title": "08:50 前抵達小田急新宿站", "detail": "早餐後依「小田急線」標示進站，使用 Suica／PASMO 或購買前往片瀨江之島的車票。別誤走 JR 或京王閘門；09:00 為預計出發時段，月台依當日列車顯示。" },
+          { "title": "選往藤澤／片瀨江之島方向", "detail": "優先看列車終點及停靠站；若搭往藤澤的快速急行／急行，到藤澤後循「片瀨江之島」方向轉乘小田急江之島線。若搭到小田原方向，需在相模大野轉往江之島線；遇直達片瀨江之島的班次則免轉乘。" },
+          { "title": "約 10:30 抵達片瀨江之島站", "detail": "在小田急「片瀨江之島」下車，這站不是江之電「江之島」站；出站往江之島、弁天橋方向，過橋後沿仲見世通上島。10:30–11:00 已預留約 30 分鐘步行及拍照。" },
+          { "title": "返程先走回片瀨江之島站", "detail": "16:15 開始下島，步行回小田急片瀨江之島站。搭往藤澤／新宿方向的車，若非直達新宿則依車次轉乘；上車前確認停靠站與轉乘資訊。" }
+        ],
+        "ticketNote": "只搭一般小田急列車可用 Suica／PASMO，無需特急券。江之島・鎌倉周遊券含小田急往返與江之電，但本日沒有搭江之電，不一定比一般往返划算；請對照出發時官網票價再決定。Romancecar 為對號座，若選到直達片瀨江之島班次，須在基本車資之外另購指定席特急券；班次與費用依當日公告。",
+        "timingNote": "09:00–10:30 是含候車／轉車的預留時間，不是保證到站時間。16:45 是下島後往車站移動的預估起點，不等於列車發車時間；還需步行、候車及搭車，18:00 抵新宿可能來不及。出發前查 12/27（週日）的時刻與即時行車資訊，想準時吃 18:30 晚餐可提前下島或保留彈性。",
+        "sources": [
+          { "label": "小田急官方路線／時刻", "url": "https://odakyu-global.com/transport-guide/timetable/" },
+          { "label": "小田急周遊券說明", "url": "https://odakyu-global.com/passes/enoshima-kamakura-freepass/" },
+          { "label": "小田急 Romancecar 說明", "url": "https://odakyu-global.com/passes/romancecar/" },
+          { "label": "江之島步行路線", "url": "https://enoshima-seacandle.com/access/" }
+        ]
+      },
       "slots": [
         { "period": "morning", "name": "新宿早餐", "time": "08:00–09:00", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站周邊吃早餐，餐後前往小田急線搭車。", "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "新宿 → 片瀨江之島", "time": "09:00–10:30", "lat": 35.308873, "lng": 139.483502, "review": "搭小田急線往片瀨江之島，視班次可能需轉乘；預留進出站與候車時間。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "新宿 → 片瀨江之島", "time": "09:00–10:30", "lat": 35.308873, "lng": 139.483502, "review": "小田急新宿站出發，搭往藤澤方向列車，依車次在藤澤或相模大野轉往片瀨江之島；詳細步驟見本日交通攻略。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "片瀨江之島站 → 江之島", "time": "10:30–11:00", "lat": 35.3021, "lng": 139.4810, "review": "從片瀨江之島站步行過弁天橋到江之島入口，按自己的步調前進。", "transport": { "mode": "步行", "fare": "免費", "duration": "約 30 分鐘（含拍照）" }, "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "江之島入口、弁財天仲見世通慢逛", "time": "11:00–12:00", "lat": 35.301439, "lng": 139.480702, "review": "從入口沿弁財天仲見世通慢慢走逛，遇到喜歡的店就停留，不趕景點。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "江之島午餐＋休息", "time": "12:00–13:30", "lat": 35.301439, "lng": 139.480702, "review": "在仲見世通或島上餐廳用餐，留足坐著休息的時間；週日熱門店可能需候位。", "needsBooking": false, "leadDays": 0 },
@@ -434,7 +463,7 @@
         { "period": "noon", "name": "あさひ本店 頂上店・丸燒章魚仙貝", "time": "15:00–15:25", "lat": 35.2990229, "lng": 139.4796798, "review": "前往江之島山頂分店，買現烤丸燒章魚仙貝當點心；與仲見世通的本店不同。週日若排隊較久，可視體力略過並保留休息時間。", "openingHours": "Google 地圖標示 10:00–18:00；12/27 營業請再次確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "店家地圖位置", "url": "https://maps.app.goo.gl/kvLpsZwmUcJY4R3m6?g_st=il" } },
         { "period": "noon", "name": "海景咖啡／甜點／坐著休息", "time": "15:25–16:15", "lat": 35.299756, "lng": 139.478479, "review": "在山上找有座位的咖啡店休息；若從神社過來，可就近找店坐著，不必為了咖啡特地走到展望塔。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "慢慢下島", "time": "16:15–16:45", "lat": 35.3021, "lng": 139.4810, "review": "沿步道慢慢走回島口，再往片瀨江之島站；Escar 僅上行，回程需步行下坡。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "江之島 → 新宿", "time": "16:45–18:00", "lat": 35.308873, "lng": 139.483502, "review": "從江之島步行至片瀨江之島站，搭小田急線返回新宿；約 18:00 抵達為行程預估，實際依車次及人潮調整。", "transport": { "mode": "步行／小田急線", "fare": "依當日車次與票種", "duration": "預留約 75 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "江之島 → 新宿", "time": "16:45–18:00", "lat": 35.308873, "lng": 139.483502, "review": "先步行回小田急片瀨江之島站，再搭往新宿方向列車（視車次轉乘）。18:00 抵達僅為目標，若候車／轉乘較久，晚餐需順延。", "transport": { "mode": "步行／小田急線", "fare": "依當日車次與票種", "duration": "預留約 75 分鐘，可能不足" }, "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "回東京（新宿）", "time": "約 18:00", "lat": 35.690921, "lng": 139.700258, "review": "抵達新宿，視當天體力決定晚餐地點。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "晚餐：新宿周邊用餐", "time": "18:30 後", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站或飯店附近吃晚餐，無須再安排其他景點。", "needsBooking": false, "leadDays": 0 },
         { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息，隔天一早前往野澤溫泉。", "needsBooking": false, "leadDays": 0 }
@@ -873,6 +902,19 @@ function reminderBadgeHTML(leadDays) {
     (day.tips || []).forEach(function (t) {
       html += '<div class="day-tips">💡 ' + escapeHTML(t) + '</div>';
     });
+    if (day.transportGuide) {
+      var guide = day.transportGuide;
+      html += '<section class="transport-guide" aria-label="' + escapeHTML(guide.title) + '">';
+      html += '<h3>🚃 ' + escapeHTML(guide.title) + '</h3><p class="transport-route">' + escapeHTML(guide.route) + '</p>';
+      html += '<ol class="transport-steps">' + (guide.steps || []).map(function (step) {
+        return '<li><b>' + escapeHTML(step.title) + '</b><p>' + escapeHTML(step.detail) + '</p></li>';
+      }).join('') + '</ol>';
+      if (guide.ticketNote) html += '<p class="transport-note">🎫 ' + escapeHTML(guide.ticketNote) + '</p>';
+      if (guide.timingNote) html += '<p class="transport-note transport-warning">⚠️ ' + escapeHTML(guide.timingNote) + '</p>';
+      html += '<div class="transport-sources">' + (guide.sources || []).map(function (source) {
+        return '<a href="' + escapeHTML(source.url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>';
+      }).join('') + '</div></section>';
+    }
     if (day.alternatives && day.alternatives.length) {
       html += '<div class="alt-box">';
       day.alternatives.forEach(function (a) {
