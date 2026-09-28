@@ -145,7 +145,10 @@
   body.home-active header.hero{display:none;}
   header.hero .tag{font-size:.7rem;margin:0;text-transform:uppercase;}
   header.hero h1{font-size:1.12rem;margin:.1rem 0;letter-spacing:0;}
-  header.hero .dates{font-size:.72rem;}
+  header.hero .dates{display:inline-flex;align-items:center;gap:.45rem;max-width:100%;margin-top:.32rem;padding:.2rem .65rem;
+    border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);
+    font-size:.82rem;font-weight:800;letter-spacing:.035em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.35;}
+  header.hero .dates::before{content:"";flex:none;width:.4rem;height:.4rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.14);}
   .quicknav{display:none;}
   .app-view{display:none;animation:app-view-in .28s ease both;}
   .app-view.active{display:block;}
@@ -218,7 +221,7 @@
   #dayTabs::-webkit-scrollbar{display:none;}
   .slot{position:relative;margin:0 0 0 5.8rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
   .slot::before{content:"";position:absolute;left:-5px;top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0b1424;}
-  .slot .slot-time{position:absolute;right:calc(100% + 1.1rem);top:.12rem;width:4.6rem;text-align:right;color:var(--accent2);font-size:.7rem;font-weight:800;white-space:nowrap;}
+  .slot .slot-time{position:absolute;right:calc(100% + 1.1rem);top:.12rem;width:4.6rem;text-align:right;color:var(--accent2);font-size:.7rem;font-weight:800;white-space:normal;overflow-wrap:anywhere;line-height:1.35;}
   .slot .period-tag{display:none;}
   .slot .slot-name{font-size:.92rem;margin:0 0 .35rem;}
   .slot .review{color:var(--text-dim);font-size:.78rem;}
@@ -281,7 +284,7 @@
 <div class="app-wrap">
     <div class="tag">❄️ 跨年滑雪與觀光全攻略</div>
   <h1 id="tripTitle">東京＆野澤溫泉 10 天 9 夜跨年之旅</h1>
-  <div class="dates" id="tripDates">2026/12/26（六）－ 2027/01/04（一）</div>
+  <div class="dates" id="tripDates">2026/12/26~2027/01/04</div>
 </div>
 </header>
 <div class="app-wrap">
@@ -420,7 +423,8 @@
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
     { "item": "野澤溫泉 12/28–1/1 晚餐：優先店家訂位並確認跨年營業日", "leadDays": 21 },
     { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
-    { "item": "高田馬場／市區後兩晚飯店預訂（尚未確定）", "leadDays": 30 }
+    { "item": "高田馬場／市區後兩晚飯店預訂（尚未確定）", "leadDays": 30 },
+    { "item": "2026/12/10 10:00（日本時間）搶 2027/1/3 三鷹之森吉卜力美術館指定入場券；先核對開館日", "leadDays": 16 }
   ],
   "days": [
     {
@@ -546,19 +550,34 @@
       "dining": [{ "meal": "午餐", "place": "飯山名物富倉蕎麥麵", "hours": "約 11:00–14:00", "dishes": [{ "name": "富倉蕎麥麵", "price": "約 ¥1,000–1,300" }] }]
     },
     {
-      "date": "2027-01-03", "weekday": "週日", "theme": "明治神宮初詣．吉祥寺慢活",
-      "tips": ["上午先到早稻田附近的感通寺，再搭東京 Metro 東西線轉 JR 前往明治神宮；兩處不同地點，需預留約一小時交通與步行緩衝", "感通寺一般參拜時間 07:00–17:00，1/3 新年開放及御朱印受理時間仍需出發前確認；明治神宮初詣人潮多，吉祥寺抵達時間可順延"],
+      "date": "2027-01-03", "weekday": "週日", "theme": "感通寺御朱印．吉祥寺與吉卜力美術館",
+      "tips": ["吉祥寺／井之頭公園旁的是東京三鷹之森吉卜力美術館，不是愛知縣的吉卜力公園；優先依搶到的入場時段調整行程", "先到感通寺領御朱印／御首題，再看受理情況與初詣排隊人潮決定是否短訪明治神宮；以中午前到吉祥寺站、準時赴美術館為優先", "感通寺一般參拜 07:00–17:00，元旦期間授與及直書時段須事前確認；若早上無法領取，不要為此錯過已預約的美術館入場時間"],
+      "ticketGuide": {
+        "title": "三鷹之森吉卜力美術館購票攻略",
+        "route": "目標 2027/1/3（週日）13:00 入場；沒票就改以井之頭公園與吉祥寺散策為主",
+        "steps": [
+          { "title": "先看官網 1/3 開館日與名額", "detail": "官方日曆目前將 2027/1/3 列為開館（一般 10:00–18:00），但年末年初可能調整；12/10 開賣前再次核對官方日曆。請勿與愛知縣的吉卜力公園門票混用。" },
+          { "title": "12/10 10:00（日本時間）上網搶票", "detail": "三鷹美術館門票每月 10 日上午 10:00 開賣下個月指定日期；在官方導向的 LAWSON TICKET 英文購票頁選 2027/1/3、入場時段、張數並完成付款。以 13:00 入場為首選；若只買到其他時段，先確定票再調整明治神宮、午餐與公園順序。" },
+          { "title": "按票面時段入館", "detail": "官網目前成人（19 歲以上）票價 ¥1,000；全數預約制，現場不售票。官方列 10:00–16:00 每整點入場，須在指定時間起一小時內進場；預留從吉祥寺站步行經井之頭公園到美術館及排隊時間，確認領票方式並帶好入場憑證。" },
+          { "title": "沒搶到票的備案", "detail": "不要無票前往現場排隊；改在吉祥寺商店街與井之頭公園自由散步、用餐。已購票者將公園安排在參觀後，依體力與日落時間決定是否散步。" }
+        ],
+        "timingNote": "票價、時段、開放日期及購票流程可能更動；出發前以美術館官網與實際訂票頁為準。美術館入場為固定時段，明治神宮為可跳過行程。",
+        "sources": [
+          { "label": "美術館官方票價／開館日", "url": "https://www.ghibli-museum.jp/en/tickets/" },
+          { "label": "LAWSON TICKET 英文購票", "url": "https://l-tike.com/st1/ghibli-en/Tt/Ttg010agreement/index" },
+          { "label": "美術館官方交通資訊", "url": "https://www.ghibli-museum.jp/en/hours-and-directions/" }
+        ]
+      },
       "slots": [
-        { "period": "morning", "name": "感通寺（早稻田）參拜", "time": "08:00–08:35", "lat": 35.7033686, "lng": 139.7210279, "review": "從高田馬場一帶前往新宿區喜久井町 39 的感通寺，早上短暫參拜；東京 Metro 東西線早稻田站步行約 5 分鐘，若想領御朱印請另外確認新年受理時間。", "openingHours": "一般參拜 07:00–17:00；1/3 請再次確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "寺院官方資訊", "url": "https://www.kantsuji.tokyo/" } },
-        { "period": "morning", "name": "早稻田 → 明治神宮移動", "time": "08:35–09:30", "lat": 35.676398, "lng": 139.699326, "review": "從早稻田搭東西線至高田馬場，轉 JR 山手線至原宿，再步行進入神宮；遇新年人潮以現場路線與班次為準。", "transport": { "mode": "東京 Metro／JR／步行", "fare": "依當日搭乘路線", "duration": "預留約 55 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "明治神宮初詣", "time": "09:30–11:30", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Canopy_of_trees_at_Meiji_Shrine.jpg?width=1200", "rating": 4.8, "review": "體驗明治神宮新年初詣；如人潮較多，留意往吉祥寺的移動時間。", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "吉祥寺．井之頭恩賜公園", "time": "12:30–15:30", "lat": 35.703152, "lng": 139.579678, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/TamagawaJosui%40InokashiraPark.JPG?width=1200", "rating": 4.6, "review": "從原宿／新宿轉乘 JR 前往吉祥寺，湖畔散步、品嚐 SATOU 炸牛肉丸，中道通與 Sunroad 商店街採購；已預留跨區移動時間。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "Harmonica 橫丁", "time": "18:00–20:00", "lat": 35.7027, "lng": 139.5798, "review": "體驗吉祥寺復古居酒屋橫丁氛圍", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：高田馬場站周邊飯店（待訂）", "time": "20:00 後", "lat": 35.712285, "lng": 139.703782, "review": "返回高田馬場站周邊飯店休息。", "needsBooking": false, "leadDays": 0 }
-      ],
-      "dining": [
-        { "meal": "午餐", "place": "SATOU 吉祥寺總本店", "hours": "約 10:00–19:00", "dishes": [{ "name": "炸牛肉丸 (Menchi Katsu)", "price": "約 ¥350／個" }] },
-        { "meal": "晚餐", "place": "Harmonica 橫丁居酒屋", "hours": "約 17:00–23:00", "dishes": [{ "name": "串燒拼盤", "price": "約 ¥2,000–3,000／人" }] }
+        { "period": "morning", "name": "感通寺參拜・領御朱印／御首題", "time": "08:00–09:00", "lat": 35.7033686, "lng": 139.7210279, "review": "前往早稻田附近的感通寺；官網表示書置御朱印於開門期間可授與、直書另看住持公告。1/3 是否 08:00 即受理及現場排隊需先確認；若未開放授與，先參拜再出發。", "openingHours": "一般參拜 07:00–17:00；正月御朱印受理時段待確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "官方御朱印資訊", "url": "https://www.kantsuji.tokyo/goshudai-goshuin/" } },
+        { "period": "morning", "name": "明治神宮初詣（看狀況）", "time": "09:45–10:15", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Canopy_of_trees_at_Meiji_Shrine.jpg?width=1200", "review": "若感通寺順利、交通順暢，可從早稻田搭東西線至高田馬場轉 JR 至原宿，短暫參訪明治神宮；步行進出及初詣排隊可能遠超預留時間。若人潮多或美術館票面時段較早，直接跳過並前往吉祥寺。", "transport": { "mode": "東京 Metro／JR／步行", "fare": "依當日路線", "duration": "跨區移動另預留約 45–60 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "中午前抵達 JR 吉祥寺站", "time": "10:15–11:45", "lat": 35.703152, "lng": 139.579678, "review": "參訪明治神宮後由原宿搭 JR，於新宿轉中央線到吉祥寺；若略過神宮，從早稻田／高田馬場轉乘前往吉祥寺。依車次與人潮調整，力求 11:45 前到站。", "transport": { "mode": "東京 Metro／JR／步行", "fare": "依當日路線", "duration": "預留跨區交通與候車緩衝" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "吉祥寺站周邊簡單午餐", "time": "11:45–12:20", "lat": 35.703152, "lng": 139.579678, "review": "在站周邊找開門的店簡單用餐或外帶；1/3 店家新年營業時間未定，別為排隊小吃耽誤美術館入場。", "kind": "restaurant", "showOnMap": false, "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "步行前往三鷹之森吉卜力美術館", "time": "12:20–13:00", "lat": 35.6962, "lng": 139.5704, "review": "從吉祥寺站往井之頭公園方向步行到美術館，預留找路及入場等候時間；如果拿到非 13:00 的票，依實際時段提前或延後。沒有票則改在吉祥寺與公園慢遊。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "三鷹之森吉卜力美術館（需預約）", "time": "13:00–15:30", "lat": 35.6962, "lng": 139.5704, "review": "以 13:00 時段為目標，依實際購得的入場券安排參觀；未購得門票時此站取消，不要到現場碰運氣。官方日曆目前顯示 2027/1/3 開館，行前再查。", "openingHours": "一般 10:00–18:00；1/3 依官網與票面為準", "ticketPrice": "成人 ¥1,000（官網現行參考價）；僅預約入場", "needsBooking": true, "leadDays": 16, "actionLink": { "label": "官方購票與開館日", "url": "https://www.ghibli-museum.jp/en/tickets/" } },
+        { "period": "noon", "name": "井之頭恩賜公園（視情況調整）", "time": "15:30–17:00", "lat": 35.6982, "lng": 139.5747, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/TamagawaJosui%40InokashiraPark.JPG?width=1200", "review": "參觀完美術館再沿井之頭公園散步回吉祥寺；依體力、天色與門票時段縮短或取消。若沒買到美術館票，可把午後改成公園及吉祥寺散策。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐自理／返回住宿", "time": "17:30 後", "lat": 35.703152, "lng": 139.579678, "review": "在吉祥寺或回高田馬場後自行選擇晚餐，不指定餐廳；1/3 正月營業時間不固定，依當日開店狀況安排。", "kind": "restaurant", "showOnMap": false, "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "name": "今晚住宿：高田馬場站周邊飯店（待訂）", "time": "晚餐後", "lat": 35.712285, "lng": 139.703782, "review": "晚餐後返回高田馬場站周邊飯店休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -877,7 +896,7 @@ function reminderBadgeHTML(leadDays) {
     var preTrip = trip.preTrip || {};
     var weather = preTrip.weather || {};
     document.getElementById('tripTitle').textContent = trip.title;
-    document.getElementById('tripDates').textContent = shortDate(trip.days[0].date) + '－' + shortDate(trip.days[trip.days.length - 1].date);
+    document.getElementById('tripDates').textContent = trip.days[0].date.replace(/-/g, '/') + '~' + trip.days[trip.days.length - 1].date.replace(/-/g, '/');
     document.getElementById('coverTripTitle').textContent = trip.coverTitle || trip.title;
     document.getElementById('coverTripSubtitle').textContent = trip.coverSubtitle || '';
     document.getElementById('coverLocation').textContent = trip.coverLocation || '';
@@ -973,10 +992,11 @@ function reminderBadgeHTML(leadDays) {
     (day.tips || []).forEach(function (t) {
       html += '<div class="day-tips">💡 ' + escapeHTML(t) + '</div>';
     });
-    if (day.transportGuide) {
-      var guide = day.transportGuide;
+    [{ guide: day.transportGuide, icon: '🚃' }, { guide: day.ticketGuide, icon: '🎟️' }].forEach(function (section) {
+      if (!section.guide) return;
+      var guide = section.guide;
       html += '<section class="transport-guide" aria-label="' + escapeHTML(guide.title) + '">';
-      html += '<h3>🚃 ' + escapeHTML(guide.title) + '</h3><p class="transport-route">' + escapeHTML(guide.route) + '</p>';
+      html += '<h3>' + section.icon + ' ' + escapeHTML(guide.title) + '</h3><p class="transport-route">' + escapeHTML(guide.route) + '</p>';
       html += '<ol class="transport-steps">' + (guide.steps || []).map(function (step) {
         return '<li><b>' + escapeHTML(step.title) + '</b><p>' + escapeHTML(step.detail) + '</p></li>';
       }).join('') + '</ol>';
@@ -986,7 +1006,7 @@ function reminderBadgeHTML(leadDays) {
         var url = safeExternalURL(source.url);
         return url ? '<a href="' + escapeHTML(url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>' : '';
       }).join('') + '</div></section>';
-    }
+    });
     if (day.alternatives && day.alternatives.length) {
       html += '<div class="alt-box">';
       day.alternatives.forEach(function (a) {
@@ -1107,14 +1127,14 @@ function reminderBadgeHTML(leadDays) {
   document.getElementById('dayTabs').addEventListener('click', function (e) {
     var btn = e.target.closest('.tab-btn');
     if (!btn) return;
-    var keepPinned = dayTabsEl.getBoundingClientRect().top <= 1;
     selectDay(btn.dataset.day);
-    if (keepPinned) {
-      window.requestAnimationFrame(function () {
-        var offset = dayTabsEl.getBoundingClientRect().top;
-        if (Math.abs(offset) > 1) window.scrollBy({ top: offset, behavior: 'auto' });
-      });
-    }
+    var dayHeading = dayCardsEl.querySelector('.day-card.show .day-head');
+    if (!dayHeading) return;
+    // 日期切換後以當日日期標題為落點；隱藏頂部列讓日期列固定在視窗最上方。
+    document.body.classList.add('header-hidden');
+    var targetY = window.scrollY + dayHeading.getBoundingClientRect().top - dayTabsEl.getBoundingClientRect().height - 12;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: 'instant' });
+    lastScrollY = window.scrollY;
   });
   mapDayTabsEl.addEventListener('click', function (e) {
     var btn = e.target.closest('.tab-btn');
