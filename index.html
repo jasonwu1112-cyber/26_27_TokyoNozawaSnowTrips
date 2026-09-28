@@ -208,6 +208,8 @@
   body.header-hidden:not(.home-active) .theme-toggle{transform:translateY(calc(-100% - 1rem));opacity:0;pointer-events:none;}
   #map-section.card{padding:.8rem;}
   #map{height:calc(100vh - 245px);min-height:390px;}
+  #map.map-unavailable{height:auto;min-height:180px;display:grid;place-items:center;padding:1.5rem;text-align:center;background:var(--bg-card);color:var(--text-dim);}
+  .map-tile-warning{position:absolute;z-index:800;left:.7rem;right:.7rem;top:.7rem;margin:0;padding:.7rem;border-radius:8px;background:var(--bg-card-solid);color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:.8rem;}
   #mapDayTabs{margin-bottom:.7rem;}
   #itinerary-section.card{background:transparent;border:0;padding:0;backdrop-filter:none;}
   #itinerary-section.app-view.active{animation:none;}
@@ -456,7 +458,7 @@
         { "period": "morning", "name": "新宿早餐", "time": "08:00–09:00", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站周邊吃早餐，餐後前往小田急線搭車。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "新宿 → 片瀨江之島", "time": "09:00–10:30", "lat": 35.308873, "lng": 139.483502, "review": "小田急新宿站出發，搭往藤澤方向列車，依車次在藤澤或相模大野轉往片瀨江之島；詳細步驟見本日交通攻略。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "片瀨江之島站 → 江之島", "time": "10:30–11:00", "lat": 35.3021, "lng": 139.4810, "review": "從片瀨江之島站步行過弁天橋到江之島入口，按自己的步調前進。", "transport": { "mode": "步行", "fare": "免費", "duration": "約 30 分鐘（含拍照）" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "午餐：海鮮丼 とびっちょ", "time": "11:00–11:55", "lat": 35.3019162, "lng": 139.4808719, "review": "過橋後先在島口的とびっちょ吃海鮮丼，預留候位與用餐時間；週日若排隊超過預留時段，後續各店縮短為踩點，別擠掉返程緩衝。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "kind": "restaurant", "showOnMap": true, "name": "午餐：海鮮丼 とびっちょ", "time": "11:00–11:55", "lat": 35.3019162, "lng": 139.4808719, "review": "過橋後先在島口的とびっちょ吃海鮮丼，預留候位與用餐時間；週日若排隊超過預留時段，後續各店縮短為踩點，別擠掉返程緩衝。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "最中冰淇淋 井上總本舗", "time": "11:55–12:10", "lat": 35.3017644, "lng": 139.480766, "review": "沿仲見世通買最中冰淇淋當飯後點心，控制停留時間，接續往山上移動。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "あさひ本店（Asahi Honten）仲見世本店", "time": "12:10–12:25", "lat": 35.3009385, "lng": 139.480545, "review": "清單儲存的是仲見世通的本店；與下午的山上頂上店分開標記，沿上島方向順路看看或買一份丸燒章魚仙貝。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "視體力決定是否搭 Escar 上島", "time": "12:25–12:50", "lat": 35.300414, "lng": 139.480344, "review": "需要省力就搭上行手扶梯，否則步行上山；Escar 沒有下行服務，回程須步行。", "openingHours": "營業時間以當日官方公告為準", "ticketPrice": "搭乘另計，請以現場公告為準", "needsBooking": false, "leadDays": 0 },
@@ -467,7 +469,7 @@
         { "period": "noon", "name": "Amaterasu Brewery", "time": "15:25–16:05", "lat": 35.3001283, "lng": 139.481654, "review": "在江之島酒廠酒吧稍作休息，之後往島口下山；飲品與入內方式依現場公告，未滿日本法定飲酒年齡勿飲酒。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "下島步行至片瀨江之島站", "time": "16:05–16:50", "lat": 35.308873, "lng": 139.483502, "review": "步行下坡、經弁天橋回小田急片瀨江之島站；Escar 僅上行，下山需步行，預留拍照與候車緩衝。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "江之島 → 新宿", "time": "約 17:00–18:40", "lat": 35.308873, "lng": 139.483502, "review": "從片瀨江之島站搭車返新宿，視班次在藤澤等站轉乘；抵達時間為估算，不是已確認車次。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 100 分鐘（含候車／轉乘）" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：新宿周邊彈性用餐", "time": "約 19:00 後", "lat": 35.690921, "lng": 139.700258, "review": "視午間海鮮丼與午後 uniRA 的食量，在新宿站或飯店附近簡單吃晚餐，也可直接回住宿休息。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：新宿周邊彈性用餐", "time": "約 19:00 後", "lat": 35.690921, "lng": 139.700258, "review": "視午間海鮮丼與午後 uniRA 的食量，在新宿站或飯店附近簡單吃晚餐，也可直接回住宿休息。", "needsBooking": false, "leadDays": 0 },
         { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息，隔天一早前往野澤溫泉。", "needsBooking": false, "leadDays": 0 }
       ]
     },
@@ -480,7 +482,7 @@
         { "period": "morning", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "11:15–12:15", "lat": 36.920895, "lng": 138.444962, "review": "領取未來 5 日滑雪裝備與雪票，現場確認尺寸、固定器及歸還時間。旺季建議預約避免排隊或缺貨。", "needsBooking": true, "leadDays": 14 },
         { "period": "noon", "name": "Day 3｜日影・上之平・Paradise 半日滑", "time": "12:30–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "抵達日以日影服務區出發，利用纜車前往上之平與 Paradise 的寬緩雪道熟悉裝備和雪況。15:30 起收尾並依官方末班資訊下山，不追求里程。", "seasonal": "抵達日半日滑；依纜車與雪道開放狀況調整", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "外湯巡禮：大湯", "time": "16:30–18:00", "lat": 36.922166, "lng": 138.445413, "rating": 4.5, "review": "滑雪後前往野澤代表性外湯泡湯，入湯前請投香油錢並遵守現場禮儀。", "openingHours": "約 05:00–23:00（依當地公告為準）", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：Gochisou Pizza", "time": "19:00–20:30", "lat": 36.9245084, "lng": 138.4459862, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/10/Screen-Shot-2023-10-03-at-11.50.30-AM.png", "review": "現做手工披薩吧，招牌為茄子披薩，平均單品約 ¥2,200。TableCheck 頁面目前可能顯示未開放訂位，請用下方連結查看最新狀態。", "openingHours": "17:00–23:00；跨年營業日請以店家公告確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/gochisoupizzabar/reserve" } },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Gochisou Pizza", "time": "19:00–20:30", "lat": 36.9245084, "lng": 138.4459862, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/10/Screen-Shot-2023-10-03-at-11.50.30-AM.png", "review": "現做手工披薩吧，招牌為茄子披薩，平均單品約 ¥2,200。TableCheck 頁面目前可能顯示未開放訂位，請用下方連結查看最新狀態。", "openingHours": "17:00–23:00；跨年營業日請以店家公告確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/gochisoupizzabar/reserve" } },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
@@ -490,7 +492,7 @@
       "slots": [
         { "period": "morning", "name": "Day 4｜Yamabiko A–E・上之平巡航", "time": "08:30–16:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "rating": 4.6, "review": "搭長坂纜車前往上部雪場，以 Yamabiko A–E 與上之平為主軸進行完整巡航。上部雪況通常較佳，但風大或能見度差時改留在上之平與 Paradise。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "熊之手湯 (Kumanoteyu)", "time": "17:30–18:15", "lat": 36.923, "lng": 138.446, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "rating": 4.3, "review": "滑雪後泡湯放鬆的絕佳外湯選擇", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：Tengu Sushi at Tanuki", "time": "18:30–20:00", "lat": 36.922166, "lng": 138.445413, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-04-at-5.39.31-PM.png", "review": "大湯路口的江戶前壽司店，主打握壽司、刺身拼盤與熟食；套餐每人約 ¥12,000 起。雪季熱門，建議事先線上訂位。", "openingHours": "17:30–20:00（每席約 1.5 小時）；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/tanukinozawa-tengu-sushi/reserve/" } },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Tengu Sushi at Tanuki", "time": "18:30–20:00", "lat": 36.922166, "lng": 138.445413, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-04-at-5.39.31-PM.png", "review": "大湯路口的江戶前壽司店，主打握壽司、刺身拼盤與熟食；套餐每人約 ¥12,000 起。雪季熱門，建議事先線上訂位。", "openingHours": "17:30–20:00（每席約 1.5 小時）；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/tanukinozawa-tengu-sushi/reserve/" } },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:00 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
@@ -501,7 +503,7 @@
         { "period": "morning", "name": "Day 5｜Paradise・Forest Trail・柄澤回圈", "time": "09:00–12:00", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "從 Paradise 進入約 5 公里的 Forest Trail，再銜接日影或柄澤回圈，體驗和前一日不同的中段長距離路線。林間段多處較窄，請控制速度。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "山頂 Rest House Yamabiko", "time": "12:30–13:30", "lat": 36.920895, "lng": 138.444962, "review": "山頂餐廳享用名物燒肉丼，補充體力後繼續全山巡航", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "日影／柄澤中段巡航", "time": "13:30–16:00", "lat": 36.922678, "lng": 138.442312, "review": "午餐後不再返回 Yamabiko，留在日影與柄澤區域練習中段雪道，16:00 前收尾下山。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：Wagyutei", "time": "18:30–20:30", "lat": 36.922300, "lng": 138.445300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/09/Screen-Shot-2023-09-11-at-12.35.02-PM.png", "review": "溫泉街主路旁的和牛壽喜燒、涮涮鍋專門店，適合三人分享；官方參考價每人約 ¥3,800–8,000。尚無穩定可核實的官方訂位頁，先查看官方介紹並於出發前聯絡店家。", "openingHours": "18:00–22:00；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "官方資訊", "url": "https://en.nozawaski.com/shop_restaurant/2241/" } },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Wagyutei", "time": "18:30–20:30", "lat": 36.922300, "lng": 138.445300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/09/Screen-Shot-2023-09-11-at-12.35.02-PM.png", "review": "溫泉街主路旁的和牛壽喜燒、涮涮鍋專門店，適合三人分享；官方參考價每人約 ¥3,800–8,000。尚無穩定可核實的官方訂位頁，先查看官方介紹並於出發前聯絡店家。", "openingHours": "18:00–22:00；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "官方資訊", "url": "https://en.nozawaski.com/shop_restaurant/2241/" } },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ],
       "dining": [
@@ -513,7 +515,7 @@
       "tips": ["主攻 Skyline 與一般 Challenge 路線；避開 Challenge 39°、Schneider 等高難度區", "跨年夜山區氣溫更低，前往除夜之鐘請務必攜帶暖暖包與防滑雪靴", "Pots TableCheck 目前可能顯示未開放訂位，12/31 營業必須再次確認"],
       "slots": [
         { "period": "morning", "name": "Day 6｜Skyline・Challenge 中階挑戰", "time": "09:00–15:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "以 Skyline 與一般 Challenge 雪道為主，避開 Challenge 39°、Schneider 與 Utopia A 等上級路線。Skyline 入口部分路段較窄，請降低速度並視能見度調整。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：Pots Bar and Kitchen", "time": "18:00–20:00", "lat": 36.921400, "lng": 138.444100, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-16-at-13.34.53.png", "review": "野澤計程車站後方的韓式居酒屋，主打火鍋、涮涮鍋與韓式炸雞。TableCheck 目前可能顯示未開放訂位；大晦日若未營業，改用 Kongo 美食廣場或外帶，並於下午先購入年越蕎麥。", "openingHours": "18:00–23:00；12/31 營業與座位請優先確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/potsbar-kitchen/reserve" } },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Pots Bar and Kitchen", "time": "18:00–20:00", "lat": 36.921400, "lng": 138.444100, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-16-at-13.34.53.png", "review": "野澤計程車站後方的韓式居酒屋，主打火鍋、涮涮鍋與韓式炸雞。TableCheck 目前可能顯示未開放訂位；大晦日若未營業，改用 Kongo 美食廣場或外帶，並於下午先購入年越蕎麥。", "openingHours": "18:00–23:00；12/31 營業與座位請優先確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/potsbar-kitchen/reserve" } },
         { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "00:30 後", "lat": 36.921063, "lng": 138.445188, "review": "跨年活動結束後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
@@ -525,7 +527,7 @@
         { "period": "morning", "name": "Day 7｜柄澤・日影恢復滑", "time": "08:30–14:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "元旦以柄澤寬緩雪道與日影區輕鬆巡航，視體力補 1–2 趟上之平，不再安排 Skyline 或 Yamabiko 長距離路線。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "歸還雪具", "time": "14:30–15:30", "lat": 36.920895, "lng": 138.444962, "review": "提早結束最後一日滑雪，在租借店營業時間內完成雪具檢查與歸還。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "外湯巡禮：麻釜熱湯", "time": "17:00–18:15", "lat": 36.921651, "lng": 138.445988, "rating": 4.4, "review": "歸還雪具後前往麻釜熱湯等外湯巡禮，再前往預訂的新年晚餐。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐：Winterland Taproom and Gyoza Bar", "time": "18:30–20:30", "lat": 36.922100, "lng": 138.444300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Winterland-Nozawa-Onsen-Gyoza.jpg", "review": "中央巴士站旁的餃子啤酒吧，主打使用在地食材的手工餃子，平均單品約 ¥1,200。元旦若未營業，改用 Kongo 美食廣場或 Genki Burger 外帶。", "openingHours": "07:00–22:00；1/1 營業與座位請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/winterlandtaproom-gyozabar/reserve/landing" } },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Winterland Taproom and Gyoza Bar", "time": "18:30–20:30", "lat": 36.922100, "lng": 138.444300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Winterland-Nozawa-Onsen-Gyoza.jpg", "review": "中央巴士站旁的餃子啤酒吧，主打使用在地食材的手工餃子，平均單品約 ¥1,200。元旦若未營業，改用 Kongo 美食廣場或 Genki Burger 外帶。", "openingHours": "07:00–22:00；1/1 營業與座位請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/winterlandtaproom-gyozabar/reserve/landing" } },
         { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "20:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
       ]
     },
@@ -582,6 +584,14 @@ function escapeHTML(s) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+function safeExternalURL(value) {
+  try {
+    var url = new URL(value);
+    return url.protocol === 'https:' ? url.href : '';
+  } catch (e) {
+    return '';
+  }
+}
 function buildMapAppLinks(lat, lng, label) {
   return [{
     label: 'Google 地圖導航',
@@ -624,11 +634,23 @@ function routeCoordinates(points) {
 }
 function initTravelMap(elementId, points, opts) {
   opts = opts || {};
+  var container = document.getElementById(elementId);
+  if (typeof L === 'undefined' || navigator.onLine === false) {
+    container.classList.add('map-unavailable');
+    container.textContent = '目前無法載入互動地圖；行程文字仍可閱讀。請連線後重新整理以使用地圖與導航。';
+    return { setTravelPoints: function () {}, invalidateSize: function () {}, openTravelPoint: function () {} };
+  }
   var map = L.map(elementId);
+  var tileWarning = document.createElement('p');
+  tileWarning.className = 'map-tile-warning';
+  tileWarning.textContent = '地圖圖磚暫時無法載入；行程與地點資訊仍可閱讀。';
+  tileWarning.hidden = true;
+  container.appendChild(tileWarning);
   L.tileLayer(opts.tileUrl || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: opts.attribution || '© OpenStreetMap contributors',
     maxZoom: 19,
-  }).addTo(map);
+  }).on('tileerror', function () { tileWarning.hidden = false; })
+    .on('tileload', function () { tileWarning.hidden = true; }).addTo(map);
   var markerLayer = L.layerGroup().addTo(map);
   var routeLine;
   var markersByNumber = {};
@@ -712,11 +734,48 @@ function reminderBadgeHTML(leadDays) {
     return match ? match[0] : String(value || '彈性');
   }
 
-  function dateKey(date) {
-    var year = date.getFullYear();
-    var month = String(date.getMonth() + 1).padStart(2, '0');
-    var day = String(date.getDate()).padStart(2, '0');
-    return year + '-' + month + '-' + day;
+  function tripClock(date) {
+    var parts = {};
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+    }).formatToParts(date).forEach(function (part) { parts[part.type] = part.value; });
+    return { date: parts.year + '-' + parts.month + '-' + parts.day,
+      minutes: Number(parts.hour) * 60 + Number(parts.minute) };
+  }
+
+  function slotTimeRange(value) {
+    var times = [...String(value || '').matchAll(/(\d{1,2}):(\d{2})/g)]
+      .map(function (match) { return Number(match[1]) * 60 + Number(match[2]); });
+    return times.length ? { start: times[0], end: times.length > 1 ? times[1] : null,
+      after: /後/.test(value) } : null;
+  }
+
+  function nextTripStop(slots, state, now) {
+    var minutes = tripClock(now).minutes;
+    if (state.dayIndex > 0) {
+      var previousSlots = trip.days[state.dayIndex - 1].slots || [];
+      var overnight = previousSlots.find(function (slot) {
+        var range = slotTimeRange(slot.time);
+        return range && range.end !== null && range.end < range.start && minutes < range.end;
+      });
+      if (overnight) return { slot: overnight, label: '前一日行程進行中' };
+    }
+    var current = null;
+    var upcoming = null;
+    slots.forEach(function (slot) {
+      var range = slotTimeRange(slot.time);
+      if (!range) return;
+      if (range.start <= minutes && (range.end !== null
+        ? (range.end < range.start || minutes < range.end)
+        : range.after)) {
+        if (!current || range.start > current.start) current = { slot: slot, start: range.start };
+      } else if (range.start > minutes && (!upcoming || range.start < upcoming.start)) {
+        upcoming = { slot: slot, start: range.start };
+      }
+    });
+    return current ? { slot: current.slot, label: '進行中' }
+      : upcoming ? { slot: upcoming.slot, label: '下一站' } : null;
   }
 
   function shortDate(value) {
@@ -775,8 +834,9 @@ function reminderBadgeHTML(leadDays) {
   }
 
   function weatherLinksHTML(location) {
+    var tenkiUrl = safeExternalURL(location.tenkiUrl);
     return '<div class="weather-links"><a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>'
-      + (location.tenkiUrl ? '<a href="' + location.tenkiUrl + '" target="_blank" rel="noopener">Tenki.jp 詳細預報</a>' : '') + '</div>';
+      + (tenkiUrl ? '<a href="' + escapeHTML(tenkiUrl) + '" target="_blank" rel="noopener">Tenki.jp 詳細預報</a>' : '') + '</div>';
   }
 
   function renderWeatherFallback(card, location, selectedKey) {
@@ -822,7 +882,8 @@ function reminderBadgeHTML(leadDays) {
     document.getElementById('coverTripSubtitle').textContent = trip.coverSubtitle || '';
     document.getElementById('coverLocation').textContent = trip.coverLocation || '';
     document.getElementById('coverDates').textContent = shortDate(trip.days[0].date) + '－' + shortDate(trip.days[trip.days.length - 1].date);
-    document.getElementById('coverImage').src = trip.coverPhoto || '';
+    var coverPhoto = safeExternalURL(trip.coverPhoto);
+    if (coverPhoto) document.getElementById('coverImage').src = coverPhoto;
     document.getElementById('pretripContent').innerHTML = [
       ['天氣', weather.summary],
       ['季節提醒', weather.typhoon],
@@ -843,7 +904,11 @@ function reminderBadgeHTML(leadDays) {
   renderTripSummary();
 
   function isRestaurantSlot(slot) {
-    return /^晚餐[：:]/.test(slot.name || '');
+    return slot.kind === 'restaurant';
+  }
+
+  function isMapExcludedSlot(slot) {
+    return isRestaurantSlot(slot) && slot.showOnMap !== true;
   }
 
   // 地圖：彙整所有 slot 座標
@@ -853,7 +918,7 @@ function reminderBadgeHTML(leadDays) {
     var dayId = 'day' + (di + 1);
     pointsByDay[dayId] = [];
     (day.slots || []).forEach(function (s) {
-      if (isRestaurantSlot(s)) {
+      if (isMapExcludedSlot(s)) {
         delete s.mapNumber;
         return;
       }
@@ -918,7 +983,8 @@ function reminderBadgeHTML(leadDays) {
       if (guide.ticketNote) html += '<p class="transport-note">🎫 ' + escapeHTML(guide.ticketNote) + '</p>';
       if (guide.timingNote) html += '<p class="transport-note transport-warning">⚠️ ' + escapeHTML(guide.timingNote) + '</p>';
       html += '<div class="transport-sources">' + (guide.sources || []).map(function (source) {
-        return '<a href="' + escapeHTML(source.url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>';
+        var url = safeExternalURL(source.url);
+        return url ? '<a href="' + escapeHTML(url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>' : '';
       }).join('') + '</div></section>';
     }
     if (day.alternatives && day.alternatives.length) {
@@ -931,13 +997,15 @@ function reminderBadgeHTML(leadDays) {
     if (di === 0) html += renderFlightSlot(bookedFlights[0]);
     daySlots.filter(function (slot) { return slot.period !== 'stay'; }).forEach(function (s) {
       var restaurantSlot = isRestaurantSlot(s);
+      var mapExcluded = isMapExcludedSlot(s);
       html += '<div class="slot' + (restaurantSlot ? ' slot-restaurant' : '') + '">';
       html += '<div class="period-tag">' + (periodLabel[s.period] || s.period) + '</div>';
-      html += '<div class="slot-name">' + escapeHTML(s.name) + (restaurantSlot ? '' : '<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(s.name) + '">地圖 #' + s.mapNumber + '</button>') + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
+      html += '<div class="slot-name">' + escapeHTML(s.name) + (mapExcluded ? '' : '<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(s.name) + '">地圖 #' + s.mapNumber + '</button>') + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
       html += '<div class="slot-time">' + escapeHTML(s.time) + '</div>';
-      if (s.photo && !featuredPhotoShown) {
+      var photoUrl = safeExternalURL(s.photo);
+      if (photoUrl && !featuredPhotoShown) {
         html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
-          + '<img data-src="' + s.photo + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+          + '<img data-src="' + escapeHTML(photoUrl) + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
         featuredPhotoShown = true;
       }
       if (s.review) {
@@ -946,9 +1014,10 @@ function reminderBadgeHTML(leadDays) {
           ? '<details class="review-details"><summary><span class="review-preview">' + reviewText + '</span><span class="review-toggle"><span class="open-label">展開詳細資訊</span><span class="close-label">收合詳細資訊</span></span></summary><div class="review-full">' + reviewText + '</div></details>'
           : '<div class="review">' + reviewText + '</div>';
       }
-      var slotMapLinks = restaurantSlot ? [] : buildMapAppLinks(s.lat, s.lng, s.name);
-      html += '<div class="slot-maplinks">' + (s.actionLink ? '<a class="booking-action" href="' + escapeHTML(s.actionLink.url) + '" target="_blank" rel="noopener">' + escapeHTML(s.actionLink.label) + '</a>' : '') + slotMapLinks.map(function (l) {
-        return '<a href="' + l.url + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
+      var slotMapLinks = mapExcluded ? [] : buildMapAppLinks(s.lat, s.lng, s.name);
+      var actionUrl = s.actionLink && safeExternalURL(s.actionLink.url);
+      html += '<div class="slot-maplinks">' + (actionUrl ? '<a class="booking-action" href="' + escapeHTML(actionUrl) + '" target="_blank" rel="noopener">' + escapeHTML(s.actionLink.label) + '</a>' : '') + slotMapLinks.map(function (l) {
+        return '<a href="' + escapeHTML(l.url) + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
       }).join('') + '</div>';
       var tags = [];
       if (s.openingHours) tags.push('🕒 ' + s.openingHours);
@@ -1063,7 +1132,7 @@ function reminderBadgeHTML(leadDays) {
   });
 
   function currentTripState() {
-    var today = dateKey(new Date());
+    var today = tripClock(new Date()).date;
     var firstDate = trip.days[0].date;
     var lastDate = trip.days[trip.days.length - 1].date;
     var exactIndex = trip.days.findIndex(function (day) { return day.date === today; });
@@ -1093,21 +1162,14 @@ function reminderBadgeHTML(leadDays) {
     document.getElementById('homeTheme').textContent = state.mode === 'before' ? '出發前先確認提醒與交通資訊' : '今天的重點已整理在下方';
     document.getElementById('homeTimelineTitle').innerHTML = state.mode === 'today' ? '<span class="n">今日</span> 行程摘要' : '<span class="n">預覽</span> 行程摘要';
 
-    var nextSlot = timelineSlots[0];
-    if (state.mode === 'today') {
-      var now = new Date();
-      var currentMinutes = now.getHours() * 60 + now.getMinutes();
-      nextSlot = timelineSlots.find(function (slot) {
-        var match = String(slot.time || '').match(/(\d{1,2}):(\d{2})/);
-        return match && Number(match[1]) * 60 + Number(match[2]) >= currentMinutes;
-      }) || timelineSlots[timelineSlots.length - 1];
-    }
-    document.getElementById('homeNext').innerHTML = nextSlot
-      ? '<div class="next-label">' + (state.mode === 'today' ? '下一站' : '行程起點') + '</div><div class="next-time">' + escapeHTML(startTime(nextSlot.time)) + '</div><div class="next-name">' + escapeHTML(nextSlot.name) + '</div>'
-      : '<div class="next-label">行程</div><div class="next-name">尚無行程資料</div>';
+    var nextStop = state.mode === 'today' ? nextTripStop(timelineSlots, state, new Date())
+      : timelineSlots.length ? { slot: timelineSlots[0], label: '行程起點' } : null;
+    document.getElementById('homeNext').innerHTML = nextStop
+      ? '<div class="next-label">' + nextStop.label + '</div><div class="next-time">' + escapeHTML(startTime(nextStop.slot.time)) + '</div><div class="next-name">' + escapeHTML(nextStop.slot.name) + '</div>'
+      : '<div class="next-label">行程</div><div class="next-name">' + (state.mode === 'today' ? '今日行程已結束' : '尚無行程資料') + '</div>';
 
     var stay = slots.filter(function (slot) { return slot.period === 'stay'; })[0];
-    var today = dateKey(new Date());
+    var today = tripClock(new Date()).date;
     var firstReminder = reminders.find(function (reminder) { return reminder.deadline >= today; }) || reminders[reminders.length - 1];
     document.getElementById('homeSummary').innerHTML = [
       '<article class="card summary-card" id="weatherCard"><div class="summary-label">目前天氣</div><div class="summary-value">載入中…</div></article>',
