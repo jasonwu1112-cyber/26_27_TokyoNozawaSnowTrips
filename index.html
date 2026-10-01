@@ -77,6 +77,18 @@
   .transport-note{margin:.65rem 0 0;padding:.55rem .7rem;border-radius:8px;background:rgba(148,163,184,.09);font-size:.76rem;}
   .transport-warning{border-left:2px solid var(--accent2);}
   .transport-sources{display:flex;flex-wrap:wrap;gap:.35rem .8rem;margin-top:.7rem;font-size:.73rem;}
+  .tax-refund-summary{margin:.3rem 0 .7rem;font-size:.85rem;font-weight:700;}
+  #tax-refund-section[hidden]{display:none;}
+  #vjw-section[hidden]{display:none;}
+  .vjw-checklist{list-style:none;margin:.6rem 0 0;padding:0;}
+  .vjw-checklist label{display:flex;align-items:flex-start;gap:.6rem;padding:.55rem 0;font-size:.78rem;color:var(--text-dim);cursor:pointer;}
+  .vjw-checklist input{flex:none;width:18px;height:18px;margin:.15rem 0 0;accent-color:var(--accent);}
+  .vjw-checklist label:has(input:checked) span{text-decoration:line-through;opacity:.65;}
+  .tax-refund-details{border-top:1px solid var(--border);padding:.65rem 0;}
+  .tax-refund-details summary{cursor:pointer;font-size:.82rem;font-weight:700;}
+  .tax-refund-details ul{margin:.6rem 0 0;padding-left:1.1rem;font-size:.78rem;color:var(--text-dim);}
+  .tax-refund-details li+li{margin-top:.5rem;}
+  .tax-refund-link{display:inline-flex;align-items:center;min-height:40px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--accent);padding:.45rem .7rem;font:inherit;font-size:.76rem;font-weight:700;cursor:pointer;}
   .alt-box{display:flex;flex-direction:column;gap:.5rem;margin:.6rem 0;}
   .alt-item{border:1px dashed var(--border);border-radius:10px;padding:.5rem .6rem;font-size:.78rem;}
   .alt-item b{color:#fff;}
@@ -93,7 +105,7 @@
   .review-details{margin:.4rem 0;color:var(--text-dim);font-size:.78rem;}
   .review-details summary{list-style:none;cursor:pointer;}
   .review-details summary::-webkit-details-marker{display:none;}
-  .review-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;}
+  .review-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;}
   .review-toggle{display:inline-block;margin-top:.35rem;color:var(--accent);font-size:.72rem;font-weight:700;}
   .review-toggle .close-label{display:none;}
   .review-details[open] .review-preview{display:none;}
@@ -156,7 +168,7 @@
   .view-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:1.25rem 0 .75rem;}
   .view-heading h2{font-size:1.35rem;margin:0;line-height:1.2;}
   .view-heading p{margin:.2rem 0 0;color:var(--text-dim);font-size:.78rem;}
-  .today-hero{position:relative;isolation:isolate;overflow:hidden;width:100vw;min-height:calc(100svh - 70px);margin:0 0 0 calc(50% - 50vw);padding:0;border:0;border-radius:0;background:#152338;display:flex;align-items:flex-end;}
+  .today-hero{position:relative;isolation:isolate;overflow:hidden;width:100vw;min-height:calc(100vh - 70px);min-height:calc(100svh - 70px);margin:0 0 0 calc(50% - 50vw);padding:0;border:0;border-radius:0;background:#152338;display:flex;align-items:flex-end;}
   .today-hero::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(4,12,24,.08) 18%,rgba(4,12,24,.48) 54%,rgba(4,12,24,.96) 100%);}
   .cover-image{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
   .cover-content{position:relative;z-index:2;width:min(100%,520px);margin:0 auto;padding:1.5rem 1rem 2rem;text-shadow:0 2px 16px rgba(0,0,0,.6);}
@@ -275,6 +287,13 @@
   html[data-theme="light"] .weather-location-select{background:#fff;color:#172235;}
   html[data-theme="light"] .bottom-nav{background:rgba(248,251,253,.96);}
   html[data-theme="light"] .theme-toggle{background:rgba(255,255,255,.9);color:#172235;}
+  /* 舊版 Safari 使用前綴；不支援模糊時仍保留既有不透明背景。 */
+  .card{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  header.hero{-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
+  #dayTabs{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);}
+  .cover-location,.next-card{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .bottom-nav{-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
+  .theme-toggle{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
   @media (prefers-reduced-motion:reduce){.bottom-nav,header.hero,.theme-toggle,#dayTabs{transition:none;}}
 </style>
 </head>
@@ -325,9 +344,14 @@
     <div id="pretripContent"></div>
   </section>
 
-  <section class="card app-view" data-view="more">
-    <h2><span class="n">⚠️</span> 免責聲明</h2>
-    <div class="disclaimer-box" id="disclaimer-text">本頁全部資訊（天氣、航班、住宿、餐廳、景點、門票、價格、營業時間、評分、活動等）均為 AI 依公開資料整理的參考建議，可能不準確或已過時，不保證與即時情況一致；請務必在官方管道／訂票訂房／地圖等 App 上核實後再做決定或前往。</div>
+  <section class="card app-view" data-view="more" id="vjw-section">
+    <h2><span class="n">📱</span> Visit Japan Web 準備清單</h2>
+    <div id="vjwContent"></div>
+  </section>
+
+  <section class="card app-view" data-view="more" id="tax-refund-section">
+    <h2><span class="n">🧾</span> 日本退稅新制</h2>
+    <div id="taxRefundContent"></div>
   </section>
 
   <section class="card app-view" data-view="schedule" id="itinerary-section">
@@ -345,6 +369,11 @@
   <section class="card app-view" data-view="more" id="tips-section">
     <h2><span class="n">💡</span> 全程實用小提醒</h2>
     <ul class="tips-list" id="tipsList"></ul>
+  </section>
+
+  <section class="card app-view" data-view="more" id="disclaimer-section">
+    <h2><span class="n">⚠️</span> 免責聲明</h2>
+    <div class="disclaimer-box" id="disclaimer-text"></div>
   </section>
 
   <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · App 版</footer>
@@ -411,15 +440,86 @@
   ],
   "disclaimer": "本頁全部資訊（天氣、航班、住宿、餐廳、景點、門票、價格、營業時間、評分、活動等）均為 AI 依公開資料整理的參考建議，可能不準確或已過時，不保證與即時情況一致；請務必在官方管道／訂票訂房／地圖等 App 上核實後再做決定或前往。",
   "tips": [
-    "北陸新幹線東京⇄飯山來回自由席約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算，此行程不建議購買 JR Pass",
-    "跨年期間（12/31～1/3）部分商店、餐廳休息或提前打烊，寺廟／神社初詣期間人潮眾多，請預留排隊時間",
-    "野澤溫泉外湯由當地居民自主管理清潔維護，入湯請投香油錢、保持安靜並依現場標示規則使用",
-    "Day 3–7 晚餐依 Nozawa Holidays 當地餐飲指南安排；村內店家常有固定休息日，12/31～1/1 請以訂位頁或店家公告確認是否營業",
-    "2026 年 12 月起日本機場實施退稅新制，出境前需先至海關 KIOSK 機台完成電子查驗，再辦理行李托運",
-    "滑雪季雪具租借與纜車票建議提早至長坂纜車口／Salomon Station 辦理，避免旺季排隊或缺貨",
-    "江之島冬季午後天色較早變暗，島上坡道與階梯請慢行；Escar 僅供上行，下島仍須步行"
+    "交通購票｜東京⇄飯山新幹線來回自由席參考約 ¥16,500，較北陸拱型 7 日券 ¥35,000 划算；依目前行程不建議另買 JR Pass，票價與車次請於出發前核對。",
+    "江之島慢遊｜冬季天色較早變暗，坡道與階梯請慢行；Escar 僅供上行，下島仍須步行，別把返程時間排得太緊。",
+    "滑雪準備｜雪具與雪票建議事先預約，抵達後提早到長坂纜車口／Salomon Station 辦理，避免旺季排隊或裝備缺貨。",
+    "村內晚餐｜Day 3–7 依 Nozawa Holidays 當地餐飲指南安排；店家常有固定休息日，請提早訂位，尤其 12/31～1/1 要再次核對訂位頁或營業公告。",
+    "外湯禮儀｜野澤溫泉外湯由當地居民自主管理；入湯請投香油錢、保持安靜，並遵守現場清潔與使用規則。",
+    "跨年與初詣｜12/31～1/3 部分商店、餐廳休息或提前打烊；寺廟／神社初詣人潮多，用餐與參拜都要保留候位、排隊及交通緩衝。"
   ],
+  "visitJapanWeb": {
+    "checkedOn": "2026-10-01",
+    "summary": "出發前完成入境資料，抵達時出示本人入境／海關 QR；回程退稅是另一項手續。",
+    "privacyNote": "勾選只供此次開啟頁面自查，重新載入會重置；本頁不保存護照、帳密或個人 QR，也不代表已向日本官方送出資料。",
+    "sections": [
+      {
+        "title": "出發前｜帳號與入境資料填寫",
+        "items": [
+          "使用官方網站註冊／登入，確認電子郵件可收信；不要使用收費代辦或不明的同名 App。",
+          "登錄本人護照資料，逐項核對英文姓名、國籍、出生日期、護照號碼與有效期限；相機辨識後也要檢查。",
+          "建立本次日本入境予定：依去程機票填日本抵達日期、航空公司與航班、出發地及停留天數；不是填 1/4 回台灣的航班。",
+          "依訂房憑證填第一晚 YKB Ensign Building 的郵遞區號、完整地址及聯絡電話；請向房東確認，不使用已失效地圖釘推測資料。",
+          "填妥入境審查及海關申報，依實際情況回答攜帶品、現金及其他申報問題；有食品／動植物等物品，另外確認檢疫規定。",
+          "確認每位同行者各自完成所需手續並能顯示本人的 QR；若使用同伴家人功能，按官方允許範圍登錄，不共用同一個人的 QR。"
+        ]
+      },
+      {
+        "title": "QR 準備｜入境、購物與回程別混用",
+        "items": [
+          "在本次入境予定中確認『入境審查及海關申報』已完成且 QR 可正常顯示；兩項手續已使用統一 QR，不需照舊教學找兩張不同的碼。",
+          "出發前在手機／平板開啟官方頁面測試顯示，依官方離線使用功能準備備援；抵達時帶實體護照，手機保持電量並準備行動電源。",
+          "若備份入境 QR，僅留在自己的裝置，資料修改後重新確認並更新；不要上傳此旅行頁、公開儲存庫或群組。入境 QR 不是登機證，也不替代護照或簽證。",
+          "購物用『免稅 QR』不是入境 QR；官方現行指南要求護照及上陸許可資料讀取，且免稅 QR 不可使用截圖。2026/11 新制上路後的適用方式，依官方及店家最新說明，護照仍隨身帶好。",
+          "1/4 回程的免稅品攜出確認不是再填一份日本入境申報；成田可依指定區域與專用 Wi-Fi 使用 Visit Japan Web，或改用現場端末，確認完成再托運。詳見下方日本退稅新制。"
+        ]
+      }
+    ],
+    "sources": [
+      { "label": "官方填寫／登入", "url": "https://www.vjw.digital.go.jp/" },
+      { "label": "官方使用流程與 QR 說明", "url": "https://services.digital.go.jp/visit-japan-web/guide/" }
+    ]
+  },
+  "taxRefund": {
+    "checkedOn": "2026-10-01",
+    "effectiveDate": "2026-11-01",
+    "departureDate": "2027-01-04",
+    "summary": "先付含稅價 → 托運前確認攜出 → 店家／退款業者返款",
+    "airportNote": "1/4 CI105 17:45 起飛，建議約 14:00 抵達成田 T2。這是行程緩衝建議，不是官方要求；先完成免稅品攜出確認（含必要的人工查驗），才交付托運行李。",
+    "sections": [
+      {
+        "title": "購物時｜先確認資格與退款方式",
+        "items": [
+          "2026/11/1 起的購買適用リファンド（先課稅、後退款）方式，本次旅程購物適用新制；請在有提供免稅手續的店家出示護照等資格文件，購物當下完成登錄，不是拿任何一般收據都能在機場補退稅。",
+          "先支付含消費稅的金額，依店家指示登錄收款方式；當場問清楚退款業者、手續費、退款時程與查詢方式。退款由店家或受託業者辦理，不是海關現場統一發錢，也不保證全額或立即入帳。",
+          "保留收據、商品清單及退款登錄憑證；在日本要吃掉、喝掉或用完的商品，建議與要帶回台灣的免稅品分開結帳。"
+        ]
+      },
+      {
+        "title": "整理行李｜同一筆商品要帶齊",
+        "items": [
+          "須在購買日起 90 日內出境並接受海關確認；將全部免稅品帶在本人可出示的行李內，依收據分組、放在容易取出的地方。護照、收據與退款資料保持隨手可取。",
+          "海關以一次購買手續（收據等）為單位確認；其中一項不在身上，該筆其他商品也無法取得確認與退款。特殊包裝取消不等於可在日本吃掉或用完消耗品；若已消耗全部或部分，勿直接操作機台申報，應先向海關窗口說明。",
+          "不要把免稅品交給不同航班的朋友攜帶，或自行郵寄回國當作攜出證明；旅客自行別送的免稅處理已廢止。大容量液體依航空安檢規則裝入托運行李，但先完成海關確認再交運；回台灣的檢疫與入境限制另行適用。"
+        ]
+      },
+      {
+        "title": "成田出境｜確認完成再托運",
+        "items": [
+          "在國際線出發大廳、托運前的免稅手續端末（KIOSK／電子端末）讀取護照並查看結果；如顯示須查驗，攜全部相關商品至海關窗口，完成人工查驗才可托運。機台判定快不代表排隊與查驗也快。",
+          "官方列成田可使用 Visit Japan Web 替代端末，但須在機場指定區域連上手續專用無線網路（保安檢查前）；不能在飯店提前完成，也不是連上任意 Wi-Fi 即可。出發前再次確認成田 T2 當日指引與端末位置。",
+          "若已先把行李交航空公司，官方說明無法為此取回受託行李完成免稅查驗；因此即使先辦理報到，仍須保留行李到海關確認完成。之後再托運、安檢、出境與登機。",
+          "完成確認後仍須把商品實際帶出日本。保存確認結果與店家憑證，回台後依店家約定核對退款；未入帳向原店家／退款業者查詢，別把刷護照視為已收到退款。"
+        ]
+      }
+    ],
+    "sources": [
+      { "label": "觀光廳旅客新制說明", "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00021.html" },
+      { "label": "觀光廳旅客常見問題", "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00023.html" },
+      { "label": "國稅廳新制／退款資訊", "url": "https://www.nta.go.jp/publication/pamph/shohi/menzei/201805/format/002.htm" }
+    ]
+  },
   "reminders": [
+    { "item": "Visit Japan Web 入境資料填寫、本人 QR 顯示與離線備援確認（詳見更多）", "leadDays": 7 },
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
     { "item": "野澤溫泉 12/28–1/1 晚餐：優先店家訂位並確認跨年營業日", "leadDays": 21 },
     { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
@@ -431,7 +531,7 @@
       "date": "2026-12-26", "weekday": "週六", "theme": "跨海啟程．東京初夜",
       "tips": ["長途飛行後首日行程從簡，抵達後以整理行李與熟悉住宿周邊為主", "清單中的 YKB Ensign Building 502 舊地圖釘標示『地點已不存在』；不等於訂房取消，出發前請依訂房憑證向房東核對地址、房號及入住方式，不要只靠舊釘導航"],
       "slots": [
-        { "period": "evening", "name": "成田機場入境", "time": "18:45–20:30", "lat": 35.7719, "lng": 140.3929, "review": "18:45 抵達成田機場第二航廈，辦理入境、領行李與購買 N'EX／Skyliner 車票", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "成田機場入境", "time": "18:45–20:30", "lat": 35.7719, "lng": 140.3929, "review": "18:45 抵達成田第二航廈，備好本人護照與 Visit Japan Web 入境／海關 QR，依現場指引辦理入境及海關手續、領行李，再購買 N'EX／Skyliner 車票。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "四谷．新宿 Check-in", "time": "20:30–21:45", "lat": 35.687813, "lng": 139.715563, "review": "搭乘 N'EX 或 Skyliner 進市區，前往 YKB Ensign Building 辦理入住", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "丸之內冬季點燈（Marunouchi Illumination）", "time": "22:00–23:00", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Marunouchi_Illumination_2022_%2852646781419%29.jpg", "rating": 4.5, "review": "【簡易攻略】以東京車站丸之內站舍為起點，沿「行幸通」走向「丸之內仲通」，約 250 棵行道樹披上香檳金 LED、全長約 1.2 公里；點燈期間約 11 月中旬～隔年 2 月中旬，每日 16:00–23:00（12 月延長至 24:00），免費入場、無需預約。路線建議：丸之內口出站→行幸通拍站舍夜景全景→仲通北段往南散策至有樂町方向，約 40–60 分鐘。", "openingHours": "16:00–24:00（12 月）／11 月中～2 月中每日開放", "ticketPrice": "免費入場，無需預約", "needsBooking": false, "leadDays": 0 },
         { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "23:00 後", "lat": 35.687813, "lng": 139.715563, "review": "返回 YKB Ensign Building 休息，準備隔日行程。", "needsBooking": false, "leadDays": 0 }
@@ -582,11 +682,12 @@
     },
     {
       "date": "2027-01-04", "weekday": "週一", "theme": "東京車站補貨．賦歸",
-      "tips": ["2026 年 12 月起日本機場退稅新制上路，務必預留時間先完成海關電子查驗"],
+      "tips": ["今日先完成免稅品攜出確認，再交付托運行李；排隊／抽查時間不固定，約 14:00 抵達成田 T2 為建議目標。"],
       "slots": [
-        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:00–11:30", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Marunouchi_%26_Tokyo_Station_1.jpg", "review": "高田馬場飯店退房，前往東京車站補貨或寄放行李", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "前往成田機場", "time": "13:30–14:45", "lat": 35.7719, "lng": 140.3929, "review": "從市區出發前往成田機場，建議 15:00 前抵達", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "成田機場退稅與登機", "time": "14:45–17:45", "lat": 35.7719, "lng": 140.3929, "review": "【2026 退稅新制重點】先至海關 KIOSK 機台完成退稅電子查驗，再辦理行李托運與 Check-in", "seasonal": "2026 年新制：電子查驗需在托運前完成", "needsBooking": false, "leadDays": 0 }
+        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:00–11:30", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Marunouchi_%26_Tokyo_Station_1.jpg", "review": "退房後前往東京車站補貨；離開前取行李、按收據核對免稅品，護照與退款登錄資料隨身放好。中午用餐後準備搭車，不再追加遠處採買。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "前往成田機場 T2", "time": "12:30–14:00", "lat": 35.7719, "lng": 140.3929, "review": "提前從東京車站搭車，目標約 14:00 抵達成田第二航廈，距 CI105 17:45 起飛約 3 小時 45 分；此為緩衝建議，實際車次、報到與登機截止依航空公司公告。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "免稅品攜出確認（托運前）", "time": "14:00–15:00", "lat": 35.7719, "lng": 140.3929, "review": "帶護照與全部免稅品到出發大廳端末，或依指定 Wi-Fi 使用 Visit Japan Web；查看判定，如須查驗則到海關窗口。確認完成前別交運行李；預留一小時不是保證完成時間。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "報到／托運／安檢與登機", "time": "15:00–17:45", "lat": 35.7719, "lng": 140.3929, "review": "海關確認完成後交付托運行李，依航空公司時間完成報到、安檢及出境，提早到登機門。退款依原店家／業者方式處理，不要為等現金退款錯過登機。", "needsBooking": false, "leadDays": 0 }
       ]
     }
   ]
@@ -918,6 +1019,40 @@ function reminderBadgeHTML(leadDays) {
     document.getElementById('tipsList').innerHTML = (trip.tips || []).map(function (tip) {
       return '<li>' + escapeHTML(tip) + '</li>';
     }).join('');
+    var vjw = trip.visitJapanWeb;
+    document.getElementById('vjw-section').hidden = !vjw;
+    if (vjw) {
+      document.getElementById('vjwContent').innerHTML = '<p class="tax-refund-summary">' + escapeHTML(vjw.summary) + '</p>'
+        + '<p class="summary-note">去程參考：' + escapeHTML(trip.flights.booked[0].time) + '；欄位依機票與官方畫面核對。</p>'
+        + vjw.sections.map(function (section) {
+          return '<details class="tax-refund-details"><summary>' + escapeHTML(section.title) + '</summary><ul class="vjw-checklist">'
+            + section.items.map(function (item) {
+              return '<li><label><input type="checkbox"><span>' + escapeHTML(item) + '</span></label></li>';
+            }).join('') + '</ul></details>';
+        }).join('')
+        + '<div class="transport-sources">' + vjw.sources.map(function (source) {
+          var url = safeExternalURL(source.url);
+          return url ? '<a href="' + escapeHTML(url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>' : '';
+        }).join('') + '</div><p class="summary-note">' + escapeHTML(vjw.privacyNote) + '</p><p class="summary-note">官方資料核對：'
+        + escapeHTML(vjw.checkedOn) + '；新制相關畫面與 QR 使用方式請行前再次確認。</p>';
+    }
+    var refund = trip.taxRefund;
+    var refundSection = document.getElementById('tax-refund-section');
+    refundSection.hidden = !refund;
+    if (refund) {
+      document.getElementById('taxRefundContent').innerHTML = '<span class="pill gold">' + escapeHTML(refund.effectiveDate.replace(/-/g, '/')) + ' 起購買適用</span>'
+        + '<p class="tax-refund-summary">' + escapeHTML(refund.summary) + '</p>'
+        + '<p class="transport-note transport-warning">' + escapeHTML(refund.airportNote) + '</p>'
+        + refund.sections.map(function (section) {
+          return '<details class="tax-refund-details"><summary>' + escapeHTML(section.title) + '</summary><ul>'
+            + section.items.map(function (item) { return '<li>' + escapeHTML(item) + '</li>'; }).join('') + '</ul></details>';
+        }).join('')
+        + '<div class="transport-sources">' + refund.sources.map(function (source) {
+          var url = safeExternalURL(source.url);
+          return url ? '<a href="' + escapeHTML(url) + '" target="_blank" rel="noopener">' + escapeHTML(source.label) + ' ↗</a>' : '';
+        }).join('') + '</div><p class="summary-note">官方資料核對：' + escapeHTML(refund.checkedOn)
+        + '；新制尚未於核對日實施，機場配置與店家退款細節請行前再次確認。</p>';
+    }
   }
 
   renderTripSummary();
@@ -992,6 +1127,12 @@ function reminderBadgeHTML(leadDays) {
     (day.tips || []).forEach(function (t) {
       html += '<div class="day-tips">💡 ' + escapeHTML(t) + '</div>';
     });
+    if (trip.visitJapanWeb && di === 0) {
+      html += '<button class="tax-refund-link" type="button" data-open-view="more" data-scroll-target="vjw-section">查看更多：Visit Japan Web 填寫與 QR 清單 →</button>';
+    }
+    if (trip.taxRefund && day.date === trip.taxRefund.departureDate) {
+      html += '<button class="tax-refund-link" type="button" data-open-view="more" data-scroll-target="tax-refund-section">查看更多：退稅新制與打包注意事項 →</button>';
+    }
     [{ guide: day.transportGuide, icon: '🚃' }, { guide: day.ticketGuide, icon: '🎟️' }].forEach(function (section) {
       if (!section.guide) return;
       var guide = section.guide;
@@ -1246,6 +1387,11 @@ function reminderBadgeHTML(leadDays) {
         document.body.classList.remove('nav-hidden', 'header-hidden');
       } else if (currentScrollY > 160 && delta > 8) {
         document.body.classList.add('nav-hidden', 'header-hidden');
+      }
+      // 頁底沒有再往下的空間，恢復導覽讓使用者直接切換 View。
+      var remainingScroll = document.documentElement.scrollHeight - window.innerHeight - currentScrollY;
+      if (remainingScroll <= 100) {
+        document.body.classList.remove('nav-hidden');
       }
       lastScrollY = currentScrollY;
       scrollTicking = false;
