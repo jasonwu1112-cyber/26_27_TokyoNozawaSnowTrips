@@ -21,19 +21,30 @@
     --text:#172235; --text-dim:#5d6b7d; --accent:#087ba5; --accent2:#9a6500;
     --border:rgba(51,65,85,.18); --danger:#c23d4b; --ok:#087b5b;
   }
-</style>
-<style>
   *{box-sizing:border-box;}
-  body{margin:0;background:linear-gradient(180deg,#0b1220 0%,#0d1526 40%,#0b1220 100%);color:var(--text);
-    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;padding-bottom:3rem;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;padding-bottom:6.5rem;overflow-x:clip;color:var(--text);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;line-height:1.6;
+    background:radial-gradient(circle at 15% 0,rgba(56,189,248,.12),transparent 26rem),
+      linear-gradient(180deg,#08111f 0%,#0b1424 55%,#08111f 100%);}
   a{color:var(--accent);}
-  .wrap{max-width:480px;margin:0 auto;padding:0 1rem;}
-    header.hero{background:radial-gradient(circle at 20% -10%,rgba(56,189,248,.35),transparent 65%),linear-gradient(135deg,#0f1a2e,#0b1220 70%);
-      border-bottom:1px solid var(--border);padding:2rem 0 1.5rem;width:100%;box-shadow:inset 0 -1px 0 rgba(56,189,248,.08);}
-  header.hero .tag{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent2);font-weight:700;font-size:.8rem;margin-bottom:.4rem;}
-  header.hero h1{font-size:1.5rem;margin:.2rem 0;font-weight:800;letter-spacing:.02em;}
-  header.hero .dates{color:var(--text-dim);font-size:.85rem;}
-  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;backdrop-filter:blur(6px);}
+  .app-wrap{max-width:520px;margin:0 auto;padding:0 1rem;}
+  header.hero{position:sticky;top:0;z-index:30;width:100%;padding:1rem 0 .85rem;
+    background:rgba(8,17,31,.9);border-bottom:1px solid var(--border);
+    box-shadow:inset 0 -1px 0 rgba(56,189,248,.08);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    transition:transform .24s ease,opacity .2s ease;}
+  body.header-hidden:not(.home-active) header.hero{transform:translateY(calc(-100% - 1px));opacity:0;pointer-events:none;}
+  header.hero .app-wrap{padding-right:4.5rem;}
+  body.home-active header.hero{display:none;}
+  header.hero .tag{display:inline-flex;align-items:center;gap:.4rem;color:var(--accent2);font-weight:700;font-size:.7rem;margin:0;text-transform:uppercase;}
+  header.hero h1{font-size:1.12rem;margin:.1rem 0;font-weight:800;letter-spacing:0;}
+  header.hero .dates{display:inline-flex;align-items:center;gap:.45rem;max-width:100%;margin-top:.32rem;padding:.2rem .65rem;
+    border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);
+    font-size:.82rem;font-weight:800;letter-spacing:.035em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.35;}
+  header.hero .dates::before{content:"";flex:none;width:.4rem;height:.4rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.14);}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.2rem;margin:1rem 0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  section.card[id]{scroll-margin-top:4.2rem;}
   .card h2{font-size:1.05rem;margin:0 0 .8rem;display:flex;align-items:center;gap:.4rem;color:#fff;}
   .card h2 .n{color:var(--accent);}
   .pill{display:inline-block;padding:.15rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700;background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.3);}
@@ -41,30 +52,39 @@
   .pill.pending{background:rgba(148,163,184,.15);color:var(--text-dim);border-color:var(--border);}
   ul.pretrip-todo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;}
   .todo-item{display:flex;gap:.5rem;align-items:flex-start;font-size:.85rem;background:rgba(148,163,184,.08);padding:.5rem .6rem;border-radius:10px;}
-  .todo-deadline{color:var(--accent2);font-weight:700;white-space:nowrap;}
+  .reminder-item{align-items:center;}
+  .reminder-item::before{content:"";flex:0 0 9px;height:9px;border-radius:50%;background:var(--danger);box-shadow:0 0 0 4px rgba(248,113,113,.14);}
+  .todo-deadline{color:var(--accent2);font-weight:700;white-space:nowrap;font-size:.72rem;}
+  .todo-text{font-size:.8rem;}
   .reminder-badge{display:inline-block;margin-left:.4rem;font-size:.7rem;background:rgba(248,113,113,.15);color:var(--danger);border:1px solid rgba(248,113,113,.35);padding:.1rem .5rem;border-radius:999px;}
   .kv{font-size:.85rem;margin:.4rem 0;}
   .kv b{color:#fff;}
-  .flight-row{border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem;margin-bottom:.6rem;font-size:.85rem;}
-  .flight-row.booked{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.06);}
-  .hotel-area{border-top:1px dashed var(--border);padding-top:.8rem;margin-top:.8rem;}
-  .hotel-area:first-child{border-top:none;padding-top:0;margin-top:0;}
-  .hotel-area .area-name{font-weight:800;color:#fff;font-size:.95rem;}
-  .hotel-area .reason{color:var(--text-dim);font-size:.78rem;margin-bottom:.5rem;}
-  .hotel-opt{display:flex;justify-content:space-between;gap:.6rem;font-size:.82rem;background:rgba(148,163,184,.07);padding:.5rem .6rem;border-radius:10px;margin-bottom:.4rem;}
   .disclaimer-box{font-size:.78rem;color:var(--text-dim);background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:.8rem .9rem;}
-  #map{width:100%;height:280px;border-radius:14px;border:1px solid var(--border);}
-  .map-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;}
+  #map-section.card{padding:.8rem;}
+  #map{width:100%;height:calc(100vh - 245px);min-height:390px;border-radius:14px;border:1px solid var(--border);}
+  #map.map-unavailable{height:auto;min-height:180px;display:grid;place-items:center;padding:1.5rem;text-align:center;background:var(--bg-card);color:var(--text-dim);}
+  .map-tile-warning{position:absolute;z-index:800;left:.7rem;right:.7rem;top:.7rem;margin:0;padding:.7rem;border-radius:8px;background:var(--bg-card-solid);color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:.8rem;}
+  .map-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;}
+  .map-head-actions{display:flex;align-items:center;gap:.5rem;margin-left:auto;}
+  .map-back-btn{min-height:32px;padding:.25rem .65rem;border:1px solid rgba(56,189,248,.4);border-radius:999px;background:rgba(56,189,248,.14);color:var(--accent);font:inherit;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .map-back-btn[hidden]{display:none;}
   .map-state{font-size:.72rem;color:var(--text-dim);white-space:nowrap;}
   .tabs{display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.5rem;margin-bottom:.8rem;}
   .tabs::-webkit-scrollbar{height:4px;}
   .tab-btn{flex:none;padding:.4rem .8rem;border-radius:999px;border:1px solid var(--border);background:rgba(148,163,184,.08);color:var(--text-dim);font-size:.78rem;font-weight:700;cursor:pointer;}
   .tab-btn.active{background:linear-gradient(135deg,var(--accent),#0284c7);color:#fff;border-color:transparent;}
+  #mapDayTabs{margin-bottom:.7rem;}
+  #itinerary-section.card{background:transparent;border:0;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none;}
+  #itinerary-section.app-view.active{animation:none;}
+  #dayTabs,#moreQuickNav{position:sticky;top:var(--app-header-height);z-index:60;margin:0 -1rem .8rem;padding:.55rem 1rem;background:rgba(8,17,31,.96);border-bottom:1px solid var(--border);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.18);scrollbar-width:none;}
+  .more-quicknav.app-view.active{display:flex;}
+  .more-quicknav [hidden]{display:none;}
+  body.header-hidden #dayTabs,body.header-hidden #moreQuickNav{top:0;}
+  #dayTabs::-webkit-scrollbar,#moreQuickNav::-webkit-scrollbar{display:none;}
   .day-card{display:none;}
   .day-card.show{display:block;}
   .day-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem;margin-bottom:.3rem;}
   .day-theme{font-size:1.05rem;font-weight:800;color:#fff;margin:.2rem 0 .6rem;}
-  .day-lodge{font-size:.75rem;color:var(--text-dim);}
   .day-tips{font-size:.78rem;color:var(--accent2);background:rgba(251,191,36,.08);border-radius:10px;padding:.5rem .7rem;margin:.5rem 0;}
   .transport-guide{margin:.8rem 0 1.35rem;padding:1rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;background:var(--bg-card);}
   .transport-guide h3{margin:0 0 .2rem;font-size:.96rem;color:var(--text);}
@@ -117,16 +137,20 @@
   .alt-box{display:flex;flex-direction:column;gap:.5rem;margin:.6rem 0;}
   .alt-item{border:1px dashed var(--border);border-radius:10px;padding:.5rem .6rem;font-size:.78rem;}
   .alt-item b{color:#fff;}
-  .slot{border:1px solid var(--border);border-radius:14px;padding:.8rem;margin-bottom:.7rem;background:rgba(15,23,42,.4);}
-  .slot .period-tag{font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--accent);}
-  .slot .slot-name{font-size:.95rem;font-weight:800;color:#fff;margin:.15rem 0;}
+  .slot{position:relative;margin:0 0 0 5.8rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
+  .slot.slot-return-highlight{background:rgba(56,189,248,.1);border-radius:0 10px 10px 0;transition:background .35s ease;}
+  .slot::before{content:"";position:absolute;left:-5px;top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0b1424;}
+  .slot-flight::before{background:var(--accent2);}
+  .slot-stay::before{background:var(--ok);}
+  .slot .period-tag{display:none;}
+  .slot .slot-name{font-size:.92rem;font-weight:800;color:#fff;margin:0 0 .35rem;}
   .map-number{display:inline-block;margin-left:.4rem;padding:.08rem .42rem;border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);font:inherit;font-size:.67rem;font-weight:700;vertical-align:middle;cursor:pointer;}
-  .slot .slot-time{font-size:.75rem;color:var(--text-dim);}
-  .photo-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin:.5rem 0;
+  .slot .slot-time{position:absolute;right:calc(100% + 1.1rem);top:.12rem;width:4.6rem;text-align:right;color:var(--accent2);font-size:.7rem;font-weight:800;white-space:normal;overflow-wrap:anywhere;line-height:1.35;}
+  .photo-frame{position:relative;width:100%;max-height:210px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin:.5rem 0;
     background:linear-gradient(135deg,var(--accent),var(--accent2));}
   .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#0b1220;font-weight:800;font-size:.85rem;text-align:center;padding:.5rem;}
   .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-  .slot .review{font-size:.82rem;margin:.4rem 0;}
+  .slot .review{color:var(--text-dim);font-size:.78rem;margin:.4rem 0;}
   .review-details{margin:.4rem 0;color:var(--text-dim);font-size:.78rem;}
   .review-details summary{list-style:none;cursor:pointer;}
   .review-details summary::-webkit-details-marker{display:none;}
@@ -141,63 +165,26 @@
   .meta-tags span{font-size:.68rem;background:rgba(148,163,184,.12);border:1px solid var(--border);border-radius:999px;padding:.15rem .5rem;color:var(--text-dim);}
   .dining-item{border-left:3px solid var(--accent2);padding:.5rem .7rem;background:rgba(251,191,36,.05);border-radius:0 10px 10px 0;margin-bottom:.5rem;font-size:.82rem;}
   .dishes{color:var(--text-dim);font-size:.75rem;margin-top:.2rem;}
-  ul.tips-list{margin:0;padding-left:1.1rem;font-size:.85rem;}
-  ul.tips-list li{margin-bottom:.4rem;}
-  footer{text-align:center;color:var(--text-dim);font-size:.72rem;margin-top:2rem;}
-  html{scroll-behavior:smooth;}
-  section.card[id]{scroll-margin-top:4.2rem;}
-  .quicknav{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.92);backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--border);padding:.5rem 1rem;margin:0 -1rem;}
-  .quicknav-row{display:flex;gap:.4rem;overflow-x:auto;white-space:nowrap;-ms-overflow-style:none;scrollbar-width:none;}
-  .quicknav-row::-webkit-scrollbar{display:none;}
-  .quicknav-row a, .quicknav-row button{flex:none;padding:.35rem .75rem;border-radius:999px;border:1px solid var(--border);
-    background:rgba(148,163,184,.08);color:var(--text-dim);font-size:.74rem;font-weight:700;text-decoration:none;cursor:pointer;}
-  .quicknav-row a:hover, .quicknav-row button:hover{color:#fff;border-color:var(--accent);}
-  .quicknav-days{margin-top:.4rem;}
-  .slot-maplinks{display:flex;margin-top:.55rem;}
-  .slot-maplinks a{font-size:.64rem;color:#062033;text-decoration:none;border:1px solid transparent;
+  .timeline-detail{padding:.65rem .7rem;border:1px solid var(--border);border-radius:8px;background:rgba(148,163,184,.06);font-size:.78rem;color:var(--text-dim);}
+  .timeline-detail strong{display:block;margin-bottom:.2rem;color:#fff;font-size:.86rem;}
+  .timeline-detail-row{margin-top:.25rem;}
+  .slot-maplinks{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem;}
+  .slot-maplinks a{min-height:28px;display:inline-flex;align-items:center;font-size:.64rem;color:#062033;text-decoration:none;border:1px solid transparent;
     border-radius:6px;padding:.22rem .42rem;background:var(--accent);font-weight:800;}
   .slot-maplinks a:hover{background:#7dd3fc;}
   .slot-maplinks a.booking-action{background:var(--accent2);color:#241800;}
   .slot-maplinks a.booking-action:hover{background:#fcd34d;}
-
-  @media (min-width: 768px){
-    .wrap{max-width:920px;}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-    #map{height:420px;}
-    .card{padding:1.5rem 1.7rem;}
-    header.hero h1{font-size:2.1rem;}
-    .day-cards-desktop{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-  }
-</style>
-<style>
-  body{padding-bottom:6.5rem;overflow-x:clip;background:
-    radial-gradient(circle at 15% 0,rgba(56,189,248,.12),transparent 26rem),
-    linear-gradient(180deg,#08111f 0%,#0b1424 55%,#08111f 100%);}
-  .app-wrap{max-width:520px;margin:0 auto;padding:0 1rem;}
-  header.hero{position:sticky;top:0;z-index:30;padding:1rem 0 .85rem;background:rgba(8,17,31,.9);backdrop-filter:blur(16px);transition:transform .24s ease,opacity .2s ease;}
-  body.header-hidden:not(.home-active) header.hero{transform:translateY(calc(-100% - 1px));opacity:0;pointer-events:none;}
-  header.hero .app-wrap{padding-right:4.5rem;}
-  body.home-active header.hero{display:none;}
-  header.hero .tag{font-size:.7rem;margin:0;text-transform:uppercase;}
-  header.hero h1{font-size:1.12rem;margin:.1rem 0;letter-spacing:0;}
-  header.hero .dates{display:inline-flex;align-items:center;gap:.45rem;max-width:100%;margin-top:.32rem;padding:.2rem .65rem;
-    border:1px solid rgba(56,189,248,.35);border-radius:999px;background:rgba(56,189,248,.12);color:var(--accent);
-    font-size:.82rem;font-weight:800;letter-spacing:.035em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.35;}
-  header.hero .dates::before{content:"";flex:none;width:.4rem;height:.4rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.14);}
-  .quicknav{display:none;}
+  ul.tips-list{margin:0;padding-left:1.1rem;font-size:.85rem;}
+  ul.tips-list li{margin-bottom:.4rem;}
+  footer{text-align:center;color:var(--text-dim);font-size:.72rem;margin-top:2rem;}
   .app-view{display:none;animation:app-view-in .28s ease both;}
   .app-view.active{display:block;}
   @keyframes app-view-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .view-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin:1.25rem 0 .75rem;}
-  .view-heading h2{font-size:1.35rem;margin:0;line-height:1.2;}
-  .view-heading p{margin:.2rem 0 0;color:var(--text-dim);font-size:.78rem;}
   .today-hero{position:relative;isolation:isolate;overflow:hidden;width:100vw;min-height:calc(100vh - 70px);min-height:calc(100svh - 70px);margin:0 0 0 calc(50% - 50vw);padding:0;border:0;border-radius:0;background:#152338;display:flex;align-items:flex-end;}
   .today-hero::before{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(4,12,24,.08) 18%,rgba(4,12,24,.48) 54%,rgba(4,12,24,.96) 100%);}
   .cover-image{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
   .cover-content{position:relative;z-index:2;width:min(100%,520px);margin:0 auto;padding:1.5rem 1rem 2rem;text-shadow:0 2px 16px rgba(0,0,0,.6);}
-  .cover-location{position:absolute;z-index:2;top:max(1rem,env(safe-area-inset-top));right:1rem;padding:.35rem .55rem;border:1px solid rgba(255,255,255,.22);border-radius:6px;background:rgba(4,12,24,.36);backdrop-filter:blur(8px);color:rgba(255,255,255,.86);font-size:.68rem;font-weight:700;}
+  .cover-location{position:absolute;z-index:2;top:max(1rem,env(safe-area-inset-top));right:1rem;padding:.35rem .55rem;border:1px solid rgba(255,255,255,.22);border-radius:6px;background:rgba(4,12,24,.36);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:rgba(255,255,255,.86);font-size:.68rem;font-weight:700;}
   .cover-trip-title{font-size:2.15rem;line-height:1.08;margin:.35rem 0 .25rem;color:#fff;letter-spacing:0;max-width:11em;}
   .cover-trip-subtitle{margin:0 0 .3rem;color:rgba(255,255,255,.9);font-size:1rem;font-weight:700;}
   .cover-dates{font-size:.78rem;color:rgba(255,255,255,.78);}
@@ -205,7 +192,7 @@
   .today-date{color:var(--accent2);font-size:.78rem;font-weight:700;margin-top:1.25rem;}
   .today-hero h2{font-size:1.4rem;line-height:1.25;margin:.2rem 0 .25rem;max-width:90%;}
   .today-theme{color:rgba(255,255,255,.78);font-size:.84rem;}
-  .next-card{margin-top:1rem;border-left:3px solid var(--accent);padding:.75rem .85rem;background:rgba(4,12,24,.54);border-radius:0 8px 8px 0;backdrop-filter:blur(8px);}
+  .next-card{margin-top:1rem;border-left:3px solid var(--accent);padding:.75rem .85rem;background:rgba(4,12,24,.54);border-radius:0 8px 8px 0;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
   .next-label{font-size:.68rem;font-weight:800;color:var(--accent);text-transform:uppercase;}
   .next-time{font-size:1.35rem;font-weight:800;color:#fff;margin:.15rem 0;}
   .next-name{font-size:.9rem;}
@@ -216,8 +203,9 @@
   .app-action.primary{background:var(--accent);color:#062033;border-color:transparent;}
   .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1rem 0;}
   .summary-card{margin:0;padding:.9rem;min-height:112px;}
-  .summary-card:last-child{grid-column:auto;min-height:112px;}
-  .summary-label{color:var(--text-dim);font-size:.7rem;font-weight:700;}
+  .summary-card-action{cursor:pointer;transition:border-color .18s ease,transform .18s ease;}
+  .summary-card-action:hover,.summary-card-action:focus-visible{border-color:var(--accent);transform:translateY(-1px);}
+  .summary-label{display:flex;align-items:center;justify-content:space-between;color:var(--text-dim);font-size:.7rem;font-weight:700;}
   .summary-value{margin-top:.35rem;color:#fff;font-size:.9rem;font-weight:800;line-height:1.35;}
   .summary-note{margin-top:.3rem;color:var(--text-dim);font-size:.72rem;}
   .weather-value{display:flex;align-items:center;gap:.4rem;}
@@ -228,60 +216,30 @@
   .weather-links a{text-decoration:none;font-weight:700;}
   .mini-timeline{display:flex;flex-direction:column;}
   .mini-stop{display:grid;grid-template-columns:3.8rem 1fr;gap:.8rem;position:relative;padding:.65rem 0;}
+  .mini-stop-action{cursor:pointer;border-radius:8px;padding-left:.25rem;padding-right:.25rem;}
+  .mini-stop-action:hover,.mini-stop-action:focus-visible{background:rgba(56,189,248,.08);}
   .mini-stop:not(:last-child)::after{content:"";position:absolute;left:4.25rem;top:2rem;bottom:-.5rem;width:1px;background:var(--border);}
   .mini-time{color:var(--accent2);font-size:.76rem;font-weight:800;}
   .mini-name{font-size:.84rem;font-weight:700;}
-  .reminder-item{align-items:center;}
-  .reminder-item::before{content:"";flex:0 0 9px;height:9px;border-radius:50%;background:var(--danger);box-shadow:0 0 0 4px rgba(248,113,113,.14);}
-  .todo-deadline{font-size:.72rem;}
-  .todo-text{font-size:.8rem;}
   .bottom-nav{position:fixed;z-index:50;left:50%;bottom:max(.65rem,env(safe-area-inset-bottom));transform:translate(-50%,0);width:min(calc(100% - 1.5rem),420px);display:grid;grid-template-columns:repeat(3,1fr);
-    padding:.25rem .35rem;background:rgba(8,17,31,.9);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(18px);box-shadow:0 10px 32px rgba(0,0,0,.3);transition:transform .24s ease,opacity .2s ease;}
+    padding:.25rem .35rem;background:rgba(8,17,31,.9);border:1px solid var(--border);border-radius:12px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 10px 32px rgba(0,0,0,.3);transition:transform .24s ease,opacity .2s ease;}
   body.nav-hidden .bottom-nav{transform:translate(-50%,calc(100% + 1.5rem));opacity:0;pointer-events:none;}
   .nav-btn{min-height:48px;border:0;border-radius:8px;background:transparent;color:var(--text-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;font:inherit;font-size:.64rem;cursor:pointer;}
   .nav-btn .nav-icon{font-size:1.05rem;line-height:1;}
-  .nav-btn.active{color:var(--accent);}
-  .nav-btn.active{background:rgba(56,189,248,.1);}
+  .nav-btn.active{color:var(--accent);background:rgba(56,189,248,.1);}
   .nav-btn.active .nav-icon{transform:translateY(-1px);}
-  .theme-toggle{position:fixed;z-index:70;top:max(.75rem,env(safe-area-inset-top));right:1rem;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;background:rgba(8,17,31,.78);color:#fff;font-size:1.05rem;cursor:pointer;backdrop-filter:blur(12px);box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .24s ease,opacity .2s ease;}
+  .theme-toggle{position:fixed;z-index:70;top:max(.75rem,env(safe-area-inset-top));right:1rem;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--border);border-radius:50%;background:rgba(8,17,31,.78);color:#fff;font-size:1.05rem;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .24s ease,opacity .2s ease;}
   body.home-active .theme-toggle{right:auto;left:1rem;}
   body.header-hidden:not(.home-active) .theme-toggle{transform:translateY(calc(-100% - 1rem));opacity:0;pointer-events:none;}
-  #map-section.card{padding:.8rem;}
-  #map{height:calc(100vh - 245px);min-height:390px;}
-  #map.map-unavailable{height:auto;min-height:180px;display:grid;place-items:center;padding:1.5rem;text-align:center;background:var(--bg-card);color:var(--text-dim);}
-  .map-tile-warning{position:absolute;z-index:800;left:.7rem;right:.7rem;top:.7rem;margin:0;padding:.7rem;border-radius:8px;background:var(--bg-card-solid);color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.25);font-size:.8rem;}
-  #mapDayTabs{margin-bottom:.7rem;}
-  #itinerary-section.card{background:transparent;border:0;padding:0;backdrop-filter:none;}
-  #itinerary-section.app-view.active{animation:none;}
-  #dayTabs{position:sticky;top:var(--app-header-height);z-index:60;margin:0 -1rem .8rem;padding:.55rem 1rem;background:rgba(8,17,31,.96);border-bottom:1px solid var(--border);backdrop-filter:blur(14px);box-shadow:0 6px 18px rgba(0,0,0,.18);scrollbar-width:none;transition:top .24s ease;}
-  body.header-hidden #dayTabs{top:0;}
-  #dayTabs::-webkit-scrollbar{display:none;}
-  .slot{position:relative;margin:0 0 0 5.8rem;border:0;border-left:1px solid var(--border);border-radius:0;padding:.15rem 0 1.2rem 1rem;background:transparent;}
-  .slot::before{content:"";position:absolute;left:-5px;top:.45rem;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px #0b1424;}
-  .slot .slot-time{position:absolute;right:calc(100% + 1.1rem);top:.12rem;width:4.6rem;text-align:right;color:var(--accent2);font-size:.7rem;font-weight:800;white-space:normal;overflow-wrap:anywhere;line-height:1.35;}
-  .slot .period-tag{display:none;}
-  .slot .slot-name{font-size:.92rem;margin:0 0 .35rem;}
-  .slot .review{color:var(--text-dim);font-size:.78rem;}
-  .slot-flight::before{background:var(--accent2);}
-  .slot-stay::before{background:var(--ok);}
-  .timeline-detail{padding:.65rem .7rem;border:1px solid var(--border);border-radius:8px;background:rgba(148,163,184,.06);font-size:.78rem;color:var(--text-dim);}
-  .timeline-detail strong{display:block;margin-bottom:.2rem;color:#fff;font-size:.86rem;}
-  .timeline-detail-row{margin-top:.25rem;}
-  .slot-maplinks a{min-height:28px;display:inline-flex;align-items:center;}
-  .photo-frame{max-height:210px;}
-  .section-stack .card{margin:.75rem 0;}
-  @media (max-width:520px){.hotel-opt{flex-direction:column;}.hotel-opt .hotel-note{text-align:left;}}
   @media (min-width:768px){
     .app-wrap{max-width:960px;}
+    .card{padding:1.5rem 1.7rem;}
     .bottom-nav{width:420px;}
     .summary-grid{grid-template-columns:repeat(4,1fr);}
-    .summary-card:last-child{grid-column:auto;min-height:112px;}
     .cover-content{width:min(100%,960px);padding:2.5rem 2rem 3rem;}
     .cover-trip-title{font-size:3.5rem;}
     .cover-trip-subtitle{font-size:1.25rem;}
     #map{height:580px;}
-    .section-stack{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem;align-items:start;}
-    .section-stack .card{margin:.5rem 0;}
   }
   html[data-theme="light"] body{background:radial-gradient(circle at 15% 0,rgba(14,165,233,.1),transparent 26rem),linear-gradient(180deg,#f6fafc 0%,#edf3f7 55%,#e7eef4 100%);}
   html[data-theme="light"] header.hero{background:rgba(246,250,252,.92);box-shadow:0 1px 0 var(--border);}
@@ -289,10 +247,10 @@
   html[data-theme="light"] .today-kicker,
   html[data-theme="light"] .next-label{color:#7dd3fc;}
   html[data-theme="light"] .today-date{color:#fbbf24;}
-  html[data-theme="light"] .today-hero .app-action.primary{color:#fff;}
+  html[data-theme="light"] .today-hero .app-action.primary,
+  html[data-theme="light"] .slot-maplinks a:not(.booking-action){color:#fff;}
   html[data-theme="light"] .card h2,
   html[data-theme="light"] .kv b,
-  html[data-theme="light"] .hotel-area .area-name,
   html[data-theme="light"] .day-theme,
   html[data-theme="light"] .alt-item b,
   html[data-theme="light"] .slot .slot-name,
@@ -301,24 +259,20 @@
   html[data-theme="light"] .today-hero h2,
   html[data-theme="light"] .today-hero .summary-value{color:#fff;}
   html[data-theme="light"] .todo-item,
-  html[data-theme="light"] .hotel-opt,
   html[data-theme="light"] .tab-btn,
   html[data-theme="light"] .meta-tags span,
   html[data-theme="light"] .timeline-detail{background:rgba(71,85,105,.07);}
-  html[data-theme="light"] #dayTabs{background:rgba(246,250,252,.95);}
-  html[data-theme="light"] #dayTabs .tab-btn.active{background:#087ba5;color:#fff;border-color:#06698d;box-shadow:0 2px 8px rgba(8,123,165,.28);}
-  html[data-theme="light"] #dayTabs .tab-btn:not(.active){background:#e3eaf0;color:#526174;border-color:#cbd5df;}
+  html[data-theme="light"] #dayTabs,
+  html[data-theme="light"] #moreQuickNav{background:rgba(246,250,252,.95);}
+  html[data-theme="light"] #dayTabs .tab-btn.active,
+  html[data-theme="light"] #moreQuickNav .tab-btn.active{background:#087ba5;color:#fff;border-color:#06698d;box-shadow:0 2px 8px rgba(8,123,165,.28);}
+  html[data-theme="light"] #dayTabs .tab-btn:not(.active),
+  html[data-theme="light"] #moreQuickNav .tab-btn:not(.active){background:#e3eaf0;color:#526174;border-color:#cbd5df;}
   html[data-theme="light"] .slot::before{box-shadow:0 0 0 4px #edf3f7;}
   html[data-theme="light"] .weather-location-select{background:#fff;color:#172235;}
   html[data-theme="light"] .bottom-nav{background:rgba(248,251,253,.96);}
   html[data-theme="light"] .theme-toggle{background:rgba(255,255,255,.9);color:#172235;}
-  .card{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
-  header.hero{-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
-  #dayTabs{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);}
-  .cover-location,.next-card{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
-  .bottom-nav{-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
-  .theme-toggle{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
-  @media (prefers-reduced-motion:reduce){.bottom-nav,header.hero,.theme-toggle,#dayTabs{transition:none;}}
+  @media (prefers-reduced-motion:reduce){.bottom-nav,header.hero,.theme-toggle,#dayTabs,#moreQuickNav{transition:none;}}
 </style>
 </head>
 <body>
@@ -358,6 +312,16 @@
     </section>
   </section>
 
+  <nav class="tabs more-quicknav app-view" data-view="more" id="moreQuickNav" aria-label="更多頁面快速跳轉">
+    <button class="tab-btn active" type="button" data-more-target="checklist-section">! 提醒</button>
+    <button class="tab-btn" type="button" data-more-target="pretrip-section">🌦️ 行前</button>
+    <button class="tab-btn" type="button" data-more-target="vjw-section">📱 VJW</button>
+    <button class="tab-btn" type="button" data-more-target="tax-refund-section">🧾 退稅</button>
+    <button class="tab-btn" type="button" data-more-target="onsen-section">♨️ 13 湯</button>
+    <button class="tab-btn" type="button" data-more-target="tips-section">💡 小提醒</button>
+    <button class="tab-btn" type="button" data-more-target="disclaimer-section">⚠️ 免責</button>
+  </nav>
+
   <section class="card app-view" data-view="more" id="checklist-section">
     <h2><span class="n">!</span> 重要提醒</h2>
     <div id="checklist"></div>
@@ -379,7 +343,7 @@
   </section>
 
   <section class="card app-view" data-view="more" id="onsen-section">
-    <h2>野澤溫泉 13 湯與五日巡湯</h2>
+    <h2><span class="n">♨️</span> 野澤溫泉 13 湯與五日巡湯</h2>
     <div id="onsenContent"></div>
   </section>
 
@@ -390,7 +354,13 @@
   </section>
 
   <section class="card app-view" data-view="schedule" id="map-section">
-    <div class="map-head"><h2><span class="n">🗺️</span> 互動地圖</h2><span class="map-state" id="mapState"></span></div>
+    <div class="map-head">
+      <h2><span class="n">🗺️</span> 互動地圖</h2>
+      <div class="map-head-actions">
+        <button class="map-back-btn" id="backToSlotBtn" type="button" hidden>↑ 返回剛才行程</button>
+        <span class="map-state" id="mapState"></span>
+      </div>
+    </div>
     <div class="tabs" id="mapDayTabs"></div>
     <div id="map"></div>
   </section>
@@ -405,7 +375,10 @@
     <div class="disclaimer-box" id="disclaimer-text"></div>
   </section>
 
-  <footer>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · App 版</footer>
+  <footer>
+    <div>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · App 版</div>
+    <div>最後修改日期：<time id="lastModified"></time></div>
+  </footer>
 </div>
 
 <nav class="bottom-nav" aria-label="主要導覽">
@@ -418,6 +391,7 @@
 {
   "title": "東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅",
   "startDate": "2026-12-26",
+  "lastModified": "2026-10-26",
   "colorScheme": "雪夜冰藍．跨年金",
   "coverPhoto": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg",
   "coverTitle": "東京 × 野澤溫泉",
@@ -1072,6 +1046,9 @@ function reminderBadgeHTML(leadDays) {
   function renderTripSummary() {
     var preTrip = trip.preTrip || {};
     var weather = preTrip.weather || {};
+    var lastModifiedEl = document.getElementById('lastModified');
+    lastModifiedEl.dateTime = trip.lastModified;
+    lastModifiedEl.textContent = trip.lastModified.replace(/-/g, '');
     document.getElementById('tripTitle').textContent = trip.title;
     document.getElementById('tripDates').textContent = trip.days[0].date.replace(/-/g, '/') + '~' + trip.days[trip.days.length - 1].date.replace(/-/g, '/');
     document.getElementById('coverTripTitle').textContent = trip.coverTitle || trip.title;
@@ -1168,6 +1145,10 @@ function reminderBadgeHTML(leadDays) {
         }).join('') + '</div><p class="summary-note">官方資料核對：' + escapeHTML(refund.checkedOn)
         + '；新制尚未於核對日實施，機場配置與店家退款細節請行前再次確認。</p>';
     }
+    document.querySelectorAll('#moreQuickNav [data-more-target]').forEach(function (btn) {
+      var targetSection = document.getElementById(btn.dataset.moreTarget);
+      btn.hidden = !targetSection || targetSection.hidden;
+    });
   }
 
   renderTripSummary();
@@ -1360,10 +1341,41 @@ function reminderBadgeHTML(leadDays) {
     mapDayTabsEl.appendChild(button);
   });
 
+  var lastClickedSlotEl = null;
+  var backToSlotBtn = document.getElementById('backToSlotBtn');
+  var moreQuickNavEl = document.getElementById('moreQuickNav');
+
+  function setActiveMoreChip(targetId) {
+    if (!moreQuickNavEl) return;
+    moreQuickNavEl.querySelectorAll('.tab-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.moreTarget === targetId);
+    });
+    var activeChip = moreQuickNavEl.querySelector('.tab-btn.active');
+    if (activeChip && moreQuickNavEl.clientWidth) {
+      moreQuickNavEl.scrollTo({
+        left: Math.max(0, activeChip.offsetLeft - (moreQuickNavEl.clientWidth - activeChip.offsetWidth) / 2),
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  function centerActiveDayTabs() {
+    [dayTabsEl, mapDayTabsEl].forEach(function (tabsEl) {
+      var activeBtn = tabsEl.querySelector('.tab-btn.active');
+      if (activeBtn && tabsEl.clientWidth) {
+        tabsEl.scrollTo({
+          left: Math.max(0, activeBtn.offsetLeft - (tabsEl.clientWidth - activeBtn.offsetWidth) / 2),
+          behavior: 'smooth'
+        });
+      }
+    });
+  }
+
   // Tab 切換（切換時淡入新內容），抽成可重用函數供快速導覽列直接呼叫
   function selectDay(day) {
     document.querySelectorAll('#dayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
     document.querySelectorAll('#mapDayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
+    centerActiveDayTabs();
     document.querySelectorAll('.day-card').forEach(function (card) {
       var willShow = day === 'all' || card.dataset.day === day;
       card.classList.toggle('show', willShow);
@@ -1379,6 +1391,9 @@ function reminderBadgeHTML(leadDays) {
         card.classList.add('animate__animated', 'animate__fadeIn');
       }
     });
+    if (lastClickedSlotEl && !lastClickedSlotEl.closest('.day-card.show')) {
+      backToSlotBtn.hidden = true;
+    }
     var numberLabels = day === 'all'
       ? document.querySelectorAll('.map-number')
       : document.querySelectorAll('.day-card.show .map-number');
@@ -1409,11 +1424,39 @@ function reminderBadgeHTML(leadDays) {
   dayCardsEl.addEventListener('click', function (e) {
     var mapButton = e.target.closest('.map-number');
     if (!mapButton) return;
+    lastClickedSlotEl = mapButton.closest('.slot');
+    backToSlotBtn.hidden = !lastClickedSlotEl;
     document.getElementById('map-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
     window.setTimeout(function () {
       travelMap.invalidateSize();
       travelMap.openTravelPoint(Number(mapButton.dataset.displayNumber || mapButton.dataset.mapNumber));
     }, 450);
+  });
+  backToSlotBtn.addEventListener('click', function () {
+    if (!lastClickedSlotEl || !lastClickedSlotEl.isConnected || !lastClickedSlotEl.closest('.day-card.show')) return;
+    document.body.classList.add('header-hidden');
+    var targetY = window.scrollY + lastClickedSlotEl.getBoundingClientRect().top - dayTabsEl.getBoundingClientRect().height - 16;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: 'instant' });
+    lastScrollY = window.scrollY;
+    lastClickedSlotEl.classList.add('slot-return-highlight');
+    window.setTimeout(function () {
+      if (lastClickedSlotEl) lastClickedSlotEl.classList.remove('slot-return-highlight');
+    }, 1200);
+  });
+  function scrollToMoreSection(targetId) {
+    var targetSection = document.getElementById(targetId);
+    if (!targetSection || targetSection.hidden) return;
+    setActiveMoreChip(targetId);
+    document.body.classList.add('header-hidden');
+    var navHeight = moreQuickNavEl ? moreQuickNavEl.getBoundingClientRect().height : 0;
+    var targetY = window.scrollY + targetSection.getBoundingClientRect().top - navHeight - 12;
+    window.scrollTo({ top: Math.max(0, targetY), behavior: 'instant' });
+    lastScrollY = window.scrollY;
+  }
+  moreQuickNavEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-more-target]');
+    if (!btn) return;
+    scrollToMoreSection(btn.dataset.moreTarget);
   });
 
   function currentTripState() {
@@ -1456,17 +1499,18 @@ function reminderBadgeHTML(leadDays) {
     var stay = slots.filter(function (slot) { return slot.period === 'stay'; })[0];
     var today = tripClock(new Date()).date;
     var firstReminder = reminders.find(function (reminder) { return reminder.deadline >= today; }) || reminders[reminders.length - 1];
+    var targetDayId = 'day' + (state.dayIndex + 1);
     document.getElementById('homeSummary').innerHTML = [
       '<article class="card summary-card" id="weatherCard"><div class="summary-label">目前天氣</div><div class="summary-value">載入中…</div></article>',
-      '<article class="card summary-card"><div class="summary-label">重要提醒</div><div class="summary-value">' + escapeHTML(firstReminder ? firstReminder.item : '目前沒有提醒') + '</div><div class="summary-note">' + (firstReminder ? firstReminder.deadline + ' 前' : '') + '</div></article>',
-      '<article class="card summary-card"><div class="summary-label">今晚住宿</div><div class="summary-value">' + escapeHTML(stay ? stay.name.replace('今晚住宿：', '') : '依旅程安排') + '</div></article>',
-      '<article class="card summary-card"><div class="summary-label">今日站點</div><div class="summary-value">' + timelineSlots.length + ' 個行程</div><div class="summary-note">地圖與時間軸同步</div></article>'
+      '<article class="card summary-card summary-card-action" role="button" tabindex="0" data-open-view="more" data-scroll-target="checklist-section"><div class="summary-label">重要提醒<span aria-hidden="true">›</span></div><div class="summary-value">' + escapeHTML(firstReminder ? firstReminder.item : '目前沒有提醒') + '</div><div class="summary-note">' + (firstReminder ? firstReminder.deadline + ' 前' : '') + '</div></article>',
+      '<article class="card summary-card summary-card-action" role="button" tabindex="0" data-open-view="schedule" data-select-day="' + targetDayId + '"' + (stay ? ' data-scroll-slot="stay"' : '') + '><div class="summary-label">今晚住宿<span aria-hidden="true">›</span></div><div class="summary-value">' + escapeHTML(stay ? stay.name.replace('今晚住宿：', '') : '依旅程安排') + '</div></article>',
+      '<article class="card summary-card summary-card-action" role="button" tabindex="0" data-open-view="schedule" data-select-day="' + targetDayId + '"><div class="summary-label">今日站點<span aria-hidden="true">›</span></div><div class="summary-value">' + timelineSlots.length + ' 個行程</div><div class="summary-note">地圖與時間軸同步</div></article>'
     ].join('');
     updateHomeWeather(state.dayIndex);
-    document.getElementById('homeTimeline').innerHTML = timelineSlots.slice(0, 4).map(function (slot) {
-      return '<div class="mini-stop"><div class="mini-time">' + escapeHTML(startTime(slot.time)) + '</div><div class="mini-name">' + escapeHTML(slot.name) + '</div></div>';
+    document.getElementById('homeTimeline').innerHTML = timelineSlots.slice(0, 4).map(function (slot, idx) {
+      return '<div class="mini-stop mini-stop-action" role="button" tabindex="0" data-open-view="schedule" data-select-day="' + targetDayId + '" data-slot-index="' + idx + '"><div class="mini-time">' + escapeHTML(startTime(slot.time)) + '</div><div class="mini-name">' + escapeHTML(slot.name) + '</div></div>';
     }).join('');
-    selectDay('day' + (state.dayIndex + 1));
+    selectDay(targetDayId);
   }
 
   function switchView(view) {
@@ -1481,6 +1525,7 @@ function reminderBadgeHTML(leadDays) {
       button.classList.toggle('active', button.dataset.viewTarget === view);
     });
     if (view === 'schedule') {
+      centerActiveDayTabs();
       window.setTimeout(function () {
         travelMap.invalidateSize();
         updateTravelMap(document.querySelector('#mapDayTabs .active').dataset.day);
@@ -1523,16 +1568,47 @@ function reminderBadgeHTML(leadDays) {
   document.querySelector('.bottom-nav').addEventListener('focusin', function () {
     document.body.classList.remove('nav-hidden');
   });
-  document.querySelectorAll('[data-open-view]').forEach(function (button) {
-    button.addEventListener('click', function () {
-      switchView(button.dataset.openView);
-      if (button.dataset.selectDay) selectDay(button.dataset.selectDay);
-      if (button.dataset.scrollTarget) {
+  function handleOpenViewTrigger(trigger) {
+    switchView(trigger.dataset.openView);
+    if (trigger.dataset.selectDay) selectDay(trigger.dataset.selectDay);
+    if (trigger.dataset.scrollTarget) {
+      if (trigger.dataset.openView === 'more') {
+        scrollToMoreSection(trigger.dataset.scrollTarget);
+      } else {
         window.setTimeout(function () {
-          document.getElementById(button.dataset.scrollTarget).scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var targetEl = document.getElementById(trigger.dataset.scrollTarget);
+          if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
       }
-    });
+    } else if (trigger.dataset.scrollSlot === 'stay') {
+      var stayEl = dayCardsEl.querySelector('.day-card.show .slot-stay');
+      if (stayEl) {
+        document.body.classList.add('header-hidden');
+        var stayY = window.scrollY + stayEl.getBoundingClientRect().top - dayTabsEl.getBoundingClientRect().height - 16;
+        window.scrollTo({ top: Math.max(0, stayY), behavior: 'instant' });
+        lastScrollY = window.scrollY;
+      }
+    } else if (trigger.dataset.slotIndex !== undefined) {
+      var slotEls = dayCardsEl.querySelectorAll('.day-card.show .slot');
+      var slotEl = slotEls[Number(trigger.dataset.slotIndex)];
+      if (slotEl) {
+        document.body.classList.add('header-hidden');
+        var slotY = window.scrollY + slotEl.getBoundingClientRect().top - dayTabsEl.getBoundingClientRect().height - 16;
+        window.scrollTo({ top: Math.max(0, slotY), behavior: 'instant' });
+        lastScrollY = window.scrollY;
+      }
+    }
+  }
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-open-view]');
+    if (trigger) handleOpenViewTrigger(trigger);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var trigger = e.target.closest('[role="button"][data-open-view]');
+    if (!trigger) return;
+    e.preventDefault();
+    handleOpenViewTrigger(trigger);
   });
   document.getElementById('homeSummary').addEventListener('change', function (e) {
     var select = e.target.closest('.weather-location-select');
