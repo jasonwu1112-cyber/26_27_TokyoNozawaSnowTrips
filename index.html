@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all';document.dispatchEvent(new Event('travel-map-ready'))" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" media="print" onload="this.media='all'" />
 <style>
   :root{
     color-scheme:dark;
@@ -161,6 +161,10 @@
     background:linear-gradient(135deg,var(--accent),var(--accent2));}
   .photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#0b1220;font-weight:800;font-size:.85rem;text-align:center;padding:.5rem;}
   .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-frame-wide,.day-card[data-day="day7"] .photo-frame{max-height:none;aspect-ratio:2/1;}
+  .photo-frame-panorama{max-height:none;aspect-ratio:3/1;}
+  .photo-credit{margin:-.2rem 0 .45rem;color:var(--text-dim);font-size:.65rem;line-height:1.4;}
+  .photo-credit a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
   .slot .review{color:var(--text-dim);font-size:.78rem;margin:.4rem 0;}
   .review-details{margin:.4rem 0;color:var(--text-dim);font-size:.78rem;}
   .review-details summary{list-style:none;cursor:pointer;}
@@ -281,6 +285,8 @@
   html[data-theme="light"] #moreQuickNav .tab-btn.active{background:#087ba5;color:#fff;border-color:#06698d;box-shadow:0 2px 8px rgba(8,123,165,.28);}
   html[data-theme="light"] #dayTabs .tab-btn:not(.active),
   html[data-theme="light"] #moreQuickNav .tab-btn:not(.active){background:#e3eaf0;color:#526174;border-color:#cbd5df;}
+  html[data-theme="light"] #mapDayTabs .tab-btn{background:#e3eaf0;color:#334155;border-color:#cbd5df;}
+  html[data-theme="light"] #mapDayTabs .tab-btn.active{background:#c7e6f3;color:#123e53;border-color:#087ba5;box-shadow:0 2px 8px rgba(8,123,165,.18);}
   html[data-theme="light"] .slot::before{box-shadow:0 0 0 4px #edf3f7;}
   html[data-theme="light"] .weather-location-select{background:#fff;color:#172235;}
   html[data-theme="light"] .bottom-nav{background:rgba(248,251,253,.96);}
@@ -390,7 +396,7 @@
 
   <footer>
     <div>2026-2027 東京＆野澤溫泉跨年滑雪之旅 · App 版</div>
-    <div class="last-modified">最後修改日期：<time id="lastModified"></time></div>
+    <div class="last-modified">*最後修改日期:<time id="lastModified"></time></div>
   </footer>
 </div>
 
@@ -404,7 +410,7 @@
 {
   "title": "東京＆野澤溫泉 10 天 9 夜跨年滑雪之旅",
   "startDate": "2026-12-26",
-  "lastModified": "2026-10-26",
+  "lastModified": "2026-10-30",
   "colorScheme": "雪夜冰藍．跨年金",
   "coverPhoto": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg",
   "coverTitle": "東京 × 野澤溫泉",
@@ -433,24 +439,24 @@
   },
   "hotelAreas": [
     {
-      "area": "四谷／新宿（YKB Ensign Building）",
-      "reason": "鄰近新宿與東京車站，方便入境當晚與隔日市區遊玩",
+      "area": "四谷／新宿",
+      "reason": "以四谷三丁目站周邊作為區域參考，不表示實際住宿入口或步行距離。",
       "options": [
-        { "tier": "已預訂", "name": "YKB Ensign Building（ＹＫＢエンサインビル）", "priceRange": "—", "note": "12/26–12/28，共 2 晚", "checkIn": "2026-12-26", "checkOut": "2026-12-28" }
+        { "tier": "已預訂", "name": "四谷三丁目站周邊住宿", "note": "12/26–12/28，共 2 晚；真實名稱、入口及入住指引請查看私人訂房憑證。", "checkIn": "2026-12-26", "checkOut": "2026-12-28" }
       ]
     },
     {
-      "area": "野澤溫泉（SUKINOZAWA）",
-      "reason": "位於野澤溫泉滑雪村內，鄰近長坂纜車站與多處外湯",
+      "area": "野澤溫泉村內",
+      "reason": "以長坂纜車／溫泉街一帶作為區域參考，不表示實際住宿入口或步行距離。",
       "options": [
-        { "tier": "已預訂", "name": "SUKINOZAWA（スキーノザワ）", "priceRange": "總價 ¥190,000（三人房含每日早餐）", "note": "12/28–01/02，共 5 晚；Wise 訂金 ¥57,000，現場尾款 ¥133,000（約 ¥44,333/人）", "checkIn": "2026-12-28", "checkOut": "2027-01-02" }
+        { "tier": "已預訂", "name": "野澤溫泉村內住宿（長坂／溫泉街周邊）", "note": "12/28–01/02，共 5 晚；真實名稱、入口及入住指引請查看私人訂房憑證。", "checkIn": "2026-12-28", "checkOut": "2027-01-02" }
       ]
     },
     {
-      "area": "六本木（東京六本木雷姆飯店）",
-      "reason": "後兩晚以六本木為住宿據點，鄰近日比谷線 4a 出口與大江戶線 7 號出口；前往東京站、新宿及吉祥寺須預留轉乘時間",
+      "area": "六本木",
+      "reason": "以六本木站周邊作為區域參考；前往東京站、新宿及吉祥寺須預留轉乘時間，不公開住宿出口與入口。",
       "options": [
-        { "tier": "已預訂", "name": "東京六本木雷姆飯店（remm Roppongi）・塔景房", "priceRange": "—", "note": "01/02 入住、01/04 退房，共 2 晚，塔景房已確認；地址：東京都港區六本木 7-14-4。房數、房價、早餐與付款條件依訂房憑證。", "checkIn": "2027-01-02", "checkOut": "2027-01-04" }
+        { "tier": "已預訂", "name": "六本木站周邊住宿", "note": "01/02 入住、01/04 退房，共 2 晚；真實名稱、入口及入住指引請查看私人訂房憑證。", "checkIn": "2027-01-02", "checkOut": "2027-01-04" }
       ]
     }
   ],
@@ -462,7 +468,10 @@
     "孕婦旅途安全｜懷孕約 5 個月同行者請穿高筒防滑雪靴並備妥簡易冰爪；野猿公苑與溫泉街雪道不趕路、視狀況局部搭計程車減少吹風候車。野澤外湯水溫極高（多為 42–48°C）且地面濕滑，孕婦不建議浸泡高溫公共外湯。",
     "村內晚餐｜Day 3–7 依 Nozawa Holidays 當地餐飲指南安排；店家常有固定休息日，請提早訂位，尤其 12/31～1/1 要再次核對訂位頁或營業公告。",
     "外湯禮儀｜野澤溫泉外湯由當地居民自主管理；入湯請投香油錢、保持安靜，並遵守現場清潔與使用規則。",
-    "跨年與初詣｜12/31～1/3 部分商店、餐廳休息或提前打烊；寺廟／神社初詣人潮多，用餐與參拜都要保留候位、排隊及交通緩衝。"
+    "跨年與初詣｜12/31～1/3 部分商店、餐廳休息或提前打烊；寺廟／神社初詣人潮多，用餐與參拜都要保留候位、排隊及交通緩衝。",
+    "住宿隱私｜三間住宿只顯示公共地標／車站周邊區域，不提供真實名稱、地址、座標、導航或付款資訊；入住與入境申報請使用私人訂房憑證。",
+    "餐飲候選｜2026/10/30 依旅伴收藏清單整理；候選不等於已訂位。Gochisou Pizza、Juntos 與 Genki Burger 當時在 Google 地圖標示暫時關閉，保留可能冬季營業的選項，但須向店家確認，不保證雪季恢復。",
+    "健康資訊｜本頁行程不是醫療建議；孕期與其他個人健康風險請諮詢合格醫療專業人員。防滑裝備、室內休息與替代行程都不是安全保證，保留既有高溫、冰雪及人潮警示。"
   ],
   "onsenGuide": {
     "officialCheckedOn": "2026-10-10",
@@ -503,7 +512,7 @@
           "使用官方網站註冊／登入，確認電子郵件可收信；不要使用收費代辦或不明的同名 App。",
           "登錄本人護照資料，逐項核對英文姓名、國籍、出生日期、護照號碼與有效期限；相機辨識後也要檢查。",
           "建立本次日本入境予定：依去程機票填日本抵達日期、航空公司與航班、出發地及停留天數；不是填 1/4 回台灣的航班。",
-          "依已確認的訂房憑證填第一晚 YKB Ensign Building 的郵遞區號、完整地址及聯絡電話。",
+          "依私人訂房憑證填寫第一晚實際住宿的郵遞區號、完整地址及聯絡電話；本頁的周邊區域代稱不可作為入境申報地址。",
           "填妥入境審查及海關申報，依實際情況回答攜帶品、現金及其他申報問題；有食品／動植物等物品，另外確認檢疫規定。",
           "確認每位同行者各自完成所需手續並能顯示本人的 QR；若使用同伴家人功能，按官方允許範圍登錄，不共用同一個人的 QR。"
         ]
@@ -567,7 +576,7 @@
     { "item": "Visit Japan Web 入境資料填寫、本人 QR 顯示與離線備援確認（詳見更多）", "leadDays": 7 },
     { "item": "野澤溫泉滑雪裝備租借與雪票預約（長坂纜車口／Salomon Station）", "leadDays": 14 },
     { "item": "野澤溫泉 12/28–1/1 晚餐：優先店家訂位並確認跨年營業日", "leadDays": 21 },
-    { "item": "SUKINOZAWA 現場尾款 ¥133,000 準備", "leadDays": 7 },
+    { "item": "三間住宿入住指引與私人訂房憑證確認（勿上傳至公開頁面）", "leadDays": 7 },
     { "item": "2026/12/10 10:00（日本時間）搶 2027/1/3 三鷹之森吉卜力美術館指定入場券；先核對開館日", "leadDays": 16 }
   ],
   "days": [
@@ -576,14 +585,14 @@
       "tips": ["長途飛行後首日行程從簡，抵達後以整理行李與熟悉住宿周邊為主"],
       "slots": [
         { "period": "evening", "name": "成田機場入境", "time": "18:45–20:30", "lat": 35.7719, "lng": 140.3929, "review": "18:45 抵達成田第二航廈，備好本人護照與 Visit Japan Web 入境／海關 QR，依現場指引辦理入境及海關手續、領行李，再購買 N'EX／Skyliner 車票。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "四谷．新宿 Check-in", "time": "20:30–21:45", "lat": 35.687813, "lng": 139.715563, "review": "搭乘 N'EX 或 Skyliner 進市區，前往 YKB Ensign Building 辦理入住", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "lodging", "showOnMap": false, "name": "四谷三丁目站周邊住宿 Check-in", "time": "20:30–21:45", "review": "搭乘 N'EX 或 Skyliner 進市區，再前往四谷／新宿區域住宿；實際路線、入口與入住指引請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "丸之內冬季點燈（Marunouchi Illumination）", "time": "22:00–23:00", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Marunouchi_Illumination_2022_%2852646781419%29.jpg", "rating": 4.5, "review": "【簡易攻略】以東京車站丸之內站舍為起點，沿「行幸通」走向「丸之內仲通」，約 250 棵行道樹披上香檳金 LED、全長約 1.2 公里；點燈期間約 11 月中旬～隔年 2 月中旬，每日 16:00–23:00（12 月延長至 24:00），免費入場、無需預約。路線建議：丸之內口出站→行幸通拍站舍夜景全景→仲通北段往南散策至有樂町方向，約 40–60 分鐘。", "openingHours": "16:00–24:00（12 月）／11 月中～2 月中每日開放", "ticketPrice": "免費入場，無需預約", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "23:00 後", "lat": 35.687813, "lng": 139.715563, "review": "返回 YKB Ensign Building 休息，準備隔日行程。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：四谷三丁目站周邊住宿", "time": "23:00 後", "review": "返回四谷／新宿區域住宿休息，準備隔日行程；實際位置請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
       "date": "2026-12-27", "weekday": "週日", "theme": "東京出發．江之島慢遊",
-      "tips": ["本日不進鎌倉市區；江之島安排海鮮丼午餐、兩家仲見世通點心店、山上頂上店、uniRA 與 Amaterasu Brewery，後兩站以少量品嚐／短暫停留為主，勿當作第二頓完整午餐；若各店排隊過長，請壓縮停留並保留返程交通緩衝", "あさひ本店仲見世通本店與山上頂上店為不同分店，地圖標記也分開；Escar 僅上行，下島仍須步行，冬季傍晚留意濕滑階梯", "週日及歲末店家營業與排隊時間以當日公告為準；酒廠酒吧飲酒請自行衡量，未滿法定年齡勿飲酒"],
+      "tips": ["本日不進鎌倉市區；江之島安排海鮮丼午餐、仲見世通點心、山上散策、uniRA 與 Amaterasu Brewery，後兩站以少量品嚐／短暫停留為主，勿當作第二頓完整午餐；若各店排隊過長，請縮短或跳過候選店並保留返程交通緩衝", "あさひ本店仲見世本店與頂上店合併為一次章魚仙貝體驗：先看本店排隊與營業，未吃到才於上山後考慮頂上店，不安排兩次必到；Escar 僅上行，下島仍須步行，冬季傍晚留意濕滑階梯", "週日及歲末店家營業與排隊時間以當日公告為準；酒廠酒吧飲酒請自行衡量，未滿法定年齡勿飲酒"],
       "transportGuide": {
         "title": "新宿 → 江之島交通攻略",
         "route": "小田急新宿站 → 藤澤站（視車次轉乘）→ 片瀨江之島站 → 步行過弁天橋",
@@ -603,39 +612,42 @@
         ]
       },
       "slots": [
-        { "period": "morning", "name": "新宿早餐", "time": "08:00–09:00", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站周邊吃早餐，餐後前往小田急線搭車。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "kind": "restaurant", "showOnMap": false, "name": "新宿早餐", "time": "08:00–09:00", "lat": 35.690921, "lng": 139.700258, "review": "在新宿站周邊吃早餐，餐後前往小田急線搭車。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "新宿 → 片瀨江之島", "time": "09:00–10:30", "lat": 35.308873, "lng": 139.483502, "review": "小田急新宿站出發，搭往藤澤方向列車，依車次在藤澤或相模大野轉往片瀨江之島；詳細步驟見本日交通攻略。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "片瀨江之島站 → 江之島", "time": "10:30–11:00", "lat": 35.3021, "lng": 139.4810, "review": "從片瀨江之島站步行過弁天橋到江之島入口，按自己的步調前進。", "transport": { "mode": "步行", "fare": "免費", "duration": "約 30 分鐘（含拍照）" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "片瀨江之島站 → 江之島", "time": "10:30–11:00", "lat": 35.3021, "lng": 139.4810, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Enoshima_panorama.jpg/1280px-Enoshima_panorama.jpg", "photoLayout": "wide", "photoCredit": "江之島海岸全景參考圖 / kallerna / CC BY-SA 3.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Enoshima_panorama.jpg", "review": "從片瀨江之島站步行過弁天橋到江之島入口，按自己的步調前進。", "transport": { "mode": "步行", "fare": "免費", "duration": "約 30 分鐘（含拍照）" }, "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "kind": "restaurant", "showOnMap": true, "name": "午餐：海鮮丼 とびっちょ", "time": "11:00–11:55", "lat": 35.3019162, "lng": 139.4808719, "review": "過橋後先在島口的とびっちょ吃海鮮丼，預留候位與用餐時間；週日若排隊超過預留時段，後續各店縮短為踩點，別擠掉返程緩衝。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "最中冰淇淋 井上總本舗", "time": "11:55–12:10", "lat": 35.3017644, "lng": 139.480766, "review": "沿仲見世通買最中冰淇淋當飯後點心，控制停留時間，接續往山上移動。", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "あさひ本店（Asahi Honten）仲見世本店", "time": "12:10–12:25", "lat": 35.3009385, "lng": 139.480545, "review": "清單儲存的是仲見世通的本店；與下午的山上頂上店分開標記，沿上島方向順路看看或買一份丸燒章魚仙貝。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "あさひ本店（Asahi Honten）章魚仙貝・分店擇一", "time": "12:10–12:25", "lat": 35.3009385, "lng": 139.480545, "review": "地圖為仲見世本店；有營業且候位可接受時買一份章魚仙貝。本店未吃到才於上山後考慮頂上店，兩店只選一次，不因收藏而重複排隊。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "視體力決定是否搭 Escar 上島", "time": "12:25–12:50", "lat": 35.300414, "lng": 139.480344, "review": "需要省力就搭上行手扶梯，否則步行上山；Escar 沒有下行服務，回程須步行。", "openingHours": "營業時間以當日官方公告為準", "ticketPrice": "搭乘另計，請以現場公告為準", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "江之島神社／展望區，二選一即可", "time": "12:50–13:40", "lat": 35.300486, "lng": 139.479541, "review": "想參拜可去江島神社邊津宮，想看景則往 Sea Candle 展望區（可能另需門票）；此段含山上步行時間，地圖標記為神社位置。", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "あさひ本店 頂上店・丸燒章魚仙貝", "time": "13:40–14:00", "lat": 35.2990229, "lng": 139.4796798, "review": "前往山上頂上店短暫停留，與中午仲見世通本店是不同店址；若先前已吃過章魚仙貝，此站以看看山頂店為主。", "openingHours": "營業時間及 12/27 營業請再次確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "店家地圖位置", "url": "https://maps.app.goo.gl/kvLpsZwmUcJY4R3m6?g_st=il" } },
+        { "period": "noon", "name": "山上彈性休息／未吃仙貝時再考慮頂上店", "time": "13:40–14:00", "lat": 35.300486, "lng": 139.479541, "review": "地圖僅以江島神社周邊作為山上休息參考，不是頂上店點位；已在本店吃過仙貝就休息，未吃到才視營業、隊伍與體力考慮頂上店。不是第二次必到店家，勿耽誤下山與返程。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "山上休息與步行下坡", "time": "14:00–14:45", "lat": 35.299756, "lng": 139.478479, "review": "在山上坐著休息後沿步道下坡，往 uniRA 與 Amaterasu Brewery 所在一帶移動；冬季階梯留意腳步。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "ウニの家 uniRA 江の島本店", "time": "14:45–15:25", "lat": 35.2997098, "lng": 139.4815727, "review": "在島上 uniRA 停留品嚐；上午已吃過海鮮丼，這裡不必再吃完整一餐，可依現場供應與食量決定點餐，排隊過長則縮短停留。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "Amaterasu Brewery", "time": "15:25–16:05", "lat": 35.3001283, "lng": 139.481654, "review": "在江之島酒廠酒吧稍作休息，之後往島口下山；飲品與入內方式依現場公告，未滿日本法定飲酒年齡勿飲酒。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "下島步行至片瀨江之島站", "time": "16:05–16:50", "lat": 35.308873, "lng": 139.483502, "review": "步行下坡、經弁天橋回小田急片瀨江之島站；Escar 僅上行，下山需步行，預留拍照與候車緩衝。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "江之島 → 新宿", "time": "約 17:00–18:40", "lat": 35.308873, "lng": 139.483502, "review": "從片瀨江之島站搭車返新宿，視班次在藤澤等站轉乘；抵達時間為估算，不是已確認車次。", "transport": { "mode": "小田急線", "fare": "依當日車次與票種", "duration": "預留約 100 分鐘（含候車／轉乘）" }, "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：新宿周邊彈性用餐", "time": "約 19:00 後", "lat": 35.690921, "lng": 139.700258, "review": "視午間海鮮丼與午後 uniRA 的食量，在新宿站或飯店附近簡單吃晚餐，也可直接回住宿休息。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：YKB Ensign Building（四谷／新宿）", "time": "晚餐後", "lat": 35.687813, "lng": 139.715563, "review": "晚餐後返回 YKB Ensign Building 休息，隔天一早前往野澤溫泉。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：四谷三丁目站周邊住宿", "time": "晚餐後", "review": "晚餐後返回四谷／新宿區域住宿休息，隔天一早前往野澤溫泉。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
       "date": "2026-12-28", "weekday": "週一", "theme": "提早入村．下午半日滑與溫泉街慢遊",
-      "tips": ["前一晚先整理雪具隨身物品，搭早班北陸新幹線才能保留下午半日滑雪與慢遊時間", "本日採雙軌行程：滑雪組下午於日影／上之平熱身，孕婦／慢遊組可於民宿休息或搭長坂 Gondola 上山喝熱飲會合", "Gochisou Pizza 的 TableCheck 目前可能顯示未開放訂位，請出發前再次確認"],
+      "tips": ["前一晚先整理雪具隨身物品，搭早班北陸新幹線才能保留下午半日滑雪與慢遊時間", "本日採雙軌行程：滑雪組下午於日影／上之平熱身，孕婦／慢遊組可於住宿休息或搭長坂 Gondola 上山喝熱飲會合", "保留 Gochisou Pizza 晚餐候選：2026/10/30 Google 地圖標示暫時關閉，可能冬季才營業但尚未確認；TableCheck 若未開放訂位，向店家核對後再安排，不以其他未確認店家作唯一備案"],
       "alternatives": [
         { "label": "滑雪組（12:30–16:00）", "summary": "日影服務區出發 → 長坂／日影纜車 → 上之平與 Paradise 寬緩雪道熟悉裝備，15:30 起收尾下山。" },
-        { "label": "孕婦／慢遊組（12:30–16:00）", "summary": "SUKINOZAWA 休息整理 → 大湯通溫泉街散步、烘焙坊與咖啡廳午茶；或買長坂 Gondola 觀光來回票直達上之平站景觀餐廳與滑雪組會合。" }
+        { "label": "孕婦／慢遊組（12:30–16:00）", "summary": "村內住宿休息整理 → 大湯通溫泉街散步、烘焙坊與咖啡廳午茶；或買長坂 Gondola 觀光來回票上山，依實際開放與步行條件決定是否會合。" },
+        { "label": "村內咖啡候選：78咖啡（なっぱカフェ）", "summary": "12/28、12/29 或 12/31 村內慢遊時擇一安排；這是なっぱカフェ，不是七良兵衛珈琲。依當日營業與體力決定是否前往，不另加固定必到時段。" },
+        { "label": "餐飲替代候選：Akebitei／Juntos／Genki Burger", "summary": "Akebitei 御好燒、Juntos 墨西哥料理與 Genki Burger 可作不同口味的用餐候選。Juntos、Genki Burger 於 2026/10/30 Google 地圖標示暫時關閉，保留可能冬季營業的選項；全部須先確認雪季營業與座位，並非已訂位。" },
+        { "label": "自由活動候選：Libushi", "summary": "有意前往酒吧的同行者可另行選擇，與當晚泡湯二選一，不要求全員參加；飲酒後不泡湯、不滑雪，營業時間須再確認。" }
       ],
       "slots": [
         { "period": "morning", "name": "東京站 → JR 飯山站", "time": "07:30–10:10", "lat": 36.851058, "lng": 138.365325, "review": "搭早班北陸新幹線至飯山站，再轉乘 Nozawa Onsen Liner／接駁巴士或計程車進村。實際車次與冬季接駁時刻需於出發前核對。", "transport": { "mode": "北陸新幹線／接駁巴士", "fare": "新幹線自由席約 ¥8,000–8,500（單程）", "duration": "東京至飯山約 1.5–2 小時，接駁約 25 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "SUKINOZAWA 寄放行李／辦理入住資料", "time": "10:40–11:15", "lat": 36.921063, "lng": 138.445188, "review": "先寄放行李並確認正式入住與尾款流程；若客房尚未整理完成，下午活動後再領房。現場尾款 ¥133,000 JPY（約 ¥44,333／人）。", "needsBooking": true, "leadDays": 7 },
+        { "period": "morning", "kind": "lodging", "showOnMap": false, "name": "野澤溫泉村內住宿寄放行李／辦理入住資料", "time": "10:40–11:15", "review": "先依私人訂房憑證確認入口、寄放行李與正式入住方式；若客房尚未整理完成，下午活動後再領房。長坂／溫泉街僅為區域參考，本頁不公開實際位置與付款資訊。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "長坂纜車口／Salomon Station 租借雪具", "time": "11:15–12:15", "lat": 36.920895, "lng": 138.444962, "review": "領取滑雪裝備與彈性雪票（本次滑雪為 12/28 下午、12/29 全日、12/31 白天與夜滑；12/30 與 1/1 安排非滑雪一日遊，請向店家確認租期與歸還方式）。孕婦／不滑雪者可購買長坂 Gondola 觀光來回票。", "needsBooking": true, "leadDays": 14 },
-        { "period": "noon", "name": "Day 3｜日影・上之平半日滑 ／ 孕婦溫泉街與 Gondola 慢遊", "time": "12:30–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "【雙軌行程】滑雪組：利用纜車前往上之平與 Paradise 的寬緩雪道熟悉裝備，15:30 起收尾下山。孕婦／慢遊組：於 SUKINOZAWA 休息或逛大湯通商店街、咖啡館保暖小憩，亦可搭長坂密閉式 Gondola 上山看雪景並與滑雪組會合。", "seasonal": "抵達日雙軌安排；依纜車與雪道開放狀況調整", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Gochisou Pizza", "time": "19:00–20:30", "lat": 36.9245084, "lng": 138.4459862, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/10/Screen-Shot-2023-10-03-at-11.50.30-AM.png", "review": "現做手工披薩吧，招牌為茄子披薩，平均單品約 ¥2,200。TableCheck 頁面目前可能顯示未開放訂位，請用下方連結查看最新狀態。", "openingHours": "17:00–23:00；跨年營業日請以店家公告確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/gochisoupizzabar/reserve" } },
+        { "period": "noon", "name": "Day 3｜日影・上之平半日滑 ／ 孕婦溫泉街與 Gondola 慢遊", "time": "12:30–16:00", "lat": 36.922678, "lng": 138.442312, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Nozawa_Onsen_01.jpg/1280px-Nozawa_Onsen_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail", "photoCredit": "野澤雪場與村落參考圖 / Hideyuki KAMON / CC BY-SA 2.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Nozawa_Onsen_01.jpg", "review": "【雙軌行程】滑雪組：利用纜車前往上之平與 Paradise 的寬緩雪道熟悉裝備，15:30 起收尾下山。孕婦／慢遊組：於村內住宿休息或逛大湯通商店街、咖啡館保暖小憩，亦可依當日開放與個人狀況考慮搭長坂 Gondola 上山會合；咖啡候選見本日提醒與攻略。", "seasonal": "抵達日雙軌安排；依纜車與雪道開放狀況調整", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐候選：Gochisou Pizza（冬季營業待確認）", "time": "19:00–20:30", "lat": 36.9245084, "lng": 138.4459862, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/10/Screen-Shot-2023-10-03-at-11.50.30-AM.png", "review": "保留披薩晚餐候選與原用餐時段。2026/10/30 Google 地圖標示暫時關閉，可能冬季才營業但未確認，並非已訂位；用下方連結查看訂位狀態，若未開放則直接聯絡店家。未確認前準備其他已確認營業的用餐選項。", "openingHours": "冬季與跨年營業待店家確認；不保證恢復營業", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/gochisoupizzabar/reserve" } },
         { "period": "evening", "onsenId": "oyu", "name": "外湯巡禮：大湯", "time": "20:45–21:45", "lat": 36.9232, "lng": 138.44829, "locationNote": "OpenStreetMap 大湯具名點位；僅供概略定位，入口與雪路依現場確認。", "locationSource": "https://www.openstreetmap.org/node/1074587418", "review": "披薩晚餐後先休息，再前往經典木造湯屋；孕婦不建議浸泡高溫外湯，可欣賞木造湯屋外觀或回房溫水淋浴休息。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "22:00 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐與巡湯後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：野澤溫泉村內住宿（長坂／溫泉街周邊）", "time": "22:00 後", "review": "晚餐與巡湯後返回村內住宿休息；實際位置請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -643,15 +655,15 @@
       "tips": ["滑雪組主攻 Yamabiko A–E、上之平與 Paradise 林間線；孕婦／慢遊組於村內散步後可搭長坂 Gondola 上山共進午餐", "麻釜熱湯湧泉區冬季坡道易結冰，孕婦請穿防滑雪靴於平坦圍欄外散步觀賞，勿走陡滑階梯", "Tengu Sushi at Tanuki 晚間座位有限，建議先完成線上訂位，孕婦可點熟食或炙燒品項"],
       "alternatives": [
         { "label": "滑雪組（08:30–16:00）", "summary": "長坂 Gondola 直達上部雪場 → Yamabiko A–E 粉雪與上之平／Paradise 巡航，中午於山頂 Rest House Yamabiko 會合。" },
-        { "label": "孕婦／慢遊組（09:30–16:00）", "summary": "早上睡飽 → 麻釜熱湯湧泉外觀賞＆溫泉街咖啡廳（七良兵衛珈琲等）→ 中午搭長坂 Gondola 到上之平／山頂餐廳與滑雪組午餐 → 下午回民宿午休或逛大湯通伴手禮。" }
+        { "label": "孕婦／慢遊組（09:30–16:00）", "summary": "早上睡飽 → 麻釜熱湯湧泉外觀賞＆溫泉街咖啡廳 → 依纜車開放與個人狀況決定是否上山午餐 → 下午回住宿午休或逛大湯通伴手禮。78咖啡等不重複餐飲候選集中列於 Day 3 提醒與攻略。" }
       ],
       "slots": [
-        { "period": "morning", "name": "Day 4｜Yamabiko・上之平巡航 ／ 孕婦麻釜與溫泉街慢遊", "time": "08:30–12:15", "lat": 36.920895, "lng": 138.444962, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "rating": 4.6, "review": "【雙軌行程】滑雪組搭長坂纜車前往 Yamabiko A–E 與上之平巡航。孕婦／慢遊組睡飽後散步至麻釜（おがま）觀看 90°C 天然湧泉蒸氣與當地居民燙野澤菜，再到大湯通咖啡廳暖身休息。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "Day 4｜Yamabiko・上之平巡航 ／ 孕婦麻釜與溫泉街慢遊", "time": "08:30–12:15", "lat": 36.920895, "lng": 138.444962, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nozawaski2.JPG?width=1280", "photoCredit": "野澤雪道參考圖 / 苗場山 / CC BY-SA 3.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Nozawaski2.JPG", "rating": 4.6, "review": "【雙軌行程】滑雪組搭長坂纜車前往 Yamabiko A–E 與上之平巡航。孕婦／慢遊組睡飽後散步至麻釜（おがま）觀看 90°C 天然湧泉蒸氣與當地居民燙野澤菜，再到大湯通咖啡廳暖身休息。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "山頂 Rest House Yamabiko 午餐會合（或村內午餐）", "time": "12:15–13:30", "lat": 36.920895, "lng": 138.444962, "review": "孕婦／慢遊組可由長坂站搭乘平穩的密閉式 Gondola 上山，在 Rest House Yamabiko 與滑雪組共進名物燒肉丼（參考約 ¥1,500–1,800）並欣賞雪山全景；若風雪大則改於村內餐廳用餐。", "openingHours": "參考約 09:00–15:00；依雪場營運時間", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "上之平・Paradise 午後巡航 ／ 孕婦民宿午休與散策", "time": "13:30–16:00", "lat": 36.922678, "lng": 138.442312, "review": "滑雪組午後滑行上之平、Paradise 與日影雪道；孕婦／慢遊組搭 Gondola 下山回 SUKINOZAWA 午休，或逛溫泉饅頭店與足湯周邊。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "上之平・Paradise 午後巡航 ／ 孕婦民宿午休與散策", "time": "13:30–16:00", "lat": 36.922678, "lng": 138.442312, "review": "滑雪組午後滑行上之平、Paradise 與日影雪道；孕婦／慢遊組搭 Gondola 下山回村內住宿午休，或逛溫泉饅頭店與足湯周邊。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Tengu Sushi at Tanuki", "time": "18:30–20:00", "lat": 36.922166, "lng": 138.445413, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-04-at-5.39.31-PM.png", "review": "大湯路口的江戶前壽司店，主打握壽司、刺身拼盤與熟食；套餐每人約 ¥12,000 起。雪季熱門，建議事先線上訂位並備註孕婦熟食需求。", "openingHours": "17:30–20:00（每席約 1.5 小時）；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/tanukinozawa-tengu-sushi/reserve/" } },
         { "period": "evening", "onsenId": "kumanotearai", "name": "外湯巡禮：熊手洗湯（熊の手洗湯）", "time": "20:15–21:15", "lat": 36.92434, "lng": 138.44448, "locationNote": "OpenStreetMap 熊の手洗湯具名點位；僅供概略定位，入口與雪路依現場確認。", "locationSource": "https://www.openstreetmap.org/node/4225001716", "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/熊の手洗湯.jpg?width=600", "review": "壽司晚餐後先休息，再前往相對容易入門的浴場；仍須確認水溫，孕婦建議不泡高溫池，可同行散步或留宿休息。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "21:30 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐與巡湯後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：野澤溫泉村內住宿（長坂／溫泉街周邊）", "time": "21:30 後", "review": "晚餐與巡湯後返回村內住宿休息；實際位置請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -675,13 +687,15 @@
         ]
       },
       "slots": [
+        { "period": "morning", "name": "JR 飯山站（去程轉乘）", "time": "去程轉乘，依當日班次", "lat": 36.851058, "lng": 138.365325, "review": "去程主要轉乘點，安排在既有 08:30–10:15 交通預留內；由野澤溫泉抵達後接續前往上林溫泉。實際巴士路線、銜接與站牌須核對冬季時刻表及現場公告，未確認有直達班次；必要時依既有備案局部搭計程車。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "野澤溫泉 → 上林溫泉（Snow Monkey Park 入口）", "time": "08:30–10:15", "lat": 36.7336, "lng": 138.4494, "review": "搭巴士至飯山站轉乘長電急行巴士至 Snow Monkey Park 站；若候車時間較長或風雪大，局部改搭計程車直達上林溫泉步道口，減少孕婦轉乘疲勞。", "transport": { "mode": "巴士／局部計程車", "fare": "依當日班次與計程車分攤", "duration": "預留約 90–105 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "地獄谷野猿公苑・雪猴泡湯觀察", "time": "10:15–12:45", "lat": 36.7327, "lng": 138.4621, "photo": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Jigokudani_Monkey_Park_in_winter.jpg", "review": "穿妥防滑雪靴與簡易冰爪，沿林間步道平緩慢行（單程預留 45–50 分鐘）進入野猿公苑，近距離觀察野生日本獼猴泡溫泉。若步道結冰過滑，孕婦可改於入口咖啡廳與澀溫泉古街休息。", "openingHours": "冬季 09:00–16:00（無休，惡劣天氣可能臨時調整）", "ticketPrice": "2026/12/1 起適用新票價；冬季建議事先確認官網線上票", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "官方開放與購票資訊", "url": "https://en.jigokudani-yaenkoen.co.jp/guide/" } },
+        { "period": "morning", "name": "地獄谷野猿公苑・雪猴泡湯觀察", "time": "10:15–12:45", "lat": 36.7327, "lng": 138.4621, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/JapaneseMacaqueM2216.jpg/1280px-JapaneseMacaqueM2216.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail", "review": "穿妥防滑雪靴與簡易冰爪，沿林間步道平緩慢行（單程預留 45–50 分鐘）進入野猿公苑，近距離觀察野生日本獼猴泡溫泉。若步道結冰過滑，孕婦可改於入口咖啡廳與澀溫泉古街休息。", "openingHours": "冬季 09:00–16:00（無休，惡劣天氣可能臨時調整）", "ticketPrice": "2026/12/1 起適用新票價；冬季建議事先確認官網線上票", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "官方開放與購票資訊", "url": "https://en.jigokudani-yaenkoen.co.jp/guide/" } },
         { "period": "noon", "kind": "restaurant", "showOnMap": true, "name": "午餐：猿座咖啡（Enza Cafe）暖身休息", "time": "12:45–14:00", "lat": 36.7332, "lng": 138.4498, "review": "位於野猿公苑步道入口旁，室內暖氣充足且設有無障礙洗手間；享用雞白湯拉麵、咖哩、烤蘋果派與熱飲，讓孕婦與同行者充分休息暖身。", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "上林溫泉／湯田中 → 返回野澤溫泉午休", "time": "14:15–16:15", "lat": 36.921063, "lng": 138.445188, "review": "午後可順遊平坦的澀溫泉街或直接搭巴士／計程車經飯山返回野澤溫泉，回 SUKINOZAWA 休息直到晚餐。", "transport": { "mode": "巴士／局部計程車", "fare": "依當日路線", "duration": "預留約 90–120 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "name": "JR 飯山站（回程轉乘）", "time": "回程轉乘，依當日班次", "lat": 36.851058, "lng": 138.365325, "review": "回程主要轉乘點，安排在既有 14:15–16:15 交通預留內；由上林溫泉／湯田中方向返回後，轉乘前往野澤溫泉。實際路線、銜接與站牌須核對冬季時刻表及現場公告，不代表已確認班次；住宿終點仍不公開定位。", "needsBooking": false, "leadDays": 0 },
+        { "period": "noon", "kind": "lodging", "showOnMap": false, "name": "上林溫泉／湯田中 → 返回野澤溫泉午休", "time": "14:15–16:15", "review": "午後可視路況順遊澀溫泉街或直接搭巴士／計程車經飯山返回野澤溫泉村內住宿，休息直到晚餐；實際住宿終點不公開。", "transport": { "mode": "巴士／局部計程車", "fare": "依當日路線", "duration": "預留約 90–120 分鐘" }, "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Wagyutei", "time": "18:30–20:30", "lat": 36.922300, "lng": 138.445300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/09/Screen-Shot-2023-09-11-at-12.35.02-PM.png", "review": "溫泉街主路旁的和牛壽喜燒、涮涮鍋專門店，適合三人分享；官方參考價每人約 ¥3,800–8,000。尚無穩定可核實的官方訂位頁，先查看官方介紹並於出發前聯絡店家。", "openingHours": "18:00–22:00；實際營業日請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "官方資訊", "url": "https://en.nozawaski.com/shop_restaurant/2241/" } },
         { "period": "evening", "onsenId": "shinyu", "name": "外湯巡禮：真湯（可跳過）", "time": "20:45–21:30", "lat": 36.92524, "lng": 138.44637, "locationNote": "OpenStreetMap 真湯具名點位，位於村北側公園入口一帶；僅供概略定位，入口依現場確認。", "locationSource": "https://www.openstreetmap.org/node/4224990574", "review": "和牛晚餐後先休息，再視體力前往真湯；一般參考 22:00 關閉，水溫偏高（約 48°C），孕婦不入浴，晚餐延誤或太累就取消。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "21:45 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐與巡湯後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：野澤溫泉村內住宿（長坂／溫泉街周邊）", "time": "21:45 後", "review": "晚餐與巡湯後返回村內住宿休息；實際位置請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -692,17 +706,23 @@
         { "label": "晚間備案：取消夜滑 ＆ 滝湯巡禮／民宿休息", "summary": "若當晚風雪過大或體力疲勞，16:30 前全數歸還雪具；晚餐後回民宿休息，或由不滑雪疲勞的同行者視坡道狀況短訪滝湯。" }
       ],
       "slots": [
-        { "period": "morning", "name": "Day 6｜Skyline・上之平收尾滑 ／ 孕婦村內慢遊與午休", "time": "09:00–15:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg", "review": "【雙軌行程】滑雪組進行最後一日白天巡航（Skyline、上之平與日影寬緩雪道，避開 Challenge 39° 等高難度區）。孕婦／慢遊組於民宿休息、大湯通採買年越蕎麥與伴手禮，保留跨年夜體力。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "Day 6｜Skyline・上之平收尾滑 ／ 孕婦村內慢遊與午休", "time": "09:00–15:30", "lat": 36.922678, "lng": 138.442312, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Nozawa_Ski.jpg?width=640", "photoCredit": "野澤雪道與遠山參考圖 / E-190 / CC BY-SA 3.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Nozawa_Ski.jpg", "review": "【雙軌行程】滑雪組進行最後一日白天巡航（Skyline、上之平與日影寬緩雪道，避開 Challenge 39° 等高難度區）。孕婦／慢遊組於民宿休息、大湯通採買年越蕎麥與伴手禮，保留跨年夜體力。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "歸還雪具（或確認夜滑裝備歸還時段）", "time": "15:30–16:30", "lat": 36.920895, "lng": 138.444962, "review": "明日（1/1）前往長野善光寺不滑雪，今日於長坂纜車口／Salomon Station 辦理雪具歸還；若要參加今晚大晦日夜滑，請先與租借店確認夜滑後或隔日早上的歸還規定。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Pots Bar and Kitchen", "time": "17:30–19:30", "lat": 36.921400, "lng": 138.444100, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Screen-Shot-2023-12-16-at-13.34.53.png", "review": "野澤計程車站後方的韓式居酒屋，主打火鍋、涮涮鍋與韓式炸雞；提早用餐以便銜接晚間夜滑與跨年活動。大晦日若未營業，改用 Kongo 美食廣場或外帶年越蕎麥。", "openingHours": "18:00–23:00；12/31 營業與座位請優先確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "查看訂位狀態", "url": "https://www.tablecheck.com/en/potsbar-kitchen/reserve" } },
-        { "period": "evening", "onsenId": "taki", "name": "大晦日長坂夜滑・跨年煙火（備案：外湯滝湯）", "time": "19:45–21:00", "lat": 36.92576, "lng": 138.44921, "locationNote": "Google 地圖滝の湯具名點位，位於麻釜上方坡道一帶；僅供概略定位，夜滑則於長坂纜車站雪道進行。", "locationSource": "https://www.google.com/maps/search/?api=1&query=Taki+no+Yu+Nozawa+Onsen", "review": "【夜滑＋跨年主案】前往長坂雪道體驗大晦日夜滑與跨年煙火（實際開放與施放時刻依雪場公告），結束後先回 SUKINOZAWA 暖身休息。【外湯備案】因滝湯位於麻釜上方坡道，冬季積雪較滑，改列為不參加夜滑時的彈性備案；21:00 前離場，飲酒後不滑雪亦不泡湯。", "seasonal": "12/31 大晦日夜滑＆跨年花火（依雪場當日公告）", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "雪場夜滑官方資訊", "url": "https://en.nozawaski.com/night/" } },
+        { "period": "evening", "onsenId": "taki", "name": "大晦日長坂夜滑・跨年煙火（備案：外湯滝湯）", "time": "19:45–21:00", "lat": 36.92576, "lng": 138.44921, "locationNote": "Google 地圖滝の湯具名點位，位於麻釜上方坡道一帶；僅供概略定位，夜滑則於長坂纜車站雪道進行。", "locationSource": "https://www.google.com/maps/search/?api=1&query=Taki+no+Yu+Nozawa+Onsen", "review": "【夜滑＋跨年主案】前往長坂雪道體驗大晦日夜滑與跨年煙火（實際開放與施放時刻依雪場公告），結束後先回村內住宿暖身休息。【外湯備案】因滝湯位於麻釜上方坡道，冬季積雪較滑，改列為不參加夜滑時的彈性備案；21:00 前離場，飲酒後不滑雪亦不泡湯。", "seasonal": "12/31 大晦日夜滑＆跨年花火（依雪場當日公告）", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "雪場夜滑官方資訊", "url": "https://en.nozawaski.com/night/" } },
         { "period": "evening", "name": "藥師堂／健命寺 除夜之鐘", "time": "23:30–00:30", "lat": 36.924, "lng": 138.447, "review": "深夜前往村內藥師堂／健命寺聆聽 108 下除夜之鐘，體驗日式雪國跨年；孕婦視當晚氣溫與體力決定是否短暫同行，或留在溫暖民宿內迎新年。", "seasonal": "跨年限定活動（12/31 深夜）", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "00:30 後", "lat": 36.921063, "lng": 138.445188, "review": "跨年活動結束後返回 SUKINOZAWA 休息。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：野澤溫泉村內住宿（長坂／溫泉街周邊）", "time": "00:30 後", "review": "跨年活動結束後返回村內住宿休息；實際位置請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
       "date": "2027-01-01", "weekday": "週五", "theme": "元旦長野初詣．善光寺與美術館慢遊一日遊",
       "tips": ["本日全體不滑雪，從飯山搭北陸新幹線僅約 11 分鐘即可抵達 JR 長野站，展開平坦舒適的善光寺周遭一日遊", "善光寺元旦初詣人潮眾多，孕婦於表參道與本堂外圍安全處參拜、求取安產御守即可，切勿進入全黑狹窄的『戒壇巡禮』地下迴廊", "長野站 ⇄ 善光寺可搭巴士或直接搭計程車（車程約 10 分鐘，三人分攤省力且免排隊吹風）；午後於城山公園／縣立美術館周邊與長野站 MIDORI 商場室內休息"],
+      "alternatives": [
+        { "label": "善光寺周邊：主餐、小吃與甜點擇一至兩間", "summary": "旅伴收藏候選有竹風堂 善光寺大門店、Suyakame Zenkōji、Ogawa no Sho Daimon Store、Zenkoji Purin 與 BENIBENI。依營業、隊伍與食量選主餐及少量點心，不把每間排成必到；不新增固定時間或假設元旦開門。" },
+        { "label": "善光寺周邊休息候選：八幡屋礒五郎 橫町咖啡廳", "summary": "可作表參道散策中的休息選項，不等於已訂位或保證有座位。先確認元旦營業，未開門就依當日情況改找其他室內休息處。" },
+        { "label": "長野站周邊候選：Sawano An／Seiyu MinamiIshido", "summary": "Tempura and Soba - Sawano An 是長野市用餐候選，不是 1/2 飯山午餐；Seiyu MinamiIshido 是長野站周邊採買備案，不是 MIDORI 館內店家。可替換站前休息採買的一部分，但元旦營業須確認，16:45 返程緩衝不變。" },
+        { "label": "暫不排入：Monzen-Sakaba Yamazato", "summary": "門前酒場 山里在長野站附近；2026/10/30 地圖顯示一般從 17:00 開始營業，晚於本日 16:45 返程目標，先保留名稱供參考，不安排午餐或延後返村。元旦若有特殊營業仍需另查。" }
+      ],
       "transportGuide": {
         "title": "野澤溫泉 ⇄ 長野善光寺交通與元旦慢遊攻略",
         "route": "野澤溫泉 → JR 飯山站 → 北陸新幹線（約 11 分鐘）→ JR 長野站 → 計程車／巴士 → 善光寺・城山公園・長野站商場",
@@ -722,31 +742,34 @@
       },
       "slots": [
         { "period": "morning", "name": "野澤溫泉 → JR 飯山站 → JR 長野站", "time": "08:40–10:10", "lat": 36.6431, "lng": 138.1886, "review": "搭巴士至飯山站，轉乘北陸新幹線（約 11 分鐘）抵達 JR 長野站；出站後視人潮搭計程車或巴士前往善光寺。", "transport": { "mode": "巴士／北陸新幹線／計程車", "fare": "新幹線單程約 ¥1,500–1,600", "duration": "含轉乘預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "善光寺元旦初詣・求安產御守", "time": "10:15–12:00", "lat": 36.6617, "lng": 138.1877, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/63/Zenko-ji_Hondo_2010.jpg", "review": "前往擁有 1400 年歷史的國寶善光寺新年參拜、求取安產御守與御朱印。元旦初詣人潮眾多，孕婦請於外圍平坦處參拜，避開本堂推擠，且勿進入全黑狹窄的『戒壇巡禮』地下迴廊。", "openingHours": "元旦全天開放參拜；授與所時間依當日公告", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "善光寺官方資訊", "url": "https://www.zenkoji.jp/" } },
-        { "period": "noon", "kind": "restaurant", "showOnMap": true, "name": "午餐：善光寺仲見世通・表參道美食散策", "time": "12:00–13:30", "lat": 36.6589, "lng": 138.1876, "review": "沿平坦石板表參道與仲見世通慢遊，享用信州手打蕎麥麵、現烤信州おやき（野澤菜／蘋果餡）、蘋果派，並於八幡屋礒五郎本店選購七味粉伴手禮。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "善光寺元旦初詣・求安產御守", "time": "10:15–12:00", "lat": 36.6617, "lng": 138.1877, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Nagano_Zenko-ji_Kondo_3.jpg/1280px-Nagano_Zenko-ji_Kondo_3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail", "photoCredit": "Nagano Zenko-ji Kondo 3 / Zairon / CC BY-SA 4.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Nagano_Zenko-ji_Kondo_3.jpg", "review": "前往擁有 1400 年歷史的國寶善光寺新年參拜、求取安產御守與御朱印。元旦初詣人潮眾多，孕婦請於外圍平坦處參拜，避開本堂推擠，且勿進入全黑狹窄的『戒壇巡禮』地下迴廊。", "openingHours": "元旦全天開放參拜；授與所時間依當日公告", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "善光寺官方資訊", "url": "https://www.zenkoji.jp/" } },
+        { "period": "noon", "kind": "restaurant", "showOnMap": true, "name": "午餐：善光寺仲見世通・表參道美食散策", "time": "12:00–13:30", "lat": 36.6589, "lng": 138.1876, "review": "沿表參道與仲見世通散策，依當日開店與候位情況選一間主餐及一至兩份小吃／甜點；竹風堂、Suyakame、Ogawa no Sho、Zenkoji Purin、BENIBENI 與橫町咖啡廳等候選見本日提醒與攻略，不需每間都到。地圖為美食散策區域，不是各店入口。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "城山公園・長野縣立美術館周邊景觀休息", "time": "13:30–14:45", "lat": 36.6623, "lng": 138.1915, "review": "從善光寺本堂東側步行約 3 分鐘即達，園區平坦開闊，可遠眺善光寺與群山景致；若美術館於元旦開館可入內休息與使用無障礙洗手間，若休館則於周邊咖啡廳小憩後搭車回長野站。", "openingHours": "公園全天開放；美術館元旦開館依官方公告", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "長野縣立美術館官網", "url": "https://nagano.art.museum/" } },
-        { "period": "noon", "name": "JR 長野站商場（MIDORI）室內逛街採買與午茶", "time": "15:00–16:45", "lat": 36.6431, "lng": 138.1886, "review": "搭計程車或巴士返回 JR 長野站，於車站室內商場吹暖氣休息，採買信州蘋果甜點、果醬與味噌伴手禮；室內有電梯、充足座位與完善洗手間，非常適合孕婦休息。", "openingHours": "元旦營業時間依商場公告（部分專櫃可能縮短營業）", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "JR 長野站 → 飯山站 → 返回野澤溫泉", "time": "16:45–18:15", "lat": 36.921063, "lng": 138.445188, "review": "搭北陸新幹線返回飯山站（約 11 分鐘），再轉乘巴士或計程車返回野澤溫泉村。", "transport": { "mode": "北陸新幹線／巴士或計程車", "fare": "依當日班次", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Winterland Taproom and Gyoza Bar", "time": "18:30–20:30", "lat": 36.922100, "lng": 138.444300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Winterland-Nozawa-Onsen-Gyoza.jpg", "review": "中央巴士站旁的餃子啤酒吧，主打使用在地食材的手工餃子，平均單品約 ¥1,200。元旦若未營業，改用 Kongo 美食廣場或 Genki Burger 外帶。", "openingHours": "07:00–22:00；1/1 營業與座位請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/winterlandtaproom-gyozabar/reserve/landing" } },
+        { "period": "noon", "name": "JR 長野站商場（MIDORI）室內逛街採買與午茶", "time": "15:00–16:45", "lat": 36.6431, "lng": 138.1886, "review": "搭計程車或巴士返回 JR 長野站，依元旦營業安排室內休息與採買。站外另有 Seiyu MinamiIshido 採買、Sawano An 用餐候選，可替換部分活動但不是額外必到站；保留 16:45 返程，不因餐廳等候延誤接駁。", "openingHours": "元旦營業時間依商場公告（部分專櫃可能縮短營業）", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "lodging", "showOnMap": false, "name": "JR 長野站 → 飯山站 → 返回野澤溫泉", "time": "16:45–18:15", "review": "搭北陸新幹線返回飯山站（約 11 分鐘），再轉乘巴士或計程車返回村內住宿；實際住宿終點不公開。", "transport": { "mode": "北陸新幹線／巴士或計程車", "fare": "依當日班次", "duration": "預留約 90 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "晚餐：Winterland Taproom and Gyoza Bar", "time": "18:30–20:30", "lat": 36.922100, "lng": 138.444300, "photo": "https://www.nozawaholidays.com/wp-content/uploads/2023/12/Winterland-Nozawa-Onsen-Gyoza.jpg", "review": "中央巴士站旁的餃子啤酒吧，主打使用在地食材的手工餃子，平均單品約 ¥1,200。元旦若未營業，改找已確認開門的店；Genki Burger 仍保留為冬季營業待確認候選，不能當唯一備案。", "openingHours": "07:00–22:00；1/1 營業與座位請確認", "needsBooking": true, "leadDays": 21, "actionLink": { "label": "線上訂位", "url": "https://www.tablecheck.com/en/winterlandtaproom-gyozabar/reserve/landing" } },
         { "period": "evening", "onsenId": "nakao", "name": "外湯巡禮：中尾湯", "time": "20:45–22:00", "lat": 36.9176, "lng": 138.4431, "locationNote": "依 Google 地圖中尾の湯中心及村南側位置概略定位，地址為豐鄉 6661 一帶；不是已量測的浴場入口。", "locationSource": "https://www.google.com/maps/search/?api=1&query=Nakao+no+Yu+Nozawa+Onsen", "review": "餃子晚餐後先休息，再前往村南側較大的中尾湯作巡湯收尾；孕婦建議留宿休息，同行者優先考慮溫湯，若飲酒、路況或水溫不合就取消。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：SUKINOZAWA（野澤溫泉）", "time": "22:15 後", "lat": 36.921063, "lng": 138.445188, "review": "晚餐與巡湯後返回 SUKINOZAWA 休息，準備隔日退房。", "needsBooking": false, "leadDays": 0 }
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：野澤溫泉村內住宿（長坂／溫泉街周邊）", "time": "22:15 後", "review": "晚餐與巡湯後返回村內住宿休息，準備隔日退房。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
-      "date": "2027-01-02", "weekday": "週六", "theme": "飯山初詣．六本木塔景入住",
-      "tips": ["鶴屋飯山店平日 09:30 起營業，1/2 新年營業尚未公告；務必在出發前查看官方店休日資訊，若休業就不為了超市延誤新幹線", "13:10 北陸新幹線為暫定目標而非已確認車次；正受庵、超市和午餐之間須預留步行、取行李及候車時間", "返東京後先到六本木雷姆飯店放行李／入住，再決定是否去新宿初賣；若抵達較晚或百貨提早打烊，改在六本木周邊逛街與用餐，不為福袋趕路"],
+      "date": "2027-01-02", "weekday": "週六", "theme": "飯山初詣．六本木周邊入住",
+      "tips": ["鶴屋飯山店平日 09:30 起營業，1/2 新年營業尚未公告；務必在出發前查看官方店休日資訊，若休業就不為了超市延誤新幹線", "13:10 北陸新幹線為暫定目標而非已確認車次；正受庵、超市和午餐之間須預留步行、取行李及候車時間", "返東京後先到六本木站周邊住宿放行李／入住，再決定是否去新宿初賣；若抵達較晚或百貨提早打烊，改在六本木周邊逛街與用餐，不為福袋趕路"],
+      "alternatives": [
+        { "label": "六本木晚餐候選：MEAT MAN Roppongi", "summary": "可作 1/2 或 1/3 其中一晚的居酒屋候選，不新增第二頓晚餐、不代表已訂位。先確認年初營業、座位及同行者飲食需求；未確認就維持六本木或返程沿途彈性用餐。" }
+      ],
       "slots": [
-        { "period": "morning", "name": "JR 飯山站寄放行李", "time": "08:30–09:15", "lat": 36.851058, "lng": 138.365325, "photo": "https://upload.wikimedia.org/wikipedia/commons/3/37/In_front_of_Iiyama_Station.JPG", "review": "SUKINOZAWA 退房後搭接駁車至飯山站寄放行李，先確認寄物空位與返程車次。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "JR 飯山站寄放行李", "time": "08:30–09:15", "lat": 36.851058, "lng": 138.365325, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Iiyama_20200320160336_%2850271444356%29.jpg/1280px-Iiyama_20200320160336_%2850271444356%29.jpg", "photoLayout": "panorama", "photoCredit": "JR 飯山站外觀全景參考圖 / inunami / CC BY 2.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Iiyama_20200320160336_(50271444356).jpg", "review": "村內住宿退房後搭接駁車至飯山站寄放行李，先確認寄物空位與返程車次。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "正受庵 (Shojoan) 新年初詣", "time": "09:30–10:30", "lat": 36.85, "lng": 138.366, "review": "飯山寺町一帶散策與參拜；需預留往返超市的步行時間，寺院新年開放以現場公告為準。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "鶴屋 飯山店（ツルヤ）採買", "time": "10:50–11:20", "lat": 36.8464532, "lng": 138.3594322, "review": "前往飯山站西南側的鶴屋飯山店選購在地零食與伴手禮，採買後要帶回車站；平常 09:30–20:00，1/2 是否營業及實際時段務必事先核對官網，休業就直接回站用餐。", "openingHours": "平日 09:30–20:00；1/2 新年營業未確認", "needsBooking": false, "leadDays": 0, "actionLink": { "label": "官方門市與營業資訊", "url": "https://www.tsuruya-corp.co.jp/store/iiyama.html" } },
         { "period": "noon", "name": "飯山名物富倉蕎麥麵午餐", "time": "11:35–12:20", "lat": 36.851058, "lng": 138.365325, "review": "回飯山站周邊享用富倉蕎麥麵，參考價約 ¥1,000–1,300；1/2 店家可能休息，請現場確認並準備站內備案。", "openingHours": "參考約 11:00–14:00；1/2 營業待確認", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "飯山站取行李／候車", "time": "12:20–13:10", "lat": 36.851058, "lng": 138.365325, "review": "取回行李並確認月台，13:10 僅是返東京的暫定目標，車次、接駁與購票以開賣後時刻表為準。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "飯山 → 東京（北陸新幹線）", "time": "暫定 13:10–15:10", "lat": 35.681236, "lng": 139.767125, "review": "依實際購得車次搭北陸新幹線返東京；13:10 出發與 15:10 抵達僅為預留時段，不是已確認車次。", "transport": { "mode": "北陸新幹線", "fare": "依實際車次與座席", "duration": "預留約 2 小時" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "東京站 → 六本木雷姆飯店", "time": "15:10–16:00", "lat": 35.66391, "lng": 139.731292, "review": "從東京站搭丸之內線至霞關，轉日比谷線到六本木，4a 出口步行約 1 分鐘至飯店；攜帶行李請依現場指引找電梯出口，不必勉強走階梯。", "transport": { "mode": "東京 Metro／步行", "fare": "依當日票價", "duration": "含出站與行李移動預留約 50 分鐘" }, "needsBooking": false, "leadDays": 0, "actionLink": { "label": "飯店官方交通資訊", "url": "https://www.hankyu-hotel.com/hotel/remm/roppongi/access" } },
-        { "period": "evening", "name": "六本木雷姆飯店 Check-in・塔景房", "time": "16:00–16:40", "lat": 35.66391, "lng": 139.731292, "review": "已預訂 1/2–1/4 塔景房兩晚，先辦理入住並放好行李；入住時間、房數與付款條件依訂房憑證，提早到達能否寄放行李請向飯店確認。", "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "lodging", "showOnMap": false, "name": "東京站 → 六本木站周邊住宿", "time": "15:10–16:00", "review": "從東京站搭丸之內線至霞關，轉日比谷線到六本木；出站後依私人訂房憑證前往住宿。攜帶行李請找電梯出口，本頁不公開實際入口或住宿導航。", "transport": { "mode": "東京 Metro／步行", "fare": "依當日票價", "duration": "含出站與行李移動預留約 50 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "kind": "lodging", "showOnMap": false, "name": "六本木站周邊住宿 Check-in", "time": "16:00–16:40", "review": "已預訂 1/2–1/4 兩晚，先辦理入住並放好行李；實際名稱、入口與入住指引請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 },
         { "period": "evening", "name": "新宿初賣福袋（看狀況）", "time": "16:40–19:00", "lat": 35.6915, "lng": 139.7046, "review": "放好行李後，若百貨仍營業且有體力，可搭大江戶線往新宿，前往伊勢丹等百貨；此段包含往返交通，不保證晚到仍有福袋。若營業時間不合，改在六本木周邊短逛，不再跨區到池袋。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "六本木晚餐／返回飯店", "time": "19:00–20:30", "lat": 35.66391, "lng": 139.731292, "review": "在六本木附近彈性用餐，回塔景房休息；若留在新宿吃晚餐，餐後再搭車回六本木，依新年營業與體力調整。", "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：東京六本木雷姆飯店（remm Roppongi）・塔景房", "time": "20:30 後", "lat": 35.66391, "lng": 139.731292, "review": "返回已預訂的六本木雷姆飯店塔景房休息，連住兩晚不需隔日換房，依訂房憑證確認。", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "kind": "restaurant", "showOnMap": false, "name": "六本木晚餐／返回住宿", "time": "19:00–20:30", "lat": 35.66, "lng": 139.73, "review": "在六本木區域彈性用餐；MEAT MAN Roppongi 可作候選但年初營業與座位待確認，並非已訂位。若留在新宿吃晚餐，餐後再搭車回六本木，依體力調整；座標僅為不展示的概略用餐區域，不是住宿或店家入口。", "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：六本木站周邊住宿", "time": "20:30 後", "review": "返回六本木區域住宿休息，連住兩晚；實際入住資訊請查看私人訂房憑證。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
@@ -770,24 +793,24 @@
       },
       "slots": [
         { "period": "morning", "name": "六本木出發 → 明治神宮", "time": "08:30–09:15", "lat": 35.676398, "lng": 139.699326, "review": "早餐後從飯店前往六本木站，搭大江戶線至代代木，轉 JR 山手線到原宿，再步行往明治神宮。含候車與步行預留約 45 分鐘，參道進出時間另計入參訪時段；若決定略過神宮，可直接於新宿轉中央線往吉祥寺。", "transport": { "mode": "都營大江戶線／JR／步行", "fare": "依當日路線", "duration": "預留約 45 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "明治神宮初詣（看狀況）", "time": "09:15–10:30", "lat": 35.676398, "lng": 139.699326, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/Canopy_of_trees_at_Meiji_Shrine.jpg?width=1200", "review": "預留約 75 分鐘含參道往返，依初詣人潮短暫參拜，不以完成本殿排隊為必要。以 10:30 前離開為原則；孕婦避免久站與推擠，人潮多、體力不足或美術館票面時段較早時直接跳過，保留前往吉祥寺的時間。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "明治神宮初詣（看狀況）", "time": "09:15–10:30", "lat": 35.676398, "lng": 139.699326, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Meiji_Shrine_Courtyard_2023-01-26.jpg/1280px-Meiji_Shrine_Courtyard_2023-01-26.jpg", "photoLayout": "wide", "photoCredit": "明治神宮境內參考圖 / Asanagi / CC0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Meiji_Shrine_Courtyard_2023-01-26.jpg", "review": "預留約 75 分鐘含參道往返，依初詣人潮短暫參拜，不以完成本殿排隊為必要。以 10:30 前離開為原則；孕婦避免久站與推擠，人潮多、體力不足或美術館票面時段較早時直接跳過，保留前往吉祥寺的時間。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "中午前抵達 JR 吉祥寺站", "time": "10:30–11:45", "lat": 35.703152, "lng": 139.579678, "review": "由原宿搭 JR 山手線至新宿，轉中央線到吉祥寺，預留步行、轉乘與候車緩衝。若略過神宮，從六本木搭大江戶線至新宿直接轉中央線，可提早到吉祥寺休息；以 11:45 前到站、準時午餐與赴美術館為優先。", "transport": { "mode": "JR 山手線／中央線／步行", "fare": "依當日路線", "duration": "預留約 75 分鐘" }, "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "吉祥寺站周邊簡單午餐", "time": "11:45–12:20", "lat": 35.703152, "lng": 139.579678, "review": "在站周邊找開門的店簡單用餐或外帶；1/3 店家新年營業時間未定，別為排隊小吃耽誤美術館入場。", "kind": "restaurant", "showOnMap": false, "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "步行前往三鷹之森吉卜力美術館", "time": "12:20–13:00", "lat": 35.6962, "lng": 139.5704, "review": "從吉祥寺站往井之頭公園方向步行到美術館，預留找路及入場等候時間；如果拿到非 13:00 的票，依實際時段提前或延後。沒有票則改在吉祥寺與公園慢遊。", "needsBooking": false, "leadDays": 0 },
-        { "period": "noon", "name": "三鷹之森吉卜力美術館（需預約）", "time": "13:00–15:30", "lat": 35.6962, "lng": 139.5704, "review": "以 13:00 時段為目標，依實際購得的入場券安排參觀；未購得門票時此站取消，不要到現場碰運氣。官方日曆目前顯示 2027/1/3 開館，行前再查。", "openingHours": "一般 10:00–18:00；1/3 依官網與票面為準", "ticketPrice": "成人 ¥1,000（官網現行參考價）；僅預約入場", "needsBooking": true, "leadDays": 16, "actionLink": { "label": "官方購票與開館日", "url": "https://www.ghibli-museum.jp/en/tickets/" } },
+        { "period": "noon", "name": "三鷹之森吉卜力美術館（需預約）", "time": "13:00–15:30", "lat": 35.6962, "lng": 139.5704, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Ghibli_Museum_-_GhibliMuseum864.jpg/1280px-Ghibli_Museum_-_GhibliMuseum864.jpg", "photoLayout": "wide", "showPhoto": true, "photoCredit": "吉卜力美術館外觀參考圖 / lumoplank / CC0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Ghibli_Museum_-_GhibliMuseum864.jpg", "review": "以 13:00 時段為目標，依實際購得的入場券安排參觀；未購得門票時此站取消，不要到現場碰運氣。官方日曆目前顯示 2027/1/3 開館，行前再查。", "openingHours": "一般 10:00–18:00；1/3 依官網與票面為準", "ticketPrice": "成人 ¥1,000（官網現行參考價）；僅預約入場", "needsBooking": true, "leadDays": 16, "actionLink": { "label": "官方購票與開館日", "url": "https://www.ghibli-museum.jp/en/tickets/" } },
         { "period": "noon", "name": "井之頭恩賜公園（視情況調整）", "time": "15:30–17:00", "lat": 35.6982, "lng": 139.5747, "photo": "https://commons.wikimedia.org/wiki/Special:FilePath/TamagawaJosui%40InokashiraPark.JPG?width=1200", "review": "參觀完美術館再沿井之頭公園散步回吉祥寺；依體力、天色與門票時段縮短或取消。若沒買到美術館票，可把午後改成公園及吉祥寺散策。", "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "吉祥寺 → 六本木", "time": "17:00–18:15", "lat": 35.66391, "lng": 139.731292, "review": "從吉祥寺搭 JR 中央線至新宿，轉大江戶線往六本木；含步行與候車預留約 75 分鐘。若在吉祥寺先用餐，返程順延即可，不必返回高田馬場。", "transport": { "mode": "JR 中央線／都營大江戶線", "fare": "依當日票價", "duration": "預留約 75 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "evening", "name": "晚餐自理／返回住宿", "time": "18:15–20:00", "lat": 35.66391, "lng": 139.731292, "review": "以六本木周邊晚餐為主，也可在吉祥寺先吃再返程，不指定餐廳；1/3 正月營業時間不固定，依當日開店狀況調整交通與用餐順序。", "kind": "restaurant", "showOnMap": false, "needsBooking": false, "leadDays": 0 },
-        { "period": "stay", "name": "今晚住宿：東京六本木雷姆飯店（remm Roppongi）・塔景房", "time": "20:00 後", "lat": 35.66391, "lng": 139.731292, "review": "晚餐後返回六本木雷姆飯店塔景房，整理行李與免稅商品，準備隔日退房及出境。", "needsBooking": false, "leadDays": 0 }
+        { "period": "evening", "kind": "lodging", "showOnMap": false, "name": "吉祥寺 → 六本木", "time": "17:00–18:15", "review": "從吉祥寺搭 JR 中央線至新宿，轉大江戶線往六本木；含步行與候車預留約 75 分鐘。住宿入口請查看私人訂房憑證，若在吉祥寺先用餐則依實際情況調整返程。", "transport": { "mode": "JR 中央線／都營大江戶線", "fare": "依當日票價", "duration": "預留約 75 分鐘" }, "needsBooking": false, "leadDays": 0 },
+        { "period": "evening", "name": "晚餐自理／返回住宿", "time": "18:15–20:00", "lat": 35.66, "lng": 139.73, "review": "以六本木周邊晚餐為主，也可在吉祥寺先吃再返程；MEAT MAN Roppongi 候選見 Day 8 提醒與攻略，若前晚已去過就不重複安排。1/3 正月營業與座位待確認，依當日開店狀況調整；座標僅為不展示的概略用餐區域。", "kind": "restaurant", "showOnMap": false, "needsBooking": false, "leadDays": 0 },
+        { "period": "stay", "kind": "lodging", "showOnMap": false, "name": "今晚住宿：六本木站周邊住宿", "time": "20:00 後", "review": "晚餐後返回六本木區域住宿，整理行李與免稅商品，準備隔日退房及出境。", "needsBooking": false, "leadDays": 0 }
       ]
     },
     {
       "date": "2027-01-04", "weekday": "週一", "theme": "六本木退房．東京車站補貨．賦歸",
-      "tips": ["今日從六本木雷姆飯店退房後直接帶行李前往東京站，不再回飯店取物；站內寄物櫃可能客滿，務必預留找寄物點及取件時間。", "今日先完成免稅品攜出確認，再交付托運行李；排隊／抽查時間不固定，約 14:00 抵達成田 T2 為建議目標。"],
+      "tips": ["今日從六本木站周邊住宿退房後直接帶行李前往東京站，不再回住宿取物；站內寄物櫃可能客滿，務必預留找寄物點及取件時間。", "今日先完成免稅品攜出確認，再交付托運行李；排隊／抽查時間不固定，約 14:00 抵達成田 T2 為建議目標。"],
       "slots": [
-        { "period": "morning", "name": "六本木雷姆飯店退房", "time": "08:00–08:30", "lat": 35.66391, "lng": 139.731292, "review": "吃完早餐並退房，帶齊全部行李與免稅品；早餐是否包含依訂單，提早退房為行程安排，不是飯店規定的退房截止。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "kind": "lodging", "showOnMap": false, "name": "六本木站周邊住宿退房", "time": "08:00–08:30", "review": "退房並帶齊全部行李與免稅品；入住細節請查看私人訂房憑證，提早退房為行程安排，不是住宿規定的退房截止。", "needsBooking": false, "leadDays": 0 },
         { "period": "morning", "name": "六本木 → 東京站", "time": "08:30–09:15", "lat": 35.681236, "lng": 139.767125, "review": "搭日比谷線至霞關轉丸之內線至東京站，直接攜行李前往站內寄物與採買；含轉乘、電梯與步行預留約 45 分鐘。", "transport": { "mode": "東京 Metro／步行", "fare": "依當日票價", "duration": "預留約 45 分鐘" }, "needsBooking": false, "leadDays": 0 },
-        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:15–11:30", "lat": 35.681236, "lng": 139.767125, "photo": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Marunouchi_%26_Tokyo_Station_1.jpg", "review": "先確認寄物空位、取件位置與營業時間，再在東京站周邊補貨；若寄物客滿就攜行李少量採買。午餐後準時取件，不再追加遠處採買或折返六本木。", "needsBooking": false, "leadDays": 0 },
+        { "period": "morning", "name": "東京車站補貨／寄放行李", "time": "09:15–11:30", "lat": 35.681236, "lng": 139.767125, "photo": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Tokyo_Station_Marunouchi_side_%2835705789190%29.jpg/1280px-Tokyo_Station_Marunouchi_side_%2835705789190%29.jpg", "photoLayout": "panorama", "photoCredit": "東京站丸之內側全景參考圖 / Jim Shine / CC BY-SA 2.0（顯示裁切）", "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Tokyo_Station_Marunouchi_side_(35705789190).jpg", "review": "先確認寄物空位、取件位置與營業時間，再在東京站周邊補貨；若寄物客滿就攜行李少量採買。午餐後準時取件，不再追加遠處採買或折返六本木。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "kind": "restaurant", "showOnMap": false, "name": "東京站周邊午餐", "time": "11:30–12:10", "lat": 35.681236, "lng": 139.767125, "review": "在站內簡單用餐，避免候位過久；保留取行李與前往機場列車月台的時間。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "取行李／前往機場列車月台", "time": "12:10–12:30", "lat": 35.681236, "lng": 139.767125, "review": "取回全部行李，按收據核對免稅品，護照與退款登錄資料隨身放好，再依已確認車次到月台；12:30 為出發目標，必要時提早用餐與取件。", "needsBooking": false, "leadDays": 0 },
         { "period": "noon", "name": "前往成田機場 T2", "time": "12:30–14:00", "lat": 35.7719, "lng": 140.3929, "review": "提前從東京車站搭車，目標約 14:00 抵達成田第二航廈，距 CI105 17:45 起飛約 3 小時 45 分；此為緩衝建議，實際車次、報到與登機截止依航空公司公告。", "needsBooking": false, "leadDays": 0 },
@@ -816,6 +839,20 @@ function safeExternalURL(value) {
   } catch (e) {
     return '';
   }
+}
+function optimizedPhotoURL(value) {
+  var source = safeExternalURL(value);
+  if (!source) return '';
+  var url = new URL(source);
+  var parts = url.pathname.split('/');
+  if (url.hostname === 'upload.wikimedia.org' && parts[1] === 'wikipedia'
+    && parts[2] === 'commons' && parts.length === 6 && /\.(jpe?g|png)$/i.test(parts[5])) {
+    url.pathname = '/wikipedia/commons/thumb/' + parts.slice(3).join('/') + '/1280px-' + parts[5];
+    url.search = '';
+    url.hash = '';
+    return url.href;
+  }
+  return source;
 }
 function buildMapAppLinks(lat, lng, label) {
   return [{
@@ -946,7 +983,7 @@ function reminderBadgeHTML(leadDays) {
 }
 </script>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script async src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="document.dispatchEvent(new Event('travel-map-ready'))"></script>
 <script>
 (function () {
   var trip = JSON.parse(document.getElementById('trip-data').textContent);
@@ -1009,6 +1046,11 @@ function reminderBadgeHTML(leadDays) {
     return Number(parts[1]) + '/' + Number(parts[2]);
   }
 
+  function formatDisplayDate(value) {
+    var parts = value.split('-');
+    return parts[1] + '/' + parts[2] + '/' + parts[0];
+  }
+
   function lodgingForDate(date) {
     var match = null;
     (trip.hotelAreas || []).some(function (hotel) {
@@ -1046,6 +1088,7 @@ function reminderBadgeHTML(leadDays) {
   }
 
   var weatherRequestToken = 0;
+  var weatherAbortController = null;
 
   function weatherSelectorHTML(selectedKey) {
     return '<select class="weather-location-select" aria-label="選擇天氣地點">'
@@ -1078,10 +1121,14 @@ function reminderBadgeHTML(leadDays) {
     var card = document.getElementById('weatherCard');
     if (!location || !card) return;
     var requestToken = ++weatherRequestToken;
+    if (weatherAbortController) weatherAbortController.abort();
+    var controller = new AbortController();
+    weatherAbortController = controller;
+    var timeoutId = window.setTimeout(function () { controller.abort(); }, 8000);
     card.innerHTML = weatherHeaderHTML(weatherKey) + '<div class="summary-value">載入中…</div><div class="summary-note">' + escapeHTML(location.label) + '</div>';
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + location.lat + '&longitude=' + location.lng
       + '&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1';
-    fetch(url).then(function (response) {
+    fetch(url, { signal: controller.signal }).then(function (response) {
       if (!response.ok) throw new Error('Weather request failed');
       return response.json();
     }).then(function (data) {
@@ -1096,6 +1143,9 @@ function reminderBadgeHTML(leadDays) {
         + weatherLinksHTML(location);
     }).catch(function () {
       if (requestToken === weatherRequestToken) renderWeatherFallback(card, location, weatherKey);
+    }).finally(function () {
+      window.clearTimeout(timeoutId);
+      if (weatherAbortController === controller) weatherAbortController = null;
     });
   }
 
@@ -1115,14 +1165,14 @@ function reminderBadgeHTML(leadDays) {
     var weather = preTrip.weather || {};
     var lastModifiedEl = document.getElementById('lastModified');
     lastModifiedEl.dateTime = trip.lastModified;
-    lastModifiedEl.textContent = trip.lastModified.replace(/-/g, '');
+    lastModifiedEl.textContent = formatDisplayDate(trip.lastModified);
     document.getElementById('tripTitle').textContent = trip.title;
     document.getElementById('tripDates').textContent = trip.days[0].date.replace(/-/g, '/') + '~' + trip.days[trip.days.length - 1].date.replace(/-/g, '/');
     document.getElementById('coverTripTitle').textContent = trip.coverTitle || trip.title;
     document.getElementById('coverTripSubtitle').textContent = trip.coverSubtitle || '';
     document.getElementById('coverLocation').textContent = trip.coverLocation || '';
-    document.getElementById('coverDates').textContent = shortDate(trip.days[0].date) + '－' + shortDate(trip.days[trip.days.length - 1].date);
-    var coverPhoto = safeExternalURL(trip.coverPhoto);
+    document.getElementById('coverDates').textContent = formatDisplayDate(trip.days[0].date) + '~' + formatDisplayDate(trip.days[trip.days.length - 1].date);
+    var coverPhoto = optimizedPhotoURL(trip.coverPhoto);
     if (coverPhoto) document.getElementById('coverImage').src = coverPhoto;
     document.getElementById('pretripContent').innerHTML = [
       ['天氣', weather.summary],
@@ -1225,7 +1275,8 @@ function reminderBadgeHTML(leadDays) {
   }
 
   function isMapExcludedSlot(slot) {
-    return slot.showOnMap === false || (isRestaurantSlot(slot) && slot.showOnMap !== true);
+    return slot.kind === 'lodging' || slot.period === 'stay' || slot.showOnMap === false
+      || (isRestaurantSlot(slot) && slot.showOnMap !== true);
   }
 
   // 地圖：彙整所有 slot 座標
@@ -1245,12 +1296,27 @@ function reminderBadgeHTML(leadDays) {
       pointsByDay[dayId].push(point);
     });
   });
-  var travelMap = initTravelMap('map', points, {
+  var mapOptions = {
     tileUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: 'Tiles &copy; Esri'
+  };
+  var travelMap = initTravelMap('map', points, mapOptions);
+  var mapReady = typeof L !== 'undefined' && navigator.onLine !== false;
+  var selectedMapDay = 'all';
+  document.addEventListener('travel-map-ready', function () {
+    if (!mapReady && typeof L !== 'undefined' && navigator.onLine !== false) {
+      var container = document.getElementById('map');
+      container.textContent = '';
+      container.classList.remove('map-unavailable');
+      travelMap = initTravelMap('map', points, mapOptions);
+      mapReady = true;
+      updateTravelMap(selectedMapDay);
+    }
+    travelMap.invalidateSize();
   });
   var mapStateEl = document.getElementById('mapState');
   function updateTravelMap(day) {
+    selectedMapDay = day;
     var selectedPoints = day === 'all' ? points : (pointsByDay[day] || []);
     var displayedPoints = day === 'all' ? selectedPoints : selectedPoints.map(function (point, index) {
       return { lat: point.lat, lng: point.lng, name: point.name, time: point.time, number: index + 1, locationNote: point.locationNote };
@@ -1336,10 +1402,14 @@ function reminderBadgeHTML(leadDays) {
       html += '<div class="period-tag">' + (periodLabel[s.period] || s.period) + '</div>';
       html += '<div class="slot-name">' + escapeHTML(s.name) + (mapExcluded ? '' : '<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(s.name) + '">地圖 #' + s.mapNumber + '</button>') + (s.needsBooking ? reminderBadgeHTML(s.leadDays) : '') + '</div>';
       html += '<div class="slot-time">' + escapeHTML(s.time) + '</div>';
-      var photoUrl = safeExternalURL(s.photo);
-      if (photoUrl && !featuredPhotoShown) {
-        html += '<div class="photo-frame"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
+      var photoUrl = s.kind === 'lodging' ? '' : optimizedPhotoURL(s.photo);
+      if (photoUrl && (!featuredPhotoShown || s.showPhoto === true)) {
+        html += '<div class="photo-frame' + (s.photoLayout === 'wide' ? ' photo-frame-wide' : s.photoLayout === 'panorama' ? ' photo-frame-panorama' : '') + '"><span class="photo-fallback">' + escapeHTML(s.name) + '</span>'
           + '<img data-src="' + escapeHTML(photoUrl) + '" alt="' + escapeHTML(s.name) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+        var photoCreditUrl = safeExternalURL(s.photoCreditUrl);
+        if (s.photoCredit && photoCreditUrl) {
+          html += '<div class="photo-credit"><a href="' + escapeHTML(photoCreditUrl) + '" target="_blank" rel="noopener">' + escapeHTML(s.photoCredit) + '</a></div>';
+        }
         featuredPhotoShown = true;
       }
       if (s.review) {
@@ -1358,7 +1428,10 @@ function reminderBadgeHTML(leadDays) {
           + '</div><button class="tax-refund-link" type="button" data-open-view="more" data-scroll-target="onsen-section">查看 13 湯水溫與替換選項 →</button>';
       }
       var slotMapLinks = mapExcluded ? [] : buildMapAppLinks(s.lat, s.lng, s.name);
-      var actionUrl = s.actionLink && safeExternalURL(s.actionLink.url);
+      if (s.kind === 'lodging') {
+        html += '<p class="summary-note">住宿隱私：僅顯示周邊區域，不提供住宿點位或導航；入住資訊請查看私人訂房憑證。</p>';
+      }
+      var actionUrl = s.kind !== 'lodging' && s.actionLink && safeExternalURL(s.actionLink.url);
       html += '<div class="slot-maplinks">' + (actionUrl ? '<a class="booking-action" href="' + escapeHTML(actionUrl) + '" target="_blank" rel="noopener">' + escapeHTML(s.actionLink.label) + '</a>' : '') + slotMapLinks.map(function (l) {
         return '<a href="' + escapeHTML(l.url) + '" target="_blank" rel="noopener">' + escapeHTML(l.label) + '</a>';
       }).join('') + '</div>';
@@ -1383,21 +1456,19 @@ function reminderBadgeHTML(leadDays) {
       lodging = lodgingForDate(day.date);
       var lodgingName = lodging ? lodging.option.name : s.name.replace('今晚住宿：', '');
       html += '<div class="slot slot-stay">';
-      html += '<div class="slot-name">🏨 今晚住宿<button class="map-number" type="button" data-map-number="' + s.mapNumber + '" aria-label="在互動地圖開啟 ' + escapeHTML(lodgingName) + '">地圖 #' + s.mapNumber + '</button></div>';
+      html += '<div class="slot-name">🏨 今晚住宿</div>';
       html += '<div class="slot-time">' + escapeHTML(s.time) + '</div>';
       html += '<div class="timeline-detail"><strong>' + escapeHTML(lodgingName) + '</strong>';
       if (lodging) {
         var pending = lodging.option.tier.indexOf('待') >= 0 ? ' pending' : '';
         html += '<div class="timeline-detail-row"><span class="pill' + pending + '">' + escapeHTML(lodging.option.tier) + '</span> ' + escapeHTML(lodging.area) + '</div>';
         html += '<div class="timeline-detail-row">' + escapeHTML(lodging.reason) + '</div>';
-        if (lodging.option.priceRange && lodging.option.priceRange !== '—') html += '<div class="timeline-detail-row">' + escapeHTML(lodging.option.priceRange) + '</div>';
         if (lodging.option.note) html += '<div class="timeline-detail-row">' + escapeHTML(lodging.option.note) + '</div>';
       } else if (s.review) {
         html += '<div class="timeline-detail-row">' + escapeHTML(s.review) + '</div>';
       }
       html += '</div>';
-      var lodgingMapLink = buildMapAppLinks(s.lat, s.lng, lodgingName)[0];
-      html += '<div class="slot-maplinks"><a href="' + lodgingMapLink.url + '" target="_blank" rel="noopener">' + escapeHTML(lodgingMapLink.label) + '</a></div>';
+      html += '<p class="summary-note">住宿隱私：僅顯示周邊區域，不提供住宿點位或導航；入住資訊請查看私人訂房憑證。</p>';
       html += '</div>';
     });
     if (di === trip.days.length - 1) html += renderFlightSlot(bookedFlights[bookedFlights.length - 1]);
@@ -1450,6 +1521,12 @@ function reminderBadgeHTML(leadDays) {
 
   // Tab 切換（切換時淡入新內容），抽成可重用函數供快速導覽列直接呼叫
   function selectDay(day) {
+    var activeDay = dayTabsEl.querySelector('.tab-btn.active');
+    if (!activeDay || activeDay.dataset.day !== day) {
+      dayCardsEl.querySelectorAll('.day-notes-details[open]').forEach(function (details) {
+        details.open = false;
+      });
+    }
     document.querySelectorAll('#dayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
     document.querySelectorAll('#mapDayTabs .tab-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.day === day); });
     centerActiveDayTabs();
@@ -1548,18 +1625,41 @@ function reminderBadgeHTML(leadDays) {
     return { mode: 'between', dayIndex: Math.max(0, nextIndex) };
   }
 
-  function renderHome() {
-    var state = currentTripState();
-    var day = trip.days[state.dayIndex];
-    var slots = day.slots || [];
-    var timelineSlots = slots.slice();
+  var homeRenderKey = '';
+
+  function homeTimelineSlots(dayIndex) {
+    var timelineSlots = (trip.days[dayIndex].slots || []).slice();
     var homeFlights = ((trip.flights || {}).booked || []);
-    if (state.dayIndex === 0 && homeFlights[0]) {
+    if (dayIndex === 0 && homeFlights[0]) {
       timelineSlots.unshift({ name: homeFlights[0].label, time: homeFlights[0].time, period: 'flight' });
     }
-    if (state.dayIndex === trip.days.length - 1 && homeFlights.length) {
+    if (dayIndex === trip.days.length - 1 && homeFlights.length) {
       timelineSlots.push({ name: homeFlights[homeFlights.length - 1].label, time: homeFlights[homeFlights.length - 1].time, period: 'flight' });
     }
+    return timelineSlots;
+  }
+
+  function renderHomeNext(state) {
+    var timelineSlots = homeTimelineSlots(state.dayIndex);
+    var nextStop = state.mode === 'today' ? nextTripStop(timelineSlots, state, new Date())
+      : timelineSlots.length ? { slot: timelineSlots[0], label: '行程起點' } : null;
+    document.getElementById('homeNext').innerHTML = nextStop
+      ? '<div class="next-label">' + nextStop.label + '</div><div class="next-time">' + escapeHTML(startTime(nextStop.slot.time)) + '</div><div class="next-name">' + escapeHTML(nextStop.slot.name) + '</div>'
+      : '<div class="next-label">行程</div><div class="next-name">' + (state.mode === 'today' ? '今日行程已結束' : '尚無行程資料') + '</div>';
+  }
+
+  function refreshHomeClock() {
+    var state = currentTripState();
+    if (homeRenderKey !== state.mode + ':' + state.dayIndex) renderHome(true);
+    else renderHomeNext(state);
+  }
+
+  function renderHome(preserveSelection) {
+    var state = currentTripState();
+    homeRenderKey = state.mode + ':' + state.dayIndex;
+    var day = trip.days[state.dayIndex];
+    var slots = day.slots || [];
+    var timelineSlots = homeTimelineSlots(state.dayIndex);
     var modeText = state.mode === 'today' ? '今日行程' : state.mode === 'before' ? '旅程即將開始' : state.mode === 'after' ? '旅程回顧' : '下一個行程日';
     document.getElementById('homeMode').textContent = modeText;
     document.getElementById('homeDate').textContent = 'DAY ' + (state.dayIndex + 1) + ' · ' + shortDate(day.date) + ' · ' + day.weekday;
@@ -1567,11 +1667,7 @@ function reminderBadgeHTML(leadDays) {
     document.getElementById('homeTheme').textContent = state.mode === 'before' ? '出發前先確認提醒與交通資訊' : '今天的重點已整理在下方';
     document.getElementById('homeTimelineTitle').innerHTML = state.mode === 'today' ? '<span class="n">今日</span> 行程摘要' : '<span class="n">預覽</span> 行程摘要';
 
-    var nextStop = state.mode === 'today' ? nextTripStop(timelineSlots, state, new Date())
-      : timelineSlots.length ? { slot: timelineSlots[0], label: '行程起點' } : null;
-    document.getElementById('homeNext').innerHTML = nextStop
-      ? '<div class="next-label">' + nextStop.label + '</div><div class="next-time">' + escapeHTML(startTime(nextStop.slot.time)) + '</div><div class="next-name">' + escapeHTML(nextStop.slot.name) + '</div>'
-      : '<div class="next-label">行程</div><div class="next-name">' + (state.mode === 'today' ? '今日行程已結束' : '尚無行程資料') + '</div>';
+    renderHomeNext(state);
 
     var stay = slots.filter(function (slot) { return slot.period === 'stay'; })[0];
     var today = tripClock(new Date()).date;
@@ -1587,10 +1683,11 @@ function reminderBadgeHTML(leadDays) {
     document.getElementById('homeTimeline').innerHTML = timelineSlots.slice(0, 4).map(function (slot, idx) {
       return '<div class="mini-stop mini-stop-action" role="button" tabindex="0" data-open-view="schedule" data-select-day="' + targetDayId + '" data-slot-index="' + idx + '"><div class="mini-time">' + escapeHTML(startTime(slot.time)) + '</div><div class="mini-name">' + escapeHTML(slot.name) + '</div></div>';
     }).join('');
-    selectDay(targetDayId);
+    if (!preserveSelection) selectDay(targetDayId);
   }
 
   function switchView(view) {
+    if (view === 'home') refreshHomeClock();
     document.body.classList.remove('nav-hidden');
     document.body.classList.remove('header-hidden');
     document.body.classList.toggle('home-active', view === 'home');
@@ -1731,6 +1828,14 @@ function reminderBadgeHTML(leadDays) {
   });
 
   renderHome();
+  window.setInterval(function () {
+    if (!document.hidden) refreshHomeClock();
+  }, 60000);
+  window.addEventListener('pageshow', refreshHomeClock);
+  window.addEventListener('focus', refreshHomeClock);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) refreshHomeClock();
+  });
   applyTheme(document.documentElement.dataset.theme);
   switchView('home');
 })();
